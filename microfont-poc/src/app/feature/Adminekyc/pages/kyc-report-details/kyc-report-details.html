@@ -1,0 +1,467 @@
+<admin-layout
+  [title]="'Digital Onboarding'"
+  [username]="getAdminName()"
+  [activeMenu]="'kycReportByYear'"
+  [drawerOpened]="state.drawerOpened()"
+  (menuClicked)="state.toggleDrawer()"
+  (userClicked)="state.openUserModal()"
+  (dashboardClicked)="state.goToDashboard()"
+  (channelManagementClicked)="state.goToChannelManagement()"
+  (productManagementClicked)="state.goToProductManagement()"
+  (workflowManagementClicked)="state.goToWorkflowManagement()"
+  (parametersClicked)="state.goToParameters()"
+  (apiManagementClicked)="state.goToApiManagement()"
+  (authorizedClicked)="state.goToAuthorizedCustomers()"
+  (unauthorizedClicked)="state.goToUnauthorizedCustomers()"
+  (incompleteClicked)="state.goToIncompleteCustomers()"
+  (declinedClicked)="state.goToDeclinedCustomers()"
+  (ecVerificationClicked)="state.goToEcVerification()"
+  (userActivityLogClicked)="state.goToUserActivityLog()"
+  (kycReportByYearClicked)="state.goToKycReportByYear()">
+
+  <section class="kyc-details-page w-full min-w-0 space-y-3 p-2 sm:space-y-4 sm:p-3 md:p-4 lg:p-5 xl:p-6">
+    <div class="kyc-details-tab">Individual Customer Profile</div>
+    <div class="kyc-details-top-line"></div>
+
+    @if (errorMessage()) {
+      <div class="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    @if (successMessage()) {
+      <div class="rounded-md border border-green-300 bg-green-50 px-3 py-2 text-sm text-green-700">
+        {{ successMessage() }}
+      </div>
+    }
+
+    @if (details()) {
+      <header class="kyc-details-title-row flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between md:gap-4">
+        <h1>Customer's Name: {{ getCustomerName() }}</h1>
+
+        <div class="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
+          <button
+            type="button"
+            class="kyc-details-back"
+            (click)="backToKycReport()">
+            Back to KYC Report
+          </button>
+        </div>
+      </header>
+
+      <div class="kyc-details-blue-line"></div>
+
+      @if (shouldShowServiceFlags()) {
+        @if (!isDebitRestrictionHidden()) {
+          <section class="kyc-details-service-row w-full min-w-0">
+            <span>Debit Restriction Withdrawal</span>
+            <input
+              type="checkbox"
+              [checked]="debitRestrictionRequested()"
+              [disabled]="isDebitRestrictionCompleted() || isSubmittingServices()"
+              (change)="setDebitRestrictionRequested($event)" />
+          </section>
+        }
+
+        <section class="kyc-details-service-grid grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-2 xl:gap-6">
+          <div class="kyc-details-service-column">
+            <h4>User Selected Services</h4>
+
+            <label><input type="checkbox" [checked]="isServiceSelected(details()?.profile?.SmsAlertFlag)" disabled /> SMS Alert</label>
+            <label><input type="checkbox" [checked]="isServiceSelected(details()?.profile?.EmailAlertFlag)" disabled /> Email Alert</label>
+            <label><input type="checkbox" [checked]="isServiceSelected(details()?.profile?.ChqBookFlag)" disabled /> Cheque Book</label>
+            <label><input type="checkbox" [checked]="isServiceSelected(details()?.profile?.DebitCardFlag)" disabled /> Debit Card</label>
+          </div>
+
+          <div class="kyc-details-service-column">
+            <h4>Approved By Admin</h4>
+
+            <label>
+              <input
+                type="checkbox"
+                [checked]="smsApproved()"
+                [disabled]="isServiceApprovalLocked(details()?.profile?.SmsAlertFlag)"
+                (change)="setServiceApproval('sms', $event)" />
+              SMS Alert
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [checked]="emailApproved()"
+                [disabled]="isServiceApprovalLocked(details()?.profile?.EmailAlertFlag)"
+                (change)="setServiceApproval('email', $event)" />
+              Email Alert
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [checked]="chequeBookApproved()"
+                [disabled]="isServiceApprovalLocked(details()?.profile?.ChqBookFlag)"
+                (change)="setServiceApproval('cheque', $event)" />
+              Cheque Book
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [checked]="debitCardApproved()"
+                [disabled]="isServiceApprovalLocked(details()?.profile?.DebitCardFlag)"
+                (change)="setServiceApproval('debit', $event)" />
+              Debit Card
+            </label>
+          </div>
+        </section>
+
+        @if (shouldShowServiceSubmit()) {
+          <div class="kyc-details-service-actions">
+            <generic-button
+              [label]="isSubmittingServices() ? 'Submitting...' : 'Submit'"
+              cssClass="admin-btn-search"
+              styles="width: 120px;"
+              [enable]="!isSubmittingServices()"
+              (onClick)="submitServiceChanges()">
+            </generic-button>
+          </div>
+        }
+      }
+
+      <section class="kyc-details-top-images grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 xl:grid-cols-[repeat(2,minmax(220px,320px))]">
+        <div class="kyc-image-card">
+          <h4>From EC</h4>
+
+          @if (getNidPhotoUrl()) {
+            <img [src]="getNidPhotoUrl()" alt="EC photo" />
+          } @else {
+            <div class="kyc-image-placeholder"></div>
+          }
+        </div>
+
+        <div class="kyc-image-card">
+          <h4>From Captured Selfie</h4>
+
+          @if (getCapturedPhotoUrl()) {
+            <img [src]="getCapturedPhotoUrl()" alt="Taken selfie" />
+          } @else {
+            <div class="kyc-image-placeholder"></div>
+          }
+        </div>
+      </section>
+
+      <section class="kyc-details-main-grid grid w-full grid-cols-1 gap-4 md:gap-5 lg:gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
+        <aside class="kyc-status-card w-full min-w-0">
+          <div class="kyc-status-card__header">Status ⚙</div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>Tracking No</strong>
+            <span>{{ getTrackingNo() }}</span>
+          </div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>Step No</strong>
+            <span>{{ getStepNo() }}</span>
+          </div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>Authentication</strong>
+            <span>{{ getAuthentication() }}</span>
+          </div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>Product Type</strong>
+            <span>{{ getProductType() }}</span>
+          </div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>Product Name</strong>
+            <span>{{ getProductName() }}</span>
+          </div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>Face Match Score</strong>
+            <span>{{ getFaceMatch() }}</span>
+          </div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>Customer Ekyc Type</strong>
+            <span>{{ getCustomerEkycType() }}</span>
+          </div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>Risk Score</strong>
+            <span>{{ getRiskScore() }}</span>
+          </div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>CustomerId</strong>
+            <span>{{ getCustomerId() }}</span>
+          </div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>Account No</strong>
+            <span>{{ getAccountNo() }}</span>
+          </div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>Nid No</strong>
+            <span>{{ getNidNumber() }}</span>
+          </div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>Sanction Screening</strong>
+            <span>{{ getSanctionScreening() }}</span>
+          </div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>Deposit Per Month</strong>
+            <span>{{ getDepositPerMonth() }}</span>
+          </div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>Withdrawal Per Month</strong>
+            <span>{{ getWithdrawalPerMonth() }}</span>
+          </div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>Onboarded From</strong>
+            <span>{{ getOnboardedFrom() }}</span>
+          </div>
+
+          <div class="kyc-status-row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.9fr)_minmax(0,1.1fr)] sm:gap-3">
+            <strong>Branch Info</strong>
+            <span>{{ getBranchInfo() }}</span>
+          </div>
+
+          @if (canDownloadCustomerFiles()) {
+            <div class="kyc-status-download-actions grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <generic-button
+                [label]="isDownloadingReport() ? 'Downloading...' : 'Download Report'"
+                cssClass="admin-btn-search"
+                styles="width: 100%; min-width: 0;"
+                [enable]="!isDownloadingReport() && !isDownloadingPhotos()"
+                (onClick)="downloadReport()">
+              </generic-button>
+
+              <generic-button
+                [label]="isDownloadingPhotos() ? 'Downloading...' : 'Download Photos'"
+                cssClass="admin-btn-search"
+                styles="width: 100%; min-width: 0;"
+                [enable]="!isDownloadingReport() && !isDownloadingPhotos()"
+                (onClick)="downloadPhotos()">
+              </generic-button>
+            </div>
+          }
+        </aside>
+
+        <section class="kyc-profile-section w-full min-w-0 overflow-hidden">
+          <nav class="kyc-profile-tabs flex w-full flex-wrap gap-1 sm:gap-2">
+            <button
+              type="button"
+              [class.active]="activeTab() === 'customerProfile'"
+              (click)="setActiveTab('customerProfile')">
+              Customer Profile
+            </button>
+
+            <button
+              type="button"
+              [class.active]="activeTab() === 'nomineeProfile'"
+              (click)="setActiveTab('nomineeProfile')">
+              Nominee Profile 1
+            </button>
+
+            <button
+              type="button"
+              [class.active]="activeTab() === 'documents'"
+              (click)="setActiveTab('documents')">
+              Documents
+            </button>
+          </nav>
+
+          @if (activeTab() === 'customerProfile') {
+            <section class="kyc-profile-grid grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-2 xl:gap-6">
+              <div class="kyc-info-column">
+                <div class="kyc-info-item">
+                  <strong>Full Name</strong>
+                  <p>{{ getCustomerName() }}</p>
+                </div>
+
+                <div class="kyc-info-item">
+                  <strong>Email</strong>
+                  <p>{{ getEmail() }}</p>
+                </div>
+
+                <div class="kyc-info-item">
+                  <strong>Mobile No</strong>
+                  <p>{{ getMobileNumber() }}</p>
+                </div>
+
+                <div class="kyc-info-item">
+                  <strong>Date of Birth</strong>
+                  <p>{{ getDateOfBirth() }}</p>
+                </div>
+
+                <div class="kyc-info-item">
+                  <strong>Spouse Name</strong>
+                  <p>{{ getSpouseName() }}</p>
+                </div>
+              </div>
+
+              <div class="kyc-info-column">
+                <div class="kyc-info-item">
+                  <strong>Father Name</strong>
+                  <p>{{ getFatherName() }}</p>
+                </div>
+
+                <div class="kyc-info-item">
+                  <strong>Mother Name</strong>
+                  <p>{{ getMotherName() }}</p>
+                </div>
+
+                <div class="kyc-info-item">
+                  <strong>Present Address</strong>
+                  <p>{{ getPresentAddress() }}</p>
+                </div>
+
+                <div class="kyc-info-item">
+                  <strong>Permanent Address</strong>
+                  <p>{{ getPermanentAddress() }}</p>
+                </div>
+              </div>
+            </section>
+          }
+
+          @if (activeTab() === 'nomineeProfile') {
+            <section class="kyc-profile-grid grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-2 xl:gap-6">
+              <div class="kyc-info-column">
+                <div class="kyc-info-item">
+                  <strong>Nominee Name</strong>
+                  <p>{{ getNomineeName() }}</p>
+                </div>
+
+                <div class="kyc-info-item">
+                  <strong>Relationship</strong>
+                  <p>{{ getNomineeRelation() }}</p>
+                </div>
+
+                <div class="kyc-info-item">
+                  <strong>Birth Date</strong>
+                  <p>{{ getNomineeBirthDate() }}</p>
+                </div>
+
+                <div class="kyc-info-item">
+                  <strong>Age</strong>
+                  <p>{{ getNomineeAge() }}</p>
+                </div>
+
+                <div class="kyc-info-item">
+                  <strong>NID No</strong>
+                  <p>{{ getNomineeNid() }}</p>
+                </div>
+
+                <div class="kyc-info-item">
+                  <strong>Share Percent</strong>
+                  <p>{{ getNomineeSharePercent() }}</p>
+                </div>
+
+                <div class="kyc-info-item">
+                  <strong>Address</strong>
+                  <p>{{ getNomineeAddress() }}</p>
+                </div>
+              </div>
+
+              <div class="kyc-info-column">
+                <div class="kyc-info-item">
+                  <strong>Nominee Photo</strong>
+
+                  @if (getNomineePhotoUrl()) {
+                    <img
+                      class="kyc-document-image"
+                      [src]="getNomineePhotoUrl()"
+                      alt="Nominee photo" />
+                  } @else {
+                    <div class="kyc-document-placeholder"></div>
+                  }
+                </div>
+              </div>
+            </section>
+          }
+
+          @if (activeTab() === 'documents') {
+            <section class="kyc-documents-grid grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 xl:grid-cols-3">
+              <div class="kyc-info-item">
+                <strong>Uploaded NID's Front</strong>
+
+                @if (getNidFrontUrl()) {
+                  <img
+                    class="kyc-document-image kyc-document-image--nid-card"
+                    [src]="getNidFrontUrl()"
+                    alt="Uploaded NID front" />
+                } @else {
+                  <div class="kyc-document-placeholder kyc-document-placeholder--nid-card"></div>
+                }
+              </div>
+
+              <div class="kyc-info-item">
+                <strong>Uploaded NID's Back</strong>
+
+                @if (getNidBackUrl()) {
+                  <img
+                    class="kyc-document-image kyc-document-image--nid-card"
+                    [src]="getNidBackUrl()"
+                    alt="Uploaded NID back" />
+                } @else {
+                  <div class="kyc-document-placeholder kyc-document-placeholder--nid-card"></div>
+                }
+              </div>
+
+              <div class="kyc-info-item kyc-info-item--signature">
+                <strong>Uploaded Signature</strong>
+
+                @if (getSignatureUrl()) {
+                  <img
+                    class="kyc-signature-image"
+                    [src]="getSignatureUrl()"
+                    alt="Uploaded signature" />
+                } @else {
+                  <div class="kyc-signature-placeholder"></div>
+                }
+              </div>
+            </section>
+          }
+        </section>
+      </section>
+    } @else if (isLoading()) {
+      <div class="kyc-details-empty">Loading KYC details...</div>
+    } @else {
+      <div class="kyc-details-empty">No KYC details available.</div>
+    }
+  </section>
+
+  @if (state.userModalOpened()) {
+    <div class="user-modal-backdrop" (click)="state.closeUserModal()"></div>
+
+    <div class="user-modal left-3 right-3 top-16 w-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 md:right-6 lg:right-8 xl:right-10">
+      <h3>Digital Onboarding</h3>
+
+      <p>
+        Logged in as:
+        <strong>{{ auth.currentAdmin()?.name || 'Admin' }}</strong>
+      </p>
+
+      <div class="user-modal__actions flex flex-wrap justify-end gap-2 sm:gap-3">
+        <generic-button
+          label="Close"
+          cssClass="admin-btn-secondary"
+          (onClick)="state.closeUserModal()">
+        </generic-button>
+
+        <generic-button
+          label="Sign Out"
+          cssClass="admin-btn-danger"
+          (onClick)="logout()">
+        </generic-button>
+      </div>
+    </div>
+  }
+</admin-layout>

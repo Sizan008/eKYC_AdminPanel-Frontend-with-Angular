@@ -1,0 +1,74 @@
+<div class="admin-customer-card grid w-full min-w-0 grid-cols-1 gap-3 p-3 sm:gap-4 sm:p-4 md:grid-cols-[140px_minmax(0,1fr)] lg:grid-cols-[150px_minmax(0,1fr)_minmax(0,1fr)] xl:gap-6">
+  <div class="admin-customer-card__photo-area min-w-0 md:row-span-2 lg:row-span-1">
+  <admin-customer-avatar
+    [imageUrl]="getCustomerPhoto()"
+    [altText]="customer().customerName"
+    fallbackText="No Photo">
+  </admin-customer-avatar>
+
+  <button
+    type="button"
+    class="admin-customer-card__details-link"
+    (click)="onDetailsClick()">
+    Details
+  </button>
+</div>
+
+  <div class="admin-customer-card__info admin-customer-card__info--left min-w-0">
+    <admin-info-row
+      label="Name"
+      [value]="customer().customerName">
+    </admin-info-row>
+
+    <admin-info-row
+      label="Mobile No"
+      [value]="customer().mobileNo || '-'">
+    </admin-info-row>
+
+    <admin-info-row
+      label="NID No"
+      [value]="customer().nidNo || '-'">
+    </admin-info-row>
+
+    <admin-info-row
+      label="CustomerId"
+      [value]="customer().customerId || '-'">
+    </admin-info-row>
+
+    <admin-info-row
+      label="Branch"
+      [value]="customer().branch || '-'">
+    </admin-info-row>
+  </div>
+
+  <div class="admin-customer-card__info admin-customer-card__info--right min-w-0 md:col-start-2 lg:col-start-auto">
+    <admin-info-row
+      label="AccountNo"
+      [value]="customer().accountNo || '-'">
+    </admin-info-row>
+
+    <admin-info-row
+      label="Face Match"
+      [value]="getFaceScore()">
+    </admin-info-row>
+
+    <admin-info-row
+      label="Authentication"
+      [value]="getAuthentication()">
+    </admin-info-row>
+
+    <admin-info-row
+      label="Make Date"
+      [value]="getMakeDate()">
+    </admin-info-row>
+
+    <div class="admin-customer-card__status-row">
+      <strong>Status :</strong>
+
+      <admin-status-badge
+        [label]="customer().status"
+        [type]="customer().status">
+      </admin-status-badge>
+    </div>
+  </div>
+</div>

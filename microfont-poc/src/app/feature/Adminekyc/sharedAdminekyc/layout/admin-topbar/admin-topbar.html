@@ -1,0 +1,19 @@
+<header class="admin-topbar flex h-[62px] w-full items-center gap-2 px-3 sm:gap-3 sm:px-4 md:gap-4 md:px-5 lg:px-6 xl:px-8">
+  <button
+    type="button"
+    class="admin-topbar__menu shrink-0"
+    (click)="onMenuClick()">
+    ☰
+  </button>
+
+  <div class="admin-topbar__title min-w-0 flex-1 truncate text-sm sm:text-base md:text-lg lg:text-xl">
+    {{ title() }}
+  </div>
+
+  <button
+    type="button"
+    class="admin-topbar__user max-w-[42vw] shrink-0 truncate px-2 py-2 text-xs sm:max-w-xs sm:px-3 sm:text-sm md:px-4"
+    (click)="onUserClick()">
+    {{ username() }}
+  </button>
+</header>

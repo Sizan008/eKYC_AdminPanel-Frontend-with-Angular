@@ -1,0 +1,270 @@
+<app-expansion-panel-header
+  [isOpenSignal]="isOpenSignal"
+  [panelTitle]="'Add Stock'"
+></app-expansion-panel-header>
+
+<form [formGroup]="frmGroup" class="stock-form">
+  <div class="panel-grid">
+    <section class="card">
+      <app-expansion-sub-panel-header
+        [isOpenSignal]="primaryPanelOpen"
+        [subPanelTitle]="'Primary details'"
+      ></app-expansion-sub-panel-header>
+
+      <div class="field-grid">
+        <input-id-box
+          [frmGroup]="frmGroup"
+          [controlName]="'productId'"
+          [label]="'Product ID'"
+          [placeholder]="'Enter product ID'"
+          [customErrorMessages]="{ required: 'Product ID is required' }"
+          (dotsClicked)="generateProductId()"
+        ></input-id-box>
+
+        <input-text-box
+          [frmGroup]="frmGroup"
+          [controlName]="'productName'"
+          [label]="'Product Name'"
+          [placeholder]="'Enter product name'"
+          displayMode="vertical"
+          [customErrorMessages]="{
+            required: 'Product name is required',
+            minlength: 'Use at least 2 characters'
+          }"
+        ></input-text-box>
+
+        <input-text-box
+          [frmGroup]="frmGroup"
+          [controlName]="'brand'"
+          [label]="'Brand Name'"
+          [placeholder]="'Enter brand name'"
+          displayMode="vertical"
+          [customErrorMessages]="{
+            required: 'Brand is required',
+            minlength: 'Use at least 2 characters'
+          }"
+        ></input-text-box>
+
+        <input-select-option-field
+          [frmGroup]="frmGroup"
+          [controlName]="'category'"
+          [label]="'Category'"
+          [options]="categoryOptions"
+          [placeholder]="'Choose category'"
+          displayMode="vertical"
+          [customErrorMessages]="{ required: 'Category is required' }"
+        ></input-select-option-field>
+      </div>
+    </section>
+
+    <section class="card">
+      <app-expansion-sub-panel-header
+        [isOpenSignal]="pricingPanelOpen"
+        [subPanelTitle]="'Pricing & inventory'"
+      ></app-expansion-sub-panel-header>
+
+      <div class="field-grid">
+        <input-number
+          [frmGroup]="frmGroup"
+          [controlName]="'quantity'"
+          [label]="'Quantity'"
+          [placeholder]="'Enter quantity'"
+          [minValue]="1"
+          displayMode="vertical"
+          [customErrorMessages]="{ required: 'Quantity is required', min: 'Minimum 1' }"
+        ></input-number>
+
+        <input-amount
+          [frmGroup]="frmGroup"
+          [controlName]="'pricePerItem'"
+          [label]="'Price Per Item (BDT)'"
+          [placeholder]="'Enter unit price'"
+          [minAmt]="0.01"
+          [decimalPlaces]="2"
+          displayMode="vertical"
+          [customErrorMessages]="{
+            required: 'Unit price is required',
+            min: 'Price must be positive'
+          }"
+        ></input-amount>
+
+        <input-amount-in-word
+          [frmGroup]="frmGroup"
+          [controlName]="'totalValue'"
+          [label]="'Total Value'"
+          [isReadonly]="true"
+          displayMode="vertical"
+        ></input-amount-in-word>
+
+        <input-date
+          [frmGroup]="frmGroup"
+          [controlName]="'expiryDate'"
+          [label]="'Expiry Date'"
+          displayMode="vertical"
+          [customErrorMessages]="{ required: 'Expiry date is required' }"
+        ></input-date>
+      </div>
+    </section>
+  </div>
+
+  <div class="panel-grid">
+    <section class="card">
+      <app-expansion-sub-sub-panel-header
+        [isOpenSignal]="logisticsPanelOpen"
+        [subSubPanelTitle]="'Logistics & planning'"
+      ></app-expansion-sub-sub-panel-header>
+
+      <div class="field-grid">
+        <month-year-picker
+          [frmGroup]="frmGroup"
+          [controlName]="'manufactureMonthYear'"
+          [label]="'Manufacture Month/Year'"
+          [placeholder]="'MM/YYYY'"
+          displayMode="vertical"
+          [customErrorMessages]="{ required: 'Manufacture date is required' }"
+        ></month-year-picker>
+
+        <input-time
+          [frmGroup]="frmGroup"
+          [controlName]="'arrivalTime'"
+          [label]="'Arrival Time'"
+          displayMode="vertical"
+          [customErrorMessages]="{ required: 'Arrival time is required' }"
+        ></input-time>
+
+        <warehouse-address-search
+          [frmGroup]="frmGroup"
+          [controlName]="'warehouseAddress'"
+          [label]="'Warehouse Address'"
+          [placeholder]="'Search warehouse address'"
+        ></warehouse-address-search>
+
+        <input-office-box
+          [frmGroup]="frmGroup"
+          [controlName]="'warehouseOffice'"
+          [label]="'Office / Section'"
+          [placeholder]="'Enter office or shelf'"
+          displayMode="vertical"
+        ></input-office-box>
+      </div>
+    </section>
+
+    <section class="card">
+      <app-expansion-sub-panel-header
+        [isOpenSignal]="specialPanelOpen"
+        [subPanelTitle]="'Special stock options'"
+      ></app-expansion-sub-panel-header>
+
+      <div class="field-grid">
+        <generic-switch
+          [frmGroup]="frmGroup"
+          [controlName]="'active'"
+          [label]="'Active stock'"
+          [isChecked]="true"
+          displayMode="vertical"
+        ></generic-switch>
+
+        <input-tag
+          formControlName="tags"
+          [label]="'Tags'"
+          [placeholder]="'Add tags for stock'"
+          [maxItems]="10"
+          [allowDuplicates]="false"
+        ></input-tag>
+
+        <input-text-area
+          [frmGroup]="frmGroup"
+          [controlName]="'description'"
+          [label]="'Short Description'"
+          [placeholder]="'Describe stock details'"
+          displayMode="vertical"
+        ></input-text-area>
+      </div>
+    </section>
+  </div>
+
+  <section class="card wide-card">
+    <generic-label
+      [labelKey]="'Detailed notes'">
+    </generic-label>
+
+    <common-quill-editor
+      [formGroup]="frmGroup"
+      [controlName]="'notes'"
+      [labelName]="'Notes and instructions'"
+      [isRequired]="false"
+      [configType]="'min'"
+      classProperty="stock-quill"
+    ></common-quill-editor>
+  </section>
+
+  <section class="card wide-card">
+    <app-expansion-sub-panel-header
+      [isOpenSignal]="attachmentsPanelOpen"
+      [subPanelTitle]="'Attachments'"
+    ></app-expansion-sub-panel-header>
+
+    <div class="attachment-grid">
+      <input-file
+        [frmGroup]="frmGroup"
+        [controlName]="'attachments'"
+        [label]="'Upload attachments'"
+        [multipleFile]="true"
+        [fileExtension]="'.pdf,.png,.jpg,.jpeg'"
+        (selectedFilesChanged)="onSelectedFilesChanged($event)"
+      ></input-file>
+
+      <div *ngIf="attachmentPreview" class="preview-card">
+        <file-preview-card [fileData]="attachmentPreview"></file-preview-card>
+      </div>
+    </div>
+  </section>
+
+  <div class="actions-row">
+    <generic-button
+      [label]="'Add To Stock'"
+      cssClass="primary-button"
+      [enable]="!frmGroup.invalid"
+      (onClick)="addStock()"
+    ></generic-button>
+
+    <generic-button
+      [label]="'Reset'"
+      cssClass="secondary-button"
+      (onClick)="resetForm()"
+    ></generic-button>
+  </div>
+
+  <section class="panel-summary">
+    <app-expansion-sub-sub-panel-header
+      [isOpenSignal]="stockPreviewPanelOpen"
+      [subSubPanelTitle]="'Stock preview table'"
+    ></app-expansion-sub-sub-panel-header>
+    <generic-table [config]="summaryTableConfig"></generic-table>
+  </section>
+
+  <section class="panel-summary">
+    <app-expansion-sub-sub-panel-header
+      [isOpenSignal]="recentStockPanelOpen"
+      [subSubPanelTitle]="'Latest stock preview'"
+    ></app-expansion-sub-sub-panel-header>
+    <generic-data-grid
+      [dataSource]="recentStockItems"
+      [selectedColumns]="['productId', 'productName', 'brand', 'category', 'quantity', 'pricePerItem', 'active']"
+      [customColumnNames]="{
+        productId: 'SKU',
+        productName: 'Product',
+        brand: 'Brand',
+        category: 'Category',
+        quantity: 'Qty',
+        pricePerItem: 'Unit Price',
+        active: 'Active'
+      }"
+      [gridTitle]="'Recent stock items'"
+      [showEditButton]="false"
+      [showDeleteButton]="false"
+      [searchEnabled]="false"
+      [pageSizeOptions]="[5]"
+    ></generic-data-grid>
+  </section>
+</form>

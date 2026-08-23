@@ -1,0 +1,253 @@
+<admin-layout
+  [title]="'Digital Onboarding'"
+  [username]="getAdminName()"
+  [activeMenu]="'workflowManagement'"
+  [drawerOpened]="state.drawerOpened()"
+  (menuClicked)="state.toggleDrawer()"
+  (userClicked)="state.openUserModal()"
+  (dashboardClicked)="state.goToDashboard()"
+  (channelManagementClicked)="state.goToChannelManagement()"
+  (productManagementClicked)="state.goToProductManagement()"
+  (workflowManagementClicked)="state.goToWorkflowManagement()"
+  (parametersClicked)="state.goToParameters()"
+  (apiManagementClicked)="state.goToApiManagement()"
+  (authorizedClicked)="state.goToAuthorizedCustomers()"
+  (unauthorizedClicked)="state.goToUnauthorizedCustomers()"
+  (incompleteClicked)="state.goToIncompleteCustomers()"
+  (declinedClicked)="state.goToDeclinedCustomers()"
+  (ecVerificationClicked)="state.goToEcVerification()"
+  (userActivityLogClicked)="state.goToUserActivityLog()"
+  (kycReportByYearClicked)="state.goToKycReportByYear()">
+
+  <section class="workflow-management w-full min-w-0 space-y-3 p-2 sm:space-y-4 sm:p-3 md:p-4 lg:p-5 xl:p-6">
+    @if (pageMode() === 'list') {
+      <header class="workflow-management__header flex flex-col gap-2 sm:gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1>Product & Channel</h1>
+          <span>Workflow Management</span>
+        </div>
+
+        <p>Product & Channel &gt; Workflow Management</p>
+      </header>
+
+      @if (pageErrorMessage()) {
+        <div class="w-full rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 sm:px-4">
+          {{ pageErrorMessage() }}
+        </div>
+      }
+
+      <div class="workflow-management__links flex flex-wrap items-center gap-2 sm:gap-3">
+        <button type="button" (click)="showCreate()">
+          {{ isLoadingCreateForm() ? 'Loading Create Form...' : 'Create New Workflow' }}
+        </button>
+      </div>
+
+      <div class="workflow-management__select-row grid w-full grid-cols-1 gap-2 sm:grid-cols-[180px_minmax(0,1fr)] sm:items-center md:max-w-2xl lg:max-w-3xl xl:max-w-4xl">
+        <label for="workflowSelect">Select Workflow</label>
+
+        <select
+          id="workflowSelect"
+          class="workflow-management__select w-full min-w-0"
+          [value]="selectedWorkflowId() ?? ''"
+          [disabled]="isLoadingWorkflows()"
+          (change)="onWorkflowChange($event)">
+          <option value="">
+            {{ isLoadingWorkflows() ? 'Loading...' : 'Select' }}
+          </option>
+
+          @for (workflow of workflows(); track workflow.id) {
+            <option [value]="workflow.id">
+              {{ workflow.workflowName || ('Workflow ' + workflow.id) }}
+            </option>
+          }
+        </select>
+      </div>
+
+      @if (selectedWorkflowId()) {
+        <section class="workflow-table-card w-full min-w-0 overflow-x-auto rounded-lg">
+          <table class="workflow-table w-full min-w-[720px] lg:min-w-full">
+            <thead>
+              <tr>
+                <th>Step Sequence No</th>
+                <th>Step Name</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @if (isLoadingSteps()) {
+                <tr>
+                  <td colspan="3" class="empty-cell">
+                    Loading workflow steps...
+                  </td>
+                </tr>
+              } @else {
+                @for (step of getPaginatedSteps(); track step.id) {
+                  <tr>
+                    <td>{{ step.stepSequenceNo }}</td>
+                    <td>{{ step.stepName || ('Step ' + step.stepId) }}</td>
+                    <td>
+                      <div class="workflow-actions flex flex-wrap items-center gap-1 sm:gap-2">
+                        <generic-button
+                          label="⌃"
+                          cssClass="admin-btn-step-action"
+                          (onClick)="moveStepUp(step)">
+                        </generic-button>
+
+                        <generic-button
+                          label="⌄"
+                          cssClass="admin-btn-step-action"
+                          (onClick)="moveStepDown(step)">
+                        </generic-button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+
+                @if (steps().length === 0) {
+                  <tr>
+                    <td colspan="3" class="empty-cell">
+                      No workflow step found.
+                    </td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+
+          @if (!isLoadingSteps() && steps().length > itemsPerPage) {
+            <div class="workflow-pagination flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+              <button
+                type="button"
+                [disabled]="currentPage() === 1"
+                (click)="goToPreviousPage()">
+                Previous
+              </button>
+
+              <span>Page {{ currentPage() }} of {{ getTotalPages() }}</span>
+
+              <button
+                type="button"
+                [disabled]="currentPage() === getTotalPages()"
+                (click)="goToNextPage()">
+                Next
+              </button>
+            </div>
+          }
+        </section>
+      }
+    }
+
+    @if (pageMode() === 'create') {
+      <section class="workflow-create w-full min-w-0">
+        <header class="workflow-create__header flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1>Workflow Management</h1>
+            <span>Create New Workflow</span>
+          </div>
+
+          <p>Workflow Management &gt; Create New Workflow</p>
+        </header>
+
+        @if (pageErrorMessage()) {
+          <div class="mb-3 w-full rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 sm:mb-4 sm:px-4">
+            {{ pageErrorMessage() }}
+          </div>
+        }
+
+        <form [formGroup]="createForm" class="workflow-create__form grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-2 xl:grid-cols-3">
+          <input-text-box
+            displayMode="outline"
+            label="Workflow Name"
+            placeholder=""
+            [frmGroup]="createForm"
+            controlName="workflowName">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Workflow Desc"
+            placeholder=""
+            [frmGroup]="createForm"
+            controlName="workflowDescription">
+          </input-text-box>
+
+          <input-number
+            displayMode="outline"
+            label="Account Opening Flag"
+            placeholder=""
+            [frmGroup]="createForm"
+            controlName="accountOpeningFlag"
+            [maxLen]="3">
+          </input-number>
+
+          <input-number
+            displayMode="outline"
+            label="Account Authentication Steps"
+            placeholder=""
+            [frmGroup]="createForm"
+            controlName="accountAuthenticationSteps"
+            [maxLen]="3">
+          </input-number>
+
+          <div class="workflow-create__actions flex flex-wrap items-center gap-2 sm:gap-3 sm:col-span-2 xl:col-span-3">
+            <generic-button
+              [label]="isCreating() ? 'Creating...' : 'Create'"
+              cssClass="admin-btn-search"
+              (onClick)="createWorkflow()">
+            </generic-button>
+
+            <button type="button" class="text-link" (click)="backToList()">
+              Back to List
+            </button>
+          </div>
+        </form>
+      </section>
+    }
+  </section>
+
+  <generic-modal
+    [isVisible]="successModalOpened()"
+    [modalTitle]="'Success'"
+    [cssClass]="'admin-workflow-success-modal'"
+    [closeOnBackdropClick]="true"
+    [showDefaultFooter]="true"
+    [showOkButton]="true"
+    [okButtonText]="'Close'"
+    [showCancelButton]="false"
+    (isVisibleChanged)="successModalOpened.set($event)"
+    (modalClosed)="closeSuccessModal()"
+    (modalResult)="closeSuccessModal()">
+
+    <section class="workflow-success-content">
+      <div class="workflow-success-content__icon">✓</div>
+      <h2>{{ successMessage() }}</h2>
+    </section>
+  </generic-modal>
+
+  @if (state.userModalOpened()) {
+    <div class="user-modal-backdrop" (click)="state.closeUserModal()"></div>
+
+    <div class="user-modal left-3 right-3 top-16 w-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 md:right-6 lg:right-8 xl:right-10">
+      <h3>Digital Onboarding</h3>
+      <p>
+        Logged in as:
+        <strong>{{ auth.currentAdmin()?.name || 'Admin' }}</strong>
+      </p>
+
+      <div class="user-modal__actions flex flex-wrap justify-end gap-2 sm:gap-3">
+        <generic-button
+          label="Close"
+          cssClass="admin-btn-secondary"
+          (onClick)="state.closeUserModal()">
+        </generic-button>
+
+        <generic-button
+          label="Sign Out"
+          cssClass="admin-btn-danger"
+          (onClick)="logout()">
+        </generic-button>
+      </div>
+    </div>
+  }
+</admin-layout>

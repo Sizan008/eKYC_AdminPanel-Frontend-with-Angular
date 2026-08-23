@@ -1,0 +1,15 @@
+<button
+  type="button"
+  class="admin-summary-card admin-summary-card--{{ type() }}"
+  [class.admin-summary-card--disabled]="!clickable()"
+  (click)="onCardClick()">
+
+  <div class="admin-summary-card__icon">
+    {{ icon() }}
+  </div>
+
+  <div>
+    <p>{{ title() }}</p>
+    <h2>{{ value() }}</h2>
+  </div>
+</button>

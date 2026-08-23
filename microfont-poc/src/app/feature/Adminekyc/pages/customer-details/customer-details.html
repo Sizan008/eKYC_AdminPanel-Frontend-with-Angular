@@ -1,0 +1,694 @@
+<admin-layout
+  [title]="'Digital Onboarding'"
+  [username]="getAdminName()"
+  [activeMenu]="activeMenu()"
+  [drawerOpened]="state.drawerOpened()"
+  (menuClicked)="state.toggleDrawer()"
+  (userClicked)="state.openUserModal()"
+  (dashboardClicked)="state.goToDashboard()"
+  (channelManagementClicked)="state.goToChannelManagement()"
+  (productManagementClicked)="state.goToProductManagement()"
+  (workflowManagementClicked)="state.goToWorkflowManagement()"
+  (parametersClicked)="state.goToParameters()"
+  (apiManagementClicked)="state.goToApiManagement()"
+  (authorizedClicked)="goToAuthorizedCustomers()"
+  (unauthorizedClicked)="goToUnauthorizedCustomers()"
+  (incompleteClicked)="goToIncompleteCustomers()"
+  (declinedClicked)="state.goToDeclinedCustomers()"
+  (ecVerificationClicked)="state.goToEcVerification()"
+  (userActivityLogClicked)="state.goToUserActivityLog()"
+  (kycReportByYearClicked)="state.goToKycReportByYear()">
+
+  @if (errorMessage()) {
+    <div class="mb-3 w-full rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 sm:mb-4 sm:px-4">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (actionMessage()) {
+    <div class="mb-3 w-full rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 sm:mb-4 sm:px-4">
+      {{ actionMessage() }}
+    </div>
+  }
+
+  @if (isLoading()) {
+    <section class="details-state w-full min-w-0 p-3 sm:p-4 md:p-5 lg:p-6 xl:p-8">
+      Loading customer details...
+    </section>
+  } @else if (!customer()) {
+    <section class="details-state w-full min-w-0 p-3 sm:p-4 md:p-5 lg:p-6 xl:p-8">
+      Customer details not found.
+
+      <div class="details-state__actions flex flex-wrap gap-2 sm:gap-3">
+        <generic-button
+          label="Back"
+          cssClass="admin-btn-secondary"
+          (onClick)="backToList()">
+        </generic-button>
+      </div>
+    </section>
+  } @else {
+    <section class="customer-details w-full min-w-0 space-y-3 p-2 sm:space-y-4 sm:p-3 md:p-4 lg:p-5 xl:p-6">
+      <header class="customer-details__header flex flex-col gap-3 md:flex-row md:items-start md:justify-between lg:gap-4 xl:gap-6">
+        <div>
+          <h1>
+            Customer's Name:
+            <span>{{ customer()?.customerName }}</span>
+          </h1>
+
+          <p>
+            Tracking No:
+            <strong>{{ customer()?.trackingNo || customer()?.applicationId || '-' }}</strong>
+          </p>
+          <div class="customer-action-buttons flex flex-wrap items-center gap-2 sm:gap-3">
+  @if (canAuthorize()) {
+    <generic-button
+      label="Authorize"
+      cssClass="admin-btn-authorize"
+      [enable]="!isActionLoading()"
+      (onClick)="openAuthorizeModal()">
+    </generic-button>
+  }
+
+  @if (canDecline()) {
+    <generic-button
+      label="Decline"
+      cssClass="admin-btn-decline"
+      [enable]="!isActionLoading()"
+      (onClick)="openDeclineModal()">
+    </generic-button>
+  }
+</div>
+        </div>
+
+        
+
+        <div class="customer-details__header-actions flex flex-wrap items-center gap-2 sm:gap-3">
+          <admin-status-badge
+            [label]="customer()?.status || 'default'"
+            [type]="customer()?.status || 'default'">
+          </admin-status-badge>
+
+          <generic-button
+            label="Back"
+            cssClass="admin-btn-secondary"
+            (onClick)="backToList()">
+          </generic-button>
+        </div>
+      </header>
+
+      @if (customer()?.declinedReason) {
+        <div
+          class="rounded-lg border px-3 py-2 text-sm font-semibold sm:px-4"
+          [class.border-red-300]="customer()?.status === 'declined'"
+          [class.bg-red-50]="customer()?.status === 'declined'"
+          [class.text-red-700]="customer()?.status === 'declined'"
+          [class.border-amber-300]="customer()?.status !== 'declined'"
+          [class.bg-amber-50]="customer()?.status !== 'declined'"
+          [class.text-amber-800]="customer()?.status !== 'declined'">
+          <strong>{{ customer()?.status === 'declined' ? 'Request Declined.' : 'CBS Error:' }}</strong>
+          {{ getCustomerReasonMessage() }}
+        </div>
+      }
+
+      @if (shouldShowServiceFlags()) {
+        @if (!isDebitRestrictionHidden()) {
+          <section class="service-panel__row w-full min-w-0">
+            <span>Debit Restriction Withdrawal</span>
+            <input
+              type="checkbox"
+              [checked]="debitRestrictionRequested()"
+              [disabled]="isDebitRestrictionCompleted() || isSubmittingServices()"
+              (change)="setDebitRestrictionRequested($event)" />
+          </section>
+        }
+
+        <section class="service-panel__grid grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-2 xl:gap-6">
+          <div class="service-panel__column">
+            <h4>User Selected Services</h4>
+
+            <label><input type="checkbox" [checked]="isServiceSelected(customer()?.alerts?.smsAlert)" disabled /> SMS Alert</label>
+            <label><input type="checkbox" [checked]="isServiceSelected(customer()?.alerts?.emailAlert)" disabled /> Email Alert</label>
+            <label><input type="checkbox" [checked]="isServiceSelected(customer()?.alerts?.chequeAlert)" disabled /> Cheque Book</label>
+            <label><input type="checkbox" [checked]="isServiceSelected(customer()?.alerts?.debitAlert)" disabled /> Debit Card</label>
+          </div>
+
+          <div class="service-panel__column">
+            <h4>Approved By Admin</h4>
+
+            <label>
+              <input
+                type="checkbox"
+                [checked]="smsApproved()"
+                [disabled]="isServiceApprovalLocked(customer()?.alerts?.smsAlertDone)"
+                (change)="setServiceApproval('sms', $event)" />
+              SMS Alert
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [checked]="emailApproved()"
+                [disabled]="isServiceApprovalLocked(customer()?.alerts?.emailAlertDone)"
+                (change)="setServiceApproval('email', $event)" />
+              Email Alert
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [checked]="chequeBookApproved()"
+                [disabled]="isServiceApprovalLocked(customer()?.alerts?.chequeAlertDone)"
+                (change)="setServiceApproval('cheque', $event)" />
+              Cheque Book
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                [checked]="debitCardApproved()"
+                [disabled]="isServiceApprovalLocked(customer()?.alerts?.debitAlertDone)"
+                (change)="setServiceApproval('debit', $event)" />
+              Debit Card
+            </label>
+          </div>
+        </section>
+
+        @if (shouldShowServiceSubmit()) {
+          <div class="service-panel__actions">
+            <generic-button
+              [label]="isSubmittingServices() ? 'Submitting...' : 'Submit'"
+              cssClass="admin-btn-search"
+              styles="width: 120px;"
+              [enable]="!isSubmittingServices()"
+              (onClick)="submitServiceChanges()">
+            </generic-button>
+          </div>
+        }
+      } @else {
+      <section class="alert-panel">
+        @if (!customer()?.alerts?.debitRestrictionHidden) {
+          <label>
+            <input
+              type="checkbox"
+              enabled
+              [checked]="customer()?.alerts?.debitRestrictionWithdrawal" />
+            Debit Restriction withdrawal
+          </label>
+        }
+
+        <div class="alert-panel__grid grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-2 xl:grid-cols-2">
+          <label>
+            <input
+              type="checkbox"
+              enabled
+              [checked]="customer()?.alerts?.smsAlert" />
+            SMS Alert
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              enabled
+              [checked]="customer()?.alerts?.smsAlertDone" />
+            <strong>Done</strong>
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              enabled
+              [checked]="customer()?.alerts?.emailAlert" />
+            Email Alert
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              enabled
+              [checked]="customer()?.alerts?.emailAlertDone" />
+            <strong>Done</strong>
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              enabled
+              [checked]="customer()?.alerts?.chequeAlert" />
+            Cheque Alert
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              enabled
+              [checked]="customer()?.alerts?.chequeAlertDone" />
+            <strong>Done</strong>
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              enabled
+              [checked]="customer()?.alerts?.debitAlert" />
+            Debit Alert
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              enabled
+              [checked]="customer()?.alerts?.debitAlertDone" />
+            <strong>Done</strong>
+          </label>
+        </div>
+      </section>
+
+      }
+
+      <section class="photo-compare-grid grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-4 xl:grid-cols-[minmax(260px,1.25fr)_repeat(3,minmax(190px,1fr))]">
+        <div class="photo-card photo-card--large photo-card--face">
+          <div class="w-full min-w-0">
+        <div class="mb-2 truncate text-sm font-semibold text-slate-700 sm:text-base">{{ 'Customer Photo' }}</div>
+        <file-preview
+          [fileData]="getFilePreviewData(getPhotoUrl('customer'), customer()?.customerName || 'customer-photo', 'image/jpeg')"
+          [width]="'100%'"
+          [height]="'360px'"
+          [showControls]="false"
+          [showDownload]="false"
+          [showFullscreen]="true"
+          placeholder="No document available">
+        </file-preview>
+      </div>
+        </div>
+
+        <div class="photo-card photo-card--face">
+          <div class="w-full min-w-0">
+        <div class="mb-2 truncate text-sm font-semibold text-slate-700 sm:text-base">{{ 'From NID Card' }}</div>
+        <file-preview
+          [fileData]="getFilePreviewData(getPhotoUrl('nid'), 'nid-photo', 'image/jpeg')"
+          [width]="'100%'"
+          [height]="'320px'"
+          [showControls]="false"
+          [showDownload]="false"
+          [showFullscreen]="true"
+          placeholder="No document available">
+        </file-preview>
+      </div>
+        </div>
+
+        <div class="photo-card photo-card--face">
+          <div class="w-full min-w-0">
+        <div class="mb-2 truncate text-sm font-semibold text-slate-700 sm:text-base">{{ 'From Porichoi API' }}</div>
+        <file-preview
+          [fileData]="getFilePreviewData(getPhotoUrl('porichoy'), 'porichoy-photo', 'image/jpeg')"
+          [width]="'100%'"
+          [height]="'320px'"
+          [showControls]="false"
+          [showDownload]="false"
+          [showFullscreen]="true"
+          placeholder="No document available">
+        </file-preview>
+      </div>
+        </div>
+
+        <div class="photo-card photo-card--face">
+          <div class="w-full min-w-0">
+        <div class="mb-2 truncate text-sm font-semibold text-slate-700 sm:text-base">{{ 'Uploaded/Captured Photo' }}</div>
+        <file-preview
+          [fileData]="getFilePreviewData(getPhotoUrl('captured'), 'captured-photo', 'image/jpeg')"
+          [width]="'100%'"
+          [height]="'320px'"
+          [showControls]="false"
+          [showDownload]="false"
+          [showFullscreen]="true"
+          placeholder="No document available">
+        </file-preview>
+      </div>
+        </div>
+      </section>
+
+      <section class="details-main-grid grid w-full grid-cols-1 gap-4 md:gap-5 lg:gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
+        <aside class="status-panel w-full min-w-0">
+          <div class="status-panel__title">
+            Status
+          </div>
+
+          @for (row of getStatusPanelRows(); track row.label) {
+            <div class="status-panel__row grid grid-cols-1 gap-1 sm:grid-cols-[minmax(120px,0.8fr)_minmax(0,1fr)] sm:gap-3">
+              <strong>{{ row.label }}</strong>
+              <span>{{ row.value }}</span>
+            </div>
+          }
+
+          @if (canDownloadCustomerFiles()) {
+            <div class="status-panel__actions grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <generic-button
+                [label]="isDownloadingReport() ? 'Downloading...' : 'Download Report'"
+                cssClass="admin-btn-search"
+                styles="width: 100%; min-width: 0;"
+                [enable]="!isDownloadingReport() && !isDownloadingPhotos()"
+                (onClick)="downloadReport()">
+              </generic-button>
+
+              <generic-button
+                [label]="isDownloadingPhotos() ? 'Downloading...' : 'Download Photos'"
+                cssClass="admin-btn-search"
+                styles="width: 100%; min-width: 0;"
+                [enable]="!isDownloadingReport() && !isDownloadingPhotos()"
+                (onClick)="downloadPhotos()">
+              </generic-button>
+            </div>
+          }
+        </aside>
+
+        <main class="profile-panel w-full min-w-0 overflow-hidden">
+          <nav class="profile-tabs flex w-full flex-wrap gap-1 sm:gap-2">
+            <button
+              type="button"
+              [class.active]="activeTab() === 'customerProfile'"
+              (click)="setTab('customerProfile')">
+              Customer Profile
+            </button>
+
+            <button
+              type="button"
+              [class.active]="activeTab() === 'nomineeProfile'"
+              (click)="setTab('nomineeProfile')">
+              Nominee Profile 1
+            </button>
+
+            <button
+              type="button"
+              [class.active]="activeTab() === 'documents'"
+              (click)="setTab('documents')">
+              Documents
+            </button>
+          </nav>
+
+          @if (activeTab() === 'customerProfile') {
+            <section class="profile-grid grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-2 xl:gap-6">
+              <admin-info-row
+                label="Full Name"
+                [value]="customer()?.customerName || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Father Name"
+                [value]="customer()?.fatherName || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Mother Name"
+                [value]="customer()?.motherName || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Email"
+                [value]="customer()?.email || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Mobile No"
+                [value]="customer()?.mobileNo || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="NID No"
+                [value]="customer()?.nidNo || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Gender"
+                [value]="customer()?.gender || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Date of Birth"
+                [value]="customer()?.dateOfBirth || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Occupation"
+                [value]="customer()?.occupation || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Designation"
+                [value]="customer()?.designation || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Monthly Income"
+                [value]="customer()?.monthlyIncome || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Source of Fund"
+                [value]="customer()?.sourceOfFund || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="TIN"
+                [value]="customer()?.tin || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Spouse Name"
+                [value]="customer()?.spouseName || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Present Address"
+                [value]="customer()?.presentAddress || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Permanent Address"
+                [value]="customer()?.permanentAddress || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Face Match"
+                [value]="getFaceScore()">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Authentication"
+                [value]="getAuthentication()">
+              </admin-info-row>
+            </section>
+          }
+
+          @if (activeTab() === 'nomineeProfile') {
+            <section class="profile-grid grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-2 xl:gap-6">
+              <admin-info-row
+                label="Nominee Name"
+                [value]="customer()?.nominee?.name || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Relation"
+                [value]="customer()?.nominee?.relation || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="NID No"
+                [value]="customer()?.nominee?.nidNo || '-'">
+              </admin-info-row>
+
+              <admin-info-row
+                label="Mobile No"
+                [value]="customer()?.nominee?.mobileNo || '-'">
+              </admin-info-row>
+
+              <div class="document-preview document-preview--nominee document-preview--contain">
+                <div class="w-full min-w-0">
+        <div class="mb-2 truncate text-sm font-semibold text-slate-700 sm:text-base">{{ 'Nominee Photo' }}</div>
+        <file-preview
+          [fileData]="getFilePreviewData(customer()?.documents?.nomineePhotoUrl || '', 'nominee-photo', 'image/jpeg')"
+          [width]="'100%'"
+          [height]="'320px'"
+          [showControls]="false"
+          [showDownload]="false"
+          [showFullscreen]="true"
+          placeholder="No document available">
+        </file-preview>
+      </div>
+              </div>
+            </section>
+          }
+
+          @if (activeTab() === 'documents') {
+            <section class="documents-grid grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 xl:grid-cols-3">
+              <div class="document-preview document-preview--contain">
+                <div class="w-full min-w-0">
+        <div class="mb-2 truncate text-sm font-semibold text-slate-700 sm:text-base">{{ 'Uploaded NID Front' }}</div>
+        <file-preview
+          [fileData]="getFilePreviewData(getDocumentUrl('nidFront'), 'nid-front', 'image/jpeg')"
+          [width]="'100%'"
+          [height]="'260px'"
+          [showControls]="false"
+          [showDownload]="false"
+          [showFullscreen]="true"
+          placeholder="No document available">
+        </file-preview>
+      </div>
+              </div>
+
+              <div class="document-preview document-preview--contain">
+                <div class="w-full min-w-0">
+        <div class="mb-2 truncate text-sm font-semibold text-slate-700 sm:text-base">{{ 'Uploaded NID Back' }}</div>
+        <file-preview
+          [fileData]="getFilePreviewData(getDocumentUrl('nidBack'), 'nid-back', 'image/jpeg')"
+          [width]="'100%'"
+          [height]="'260px'"
+          [showControls]="false"
+          [showDownload]="false"
+          [showFullscreen]="true"
+          placeholder="No document available">
+        </file-preview>
+      </div>
+              </div>
+
+              <div class="document-preview document-preview--contain document-preview--signature">
+                <div class="w-full min-w-0">
+        <div class="mb-2 truncate text-sm font-semibold text-slate-700 sm:text-base">{{ 'Uploaded Signature' }}</div>
+        <file-preview
+          [fileData]="getFilePreviewData(getDocumentUrl('signature'), 'signature', 'image/jpeg')"
+          [width]="'100%'"
+          [height]="'260px'"
+          [showControls]="false"
+          [showDownload]="false"
+          [showFullscreen]="true"
+          placeholder="No document available">
+        </file-preview>
+      </div>
+              </div>
+            </section>
+          }
+        </main>
+      </section>
+    </section>
+  }
+
+  <generic-modal
+    [isVisible]="authorizeModalOpened()"
+    [modalTitle]="'Authorize Customer'"
+    [cssClass]="'admin-customer-action-modal'"
+    [closeOnBackdropClick]="!isActionLoading()"
+    [showDefaultFooter]="true"
+    [showOkButton]="false"
+    [showCancelButton]="false"
+    (isVisibleChanged)="authorizeModalOpened.set($event)"
+    (modalCancelled)="closeAuthorizeModal()">
+
+    <section class="space-y-3 text-sm text-slate-700">
+      <p>Are you sure you want to authorize this customer?</p>
+
+      @if (authorizationRequirementMessage()) {
+        <div class="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 font-semibold text-amber-800">
+          {{ authorizationRequirementMessage() }}
+        </div>
+      }
+
+      @if (needsNewLoanBoAcceptanceReason()) {
+        <label class="block space-y-2">
+          <span class="font-semibold text-slate-800">Acceptance Reason</span>
+          <textarea
+            rows="4"
+            class="w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+            placeholder="Enter acceptance reason"
+            [value]="acceptanceReason()"
+            [disabled]="isActionLoading()"
+            (input)="acceptanceReason.set($any($event.target).value)">
+          </textarea>
+        </label>
+      }
+    </section>
+
+    <div slot="footer" class="flex flex-wrap justify-end gap-2 sm:gap-3">
+      <generic-button
+        label="Cancel"
+        cssClass="admin-btn-secondary"
+        [enable]="!isActionLoading()"
+        (onClick)="closeAuthorizeModal()">
+      </generic-button>
+
+      <generic-button
+        [label]="isActionLoading() ? 'Authorizing...' : 'Yes, Authorize'"
+        cssClass="admin-btn-authorize"
+        [enable]="canSubmitAuthorization()"
+        (onClick)="submitAuthorization()">
+      </generic-button>
+    </div>
+  </generic-modal>
+
+  <generic-modal
+    [isVisible]="declineModalOpened()"
+    [modalTitle]="'Decline Reason'"
+    [cssClass]="'admin-customer-action-modal'"
+    [closeOnBackdropClick]="!isActionLoading()"
+    [showDefaultFooter]="true"
+    [showOkButton]="false"
+    [showCancelButton]="false"
+    (isVisibleChanged)="declineModalOpened.set($event)"
+    (modalCancelled)="closeDeclineModal()">
+
+    <section class="space-y-3 text-sm text-slate-700">
+      <p>Please provide a decline reason.</p>
+
+      <textarea
+        rows="4"
+        class="w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+        placeholder="Enter decline reason"
+        [value]="declineReason()"
+        [disabled]="isActionLoading()"
+        (input)="declineReason.set($any($event.target).value)">
+      </textarea>
+    </section>
+
+    <div slot="footer" class="flex flex-wrap justify-end gap-2 sm:gap-3">
+      <generic-button
+        label="Cancel"
+        cssClass="admin-btn-secondary"
+        [enable]="!isActionLoading()"
+        (onClick)="closeDeclineModal()">
+      </generic-button>
+
+      <generic-button
+        [label]="isActionLoading() ? 'Declining...' : 'Decline'"
+        cssClass="admin-btn-decline"
+        [enable]="!isActionLoading() && !!declineReason().trim()"
+        (onClick)="submitDecline()">
+      </generic-button>
+    </div>
+  </generic-modal>
+
+  @if (state.userModalOpened()) {
+    <div class="user-modal-backdrop" (click)="state.closeUserModal()"></div>
+
+    <div class="user-modal left-3 right-3 top-16 w-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 md:right-6 lg:right-8 xl:right-10">
+      <h3>Digital Onboarding</h3>
+
+      <p>
+        Logged in as:
+        <strong>{{ auth.currentAdmin()?.name || 'Admin' }}</strong>
+      </p>
+
+      <div class="user-modal__actions flex flex-wrap justify-end gap-2 sm:gap-3">
+        <generic-button
+          label="Close"
+          cssClass="admin-btn-secondary"
+          (onClick)="state.closeUserModal()">
+        </generic-button>
+
+        <generic-button
+          label="Sign Out"
+          cssClass="admin-btn-danger"
+          (onClick)="logout()">
+        </generic-button>
+      </div>
+    </div>
+  }
+</admin-layout>

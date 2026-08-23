@@ -1,0 +1,48 @@
+:host {
+  display: block;
+}
+
+.admin-topbar {
+  height: 62px;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(90deg, #004b8d, #0072bc);
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.22);
+
+  &__menu {
+    width: 42px;
+    height: 38px;
+    border: 0;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    font-size: 23px;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+  }
+
+  &__title {
+    flex: 1;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+  }
+
+  &__user {
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+  }
+}
+

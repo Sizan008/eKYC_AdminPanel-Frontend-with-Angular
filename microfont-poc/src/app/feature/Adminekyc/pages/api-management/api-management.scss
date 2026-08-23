@@ -1,0 +1,268 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.api-management-page {
+  color: #0f172a;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+
+    div {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      color: #0f172a;
+      font-size: 25px;
+      font-weight: 500;
+    }
+
+    span {
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    p {
+      margin: 0;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
+
+  &__links {
+    margin-bottom: 18px;
+
+    button {
+      border: 0;
+      background: transparent;
+      color: #0284c7;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.api-table-card {
+  width: min(1220px, 100%);
+  margin: 8px auto 0;
+}
+
+.api-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #0f172a;
+
+  th,
+  td {
+    padding: 14px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.85);
+    text-align: left;
+    vertical-align: top;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  th {
+    font-weight: 700;
+  }
+
+  td {
+    font-weight: 400;
+  }
+
+  &__edit {
+    border: 0;
+    background: transparent;
+    color: #0284c7;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .empty-cell {
+    text-align: center;
+    color: #64748b;
+  }
+}
+
+.api-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 18px;
+
+  button {
+    min-width: 92px;
+    height: 34px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+  }
+
+  span {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.api-form-page {
+  color: #0f172a;
+}
+
+.api-form {
+  width: min(1280px, 100%);
+  display: grid;
+  gap: 16px 20px;
+  margin: 14px auto 0;
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 2px;
+
+    &--row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+}
+
+.text-link {
+  border: 0;
+  background: transparent;
+  color: #0284c7;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.api-success-content {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 12px 6px 4px;
+  text-align: center;
+
+  &__icon {
+    width: 58px;
+    height: 58px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #16a34a;
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 800;
+  }
+
+  h2 {
+    margin: 4px 0 0;
+    color: #0f172a;
+    font-size: 22px;
+    font-weight: 600;
+  }
+}
+
+.user-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.user-modal {
+  position: fixed;
+  z-index: 90;
+  padding: 20px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.24);
+
+  h3 {
+    margin: 0 0 8px;
+    color: #12365f;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0 0 18px;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 500;
+
+    strong {
+      color: #0f172a;
+      font-weight: 700;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+
+:host ::ng-deep .admin-api-success-modal {
+  max-width: 420px !important;
+}
+
+@media (max-width: 900px) {
+  .api-management-page__header {
+    align-items: flex-start;
+  }
+
+  .api-table-card {
+    overflow-x: auto;
+  }
+
+  .api-table {
+    min-width: 1100px;
+  }
+
+  .api-form {
+    width: 100%;
+  }
+}

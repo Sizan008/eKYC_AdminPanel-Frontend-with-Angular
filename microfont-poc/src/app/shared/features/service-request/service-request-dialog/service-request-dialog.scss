@@ -1,0 +1,94 @@
+.service-request-page-wrapper {
+  color: #111827 !important;
+  background-color: rgb(255, 255, 255) !important;
+  min-height: 200px !important;
+  padding: 1.5rem !important;
+  border-radius: 0.5rem !important;
+
+  // Material tabs theme styling
+  ::ng-deep .mat-mdc-tab-group {
+    margin-bottom: 1.5rem;
+  }
+
+  ::ng-deep .mat-mdc-tab-header {
+    border-bottom: 2px solid #e5e7eb;
+  }
+
+  ::ng-deep .mat-mdc-tab-labels {
+    gap: 0.5rem;
+  }
+
+  ::ng-deep .mat-mdc-tab {
+    min-width: 160px;
+    height: 48px;
+    padding: 0 24px;
+    font-family: "Roboto", "Inter", "Helvetica Neue", sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 0.005em;
+    color: var(--theme-text-light, #6b7280);
+    transition: all 0.2s ease;
+    border-radius: 8px 8px 0 0;
+
+    &:hover {
+      background-color: rgba(var(--theme-primary-rgb, 8, 106, 216), 0.05);
+      color: var(--theme-primary, #086ad8);
+    }
+  }
+
+  ::ng-deep .mat-mdc-tab.mdc-tab--active {
+    color: var(--theme-primary, #086ad8);
+    font-weight: 600;
+
+    .mdc-tab__text-label {
+      color: var(--theme-primary, #086ad8);
+    }
+  }
+
+  ::ng-deep .mat-mdc-tab-body-content {
+    padding-top: 1rem;
+  }
+
+  ::ng-deep .mat-mdc-tab-header-pagination {
+    display: none;
+  }
+
+  ::ng-deep .mdc-tab-indicator__content--underline {
+    border-color: var(--theme-primary, #086ad8);
+    border-width: 3px;
+    border-radius: 3px 3px 0 0;
+  }
+
+  ::ng-deep .mat-mdc-tab:not(.mdc-tab--active) {
+    .mdc-tab-indicator__content--underline {
+      border-color: transparent;
+    }
+  }
+
+  // Smooth animation for tab content
+  ::ng-deep .mat-mdc-tab-body.mat-mdc-tab-body-active {
+    animation: fadeIn 0.3s ease-in;
+  }
+}
+
+// Tab navigation styles (legacy - kept for backward compatibility)
+.tab-navigation {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.tab-content {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

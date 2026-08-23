@@ -1,0 +1,74 @@
+<div class="page-wrapper">
+    <div class="panel">
+
+        <div class="grid grid-cols-1 md:grid-cols-1 gap-0">
+            <app-expansion-panel-header [isOpenSignal]="businessHeaderPanel" [panelTitle]="'Change Details'" />
+            <div class="container">
+
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center p-2 gap-3">
+                        <!-- Back Button -->
+                        <button class="flex items-center px-4 py-2 mx-1 bg-blue-400 text-white rounded" type="button"
+                            (click)="goBack()">
+                            <mat-icon class="mr-2">arrow_back</mat-icon>
+                            Back
+                        </button>
+
+
+                        <!-- Page Title -->
+                        <span class="font-semibold text-lg">Approval Movement</span>
+                    </div>
+
+                    <div class="flex justify-center sm:justify-end mt-1.5 mr-3">
+                        <div class="flex gap-3">
+                            <input  type="text" [(ngModel)]="rejectReason" placeholder="Remarks"
+                                class="border rounded px-2 py-1" required>
+                            <button mat-flat-button color="warn"
+                                class="flex items-center px-4 py-2 mx-1 bg-red-400 text-white rounded" type="button"
+                                (click)="onReject()">
+                                <mat-icon class="mr-2">close</mat-icon>
+                                Reject
+                            </button>
+                            <button mat-flat-button color="primary"
+                                class="flex items-center px-4 py-2 mx-1 bg-green-400 text-white rounded" type="button"
+                                (click)="onApprove()">
+                                <mat-icon class="mr-2">check_circle</mat-icon>
+                                Approve
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full h-full bg-accent-50 p-3">
+                    <!-- Case 1: Only Change Request -->
+                    <ng-container *ngIf="!hasPreviousContent(); else withPrevious">
+                        <mat-card class="w-full">
+                            <div class="font-semibold text-xl pt-1 text-center bg-accent-50">
+                                Change Request
+                            </div>
+                            <ng-template #dynamicHostLeft></ng-template>
+                        </mat-card>
+                    </ng-container>
+
+                    <!-- Case 2: Change Request + Previous Data -->
+                    <ng-template #withPrevious>
+                        <div class="grid sm:grid-cols-2 gap-x-5">
+                            <mat-card>
+                                <div class="font-semibold text-xl pt-1 text-center bg-accent-50">
+                                    Change Request
+                                </div>
+                                <ng-template #dynamicHostLeft></ng-template>
+                            </mat-card>
+                            <mat-card>
+                                <div class="font-semibold text-xl pt-1 text-center bg-accent-50">
+                                    Previous Data
+                                </div>
+                                <ng-template #dynamicHostRight></ng-template>
+                            </mat-card>
+                        </div>
+                    </ng-template>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

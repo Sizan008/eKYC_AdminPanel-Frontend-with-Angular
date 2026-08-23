@@ -1,0 +1,56 @@
+:host {
+  display: block;
+}
+
+.admin-filter-panel {
+  display: grid;
+  justify-content: center;
+  gap: 24px;
+  position: relative;
+  padding: 0;
+
+  h3 {
+    margin: 0 0 10px;
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 700;
+  }
+}
+
+.filter-column {
+  display: grid;
+  align-content: start;
+}
+
+/* Keep the direct Microfont controls fluid without changing shared source styles. */
+:host ::ng-deep input-text-box,
+:host ::ng-deep input-date,
+:host ::ng-deep input-number {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+:host ::ng-deep .custom-input {
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.filter-actions {
+  position: static;
+  display: flex;
+  gap: 12px;
+}
+
+:host ::ng-deep .admin-btn-reset:hover,
+:host ::ng-deep button.admin-btn-reset:hover {
+  background: red !important;
+  border-color: #475569 !important;
+}
+
+:host ::ng-deep .admin-btn-search:hover,
+:host ::ng-deep button.admin-btn-search:hover {
+  background: green !important;
+  border-color: #1d4ed8 !important;
+}

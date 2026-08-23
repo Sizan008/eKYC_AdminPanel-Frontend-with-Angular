@@ -1,0 +1,110 @@
+:host {
+  display: block;
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+.admin-layout {
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #eef3f8;
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+.admin-layout__body {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.admin-layout__content {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
+}
+
+/*
+  Keep Microfont controls untouched and size them only inside the Admin eKYC
+  feature. These values follow the compact Leads-project proportions.
+*/
+:host ::ng-deep .admin-layout__content input-text-box,
+:host ::ng-deep .admin-layout__content input-number,
+:host ::ng-deep .admin-layout__content input-date,
+:host ::ng-deep .admin-layout__content input-select-option-field {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+:host ::ng-deep .admin-layout__content input-text-box .custom-input,
+:host ::ng-deep .admin-layout__content input-number .custom-input,
+:host ::ng-deep .admin-layout__content input-date .custom-input,
+:host ::ng-deep .admin-layout__content input-select-option-field .custom-select,
+:host ::ng-deep .admin-layout__content .custom-select {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  box-sizing: border-box !important;
+  font-size: 13px !important;
+}
+
+:host ::ng-deep .admin-layout__content input-number input.custom-input {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+:host ::ng-deep .admin-layout__content .floating-input-label,
+:host ::ng-deep .admin-layout__content .input-label {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+:host ::ng-deep .admin-layout__content generic-button .a_demo_three:not(.admin-btn-step-action) {
+  width: auto !important;
+  min-width: 96px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  padding: 0 14px !important;
+  border-radius: 4px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+:host ::ng-deep .admin-layout__content .admin-btn-search,
+:host ::ng-deep .admin-layout__content .admin-btn-reset,
+:host ::ng-deep .admin-layout__content .admin-btn-kyc-reset {
+  width: 104px !important;
+  min-width: 104px !important;
+}
+
+:host ::ng-deep .admin-layout__content .admin-btn-download {
+  min-width: 120px !important;
+}
+
+:host ::ng-deep .admin-layout__content .admin-btn-kyc-report {
+  min-width: 132px !important;
+}
+
+@media (min-width: 640px) {
+  :host ::ng-deep .admin-layout__content input-text-box .custom-input,
+  :host ::ng-deep .admin-layout__content input-number .custom-input,
+  :host ::ng-deep .admin-layout__content input-date .custom-input,
+  :host ::ng-deep .admin-layout__content input-select-option-field .custom-select,
+  :host ::ng-deep .admin-layout__content .custom-select {
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
+  }
+}

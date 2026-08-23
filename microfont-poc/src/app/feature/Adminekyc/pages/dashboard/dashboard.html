@@ -1,0 +1,134 @@
+<admin-layout
+  [title]="'Digital Onboarding'"
+  [username]="getAdminName()"
+  [activeMenu]="'dashboard'"
+  [drawerOpened]="state.drawerOpened()"
+  (menuClicked)="state.toggleDrawer()"
+  (userClicked)="state.openUserModal()"
+  (dashboardClicked)="state.goToDashboard()"
+  (channelManagementClicked)="state.goToChannelManagement()"
+  (productManagementClicked)="state.goToProductManagement()"
+  (workflowManagementClicked)="state.goToWorkflowManagement()"
+  (parametersClicked)="state.goToParameters()"
+  (apiManagementClicked)="state.goToApiManagement()"
+  (authorizedClicked)="goToAuthorizedCustomers()"
+  (unauthorizedClicked)="goToUnauthorizedCustomers()"
+  (incompleteClicked)="goToIncompleteCustomers()"
+  (declinedClicked)="state.goToDeclinedCustomers()"
+  (ecVerificationClicked)="state.goToEcVerification()"
+  (userActivityLogClicked)="state.goToUserActivityLog()"
+  (kycReportByYearClicked)="state.goToKycReportByYear()">
+
+  @if (summary().licenceError) {
+    <div class="mb-3 w-full rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-800 sm:mb-4 sm:px-4">
+      {{ summary().licenceError }}
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="mb-3 w-full rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 sm:mb-4 sm:px-4">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <section class="dashboard-hero flex w-full flex-col gap-4 p-4 sm:p-5 md:flex-row md:items-center md:justify-between lg:p-6 xl:p-7">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Customer onboarding status overview</p>
+    </div>
+
+    <generic-button
+      [label]="isLoading() ? 'Refreshing...' : 'Refresh'"
+      cssClass="admin-btn-secondary"
+      [enable]="!isLoading()"
+      (onClick)="loadDashboardSummary()">
+    </generic-button>
+  </section>
+
+  <section class="summary-grid grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-4 xl:gap-6">
+  <admin-summary-card
+    title="Total Onboarded Customers"
+    [value]="summary().total"
+    icon="👥"
+    type="total"
+    [clickable]="false">
+  </admin-summary-card>
+
+  <admin-summary-card
+    title="Authorized Customers"
+    [value]="summary().authorized"
+    icon="✓"
+    type="authorized"
+    (cardClicked)="goToAuthorizedCustomers()">
+  </admin-summary-card>
+
+  <admin-summary-card
+    title="Unauthorized Customers"
+    [value]="summary().unauthorized"
+    icon="!"
+    type="unauthorized"
+    (cardClicked)="goToUnauthorizedCustomers()">
+  </admin-summary-card>
+
+  <admin-summary-card
+    title="Incomplete Customers"
+    [value]="summary().incomplete"
+    icon="⌛"
+    type="incomplete"
+    (cardClicked)="goToIncompleteCustomers()">
+  </admin-summary-card>
+</section>
+
+  <section class="dashboard-chart-section mt-4 w-full max-w-full sm:mt-5 md:mt-6 lg:max-w-3xl xl:max-w-4xl">
+    <div class="relative w-full min-w-0 overflow-hidden rounded-xl bg-white p-3 shadow-sm sm:p-4 md:p-5 lg:p-6">
+      @if (chartReady()) {
+        <common-donut-chart
+          [headerTitle]="'Customer Status Chart'"
+          [dataByRange]="chartDataByRange()"
+          [range]="'weekly'"
+          [height]="340"
+          [colors]="['#16a34a', '#ef4444', '#f59e0b']"
+          [showWeekly]="false"
+          [showMonthly]="false"
+          [showYearly]="false">
+        </common-donut-chart>
+
+        <div class="pointer-events-none absolute left-1/2 top-[46%] flex -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center">
+          <span class="max-w-28 text-[10px] font-semibold leading-tight text-slate-500 sm:max-w-36 sm:text-xs">Total Onboarding Customers</span>
+          <strong class="mt-1 text-xl font-extrabold text-slate-800 sm:text-2xl md:text-3xl">{{ chartTotal() }}</strong>
+        </div>
+      } @else {
+        <div class="flex h-[388px] w-full items-center justify-center px-4 text-center text-sm font-medium text-slate-500">
+          {{ isLoading() ? 'Loading customer status chart...' : 'No customer status data available.' }}
+        </div>
+      }
+    </div>
+  </section>
+
+  @if (state.userModalOpened()) {
+    <div class="user-modal-backdrop" (click)="state.closeUserModal()"></div>
+
+    <div class="user-modal left-3 right-3 top-16 w-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 md:right-6 lg:right-8 xl:right-10">
+      <h3>Digital Onboarding</h3>
+
+      <p>
+        Logged in as:
+        <strong>{{ auth.currentAdmin()?.name || 'Admin' }}</strong>
+      </p>
+
+      <div class="user-modal__actions flex flex-wrap justify-end gap-2 sm:gap-3">
+        <generic-button
+          label="Close"
+          cssClass="admin-btn-secondary"
+          (onClick)="state.closeUserModal()">
+        </generic-button>
+
+        <generic-button
+          label="Sign Out"
+          cssClass="admin-btn-danger"
+          (onClick)="logout()">
+        </generic-button>
+      </div>
+    </div>
+  }
+</admin-layout>

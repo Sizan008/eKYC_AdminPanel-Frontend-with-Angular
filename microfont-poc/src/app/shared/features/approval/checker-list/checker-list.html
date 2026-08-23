@@ -1,0 +1,47 @@
+<div class="page-wrapper">
+  <div class="panel">
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-0">
+      <app-expansion-panel-header [isOpenSignal]="businessHeaderPanel" [panelTitle]="'Pending Approval'" />
+      <div class="container">
+        <div class="component-section mt-3">
+          <generic-data-grid
+            [id]="'enhanced-transactions'"
+            [initPageSize]="8"
+            [enableSelection]="false"
+            [showProgressButton]="true"
+            [showEditButton]="false"
+            [showDeleteButton]="false"
+            [showViewButton]="true"
+            [showPrintButton]="false"
+            [useInlineEdit]="false"
+            [dataSource]="dataSource"
+            [selectedColumns]="[
+              'setId','functionName','actionType','remarks','recordUserId'
+            ]"
+            [customColumnNames]="{
+              setId:'Set',
+              functionName:'Function',
+              actionType:'Last Action',
+              remarks:'Remarks',
+              recordUserId:'Record User'
+            }"
+            (onFHViewClick)="view($event)"
+            (onFHProgressClick)="handleProgressClick($event)">
+          </generic-data-grid>
+
+          <generic-modal
+            [isVisible]="isModalVisible"
+            [modalTitle]="modalTitle"
+            [modalComponent]="modalComponent"
+            [modalComponentData]="modalComponentData"
+            [cssClass]="'modal-sm'"
+            [showOkButton]="false"
+            (isVisibleChanged)="onModalVisibilityChange($event)"
+            (modalResult)="onModalResult($event)">
+          </generic-modal>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

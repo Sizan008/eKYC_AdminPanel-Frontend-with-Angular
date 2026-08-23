@@ -1,0 +1,607 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.details-state {
+  min-height: 280px;
+  display: grid;
+  place-items: center;
+  color: #334155;
+  font-size: 18px;
+  font-weight: 800;
+
+  &__actions {
+    margin-top: 16px;
+  }
+}
+
+.customer-details {
+  color: #0f172a;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 16px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #0ea5c6;
+
+    h1 {
+      margin: 0;
+      color: #0f172a;
+      font-size: 30px;
+      line-height: 1.2;
+      font-weight: 500;
+
+      span {
+        margin-left: 8px;
+        font-weight: 400;
+      }
+    }
+
+    p {
+      margin: 8px 0 0;
+      color: #475569;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+
+  &__header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
+.alert-panel {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 22px;
+  padding: 0 0 12px;
+  border-bottom: 1px solid #0ea5c6;
+
+  label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  input {
+    width: 14px;
+    height: 14px;
+  }
+
+  &__grid {
+    display: grid;
+    gap: 10px 8px;
+  }
+}
+
+.service-panel__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #0ea5c6;
+  color: #0f172a;
+  font-size: 15px;
+  font-weight: 400;
+
+  input[type='checkbox'] {
+    width: 16px;
+    height: 16px;
+
+    &:not(:disabled) {
+      cursor: pointer;
+    }
+  }
+}
+
+.service-panel__grid {
+  display: grid;
+  gap: 24px;
+  margin-top: 12px;
+  margin-bottom: 18px;
+
+  h4 {
+    margin: 0 0 12px;
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 9px;
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 400;
+  }
+}
+
+.service-panel__column {
+  display: grid;
+  align-content: start;
+
+  input[type='checkbox'] {
+    width: 16px;
+    height: 16px;
+
+    &:not(:disabled) {
+      cursor: pointer;
+    }
+  }
+}
+
+.service-panel__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: -4px 0 18px;
+}
+
+/* Top photo comparison */
+
+.photo-compare-grid {
+  display: grid;
+  align-items: start;
+  gap: 28px;
+  margin: 22px 0;
+}
+
+.photo-card {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+
+  > h3 {
+    display: none;
+  }
+
+  &--large {
+    align-self: stretch;
+  }
+}
+
+/* Main details area */
+
+.details-main-grid {
+  display: grid;
+  gap: 30px;
+  align-items: start;
+}
+
+.status-panel {
+  background: #ffffff;
+  border: 1px solid #d9dee7;
+  border-radius: 3px;
+  overflow: hidden;
+
+  &__title {
+    padding: 14px 18px;
+    background: #334047;
+    color: #ffffff;
+    font-weight: 800;
+  }
+
+  &__row {
+    display: grid;
+    gap: 10px;
+    padding: 14px 18px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #0f172a;
+    font-size: 16px;
+
+    strong {
+      font-weight: 700;
+    }
+
+    span {
+      text-align: right;
+      font-weight: 400;
+    }
+  }
+
+  &__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 12px 14px 14px;
+    border-top: 1px solid #e5e7eb;
+  }
+}
+
+.profile-panel {
+  min-width: 0;
+}
+
+.profile-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 22px;
+  border-bottom: 1px solid #cbd5e1;
+
+  button {
+    min-height: 42px;
+    padding: 0 18px;
+    border: 1px solid transparent;
+    border-bottom: 0;
+    background: transparent;
+    color: #0284c7;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+
+    &.active {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      color: #334155;
+    }
+  }
+}
+
+.profile-grid {
+  display: grid;
+  gap: 18px 34px;
+  
+}
+/* Customer Profile / Nominee Profile details font control */
+
+
+/* Documents */
+
+.documents-grid {
+  display: grid;
+  gap: 22px 40px;
+  align-items: start;
+}
+
+.document-preview {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+
+  > h3 {
+    display: none;
+  }
+
+  &--signature {
+    max-width: 280px;
+    max-height: 420px;
+  }
+
+  &--nominee {
+    grid-column: 1 / -1;
+    max-width: 280px;
+    max-height: 420px;
+  }
+}
+
+/* User modal */
+
+.user-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(15, 23, 42, 0.25);
+}
+
+.user-modal {
+  position: fixed;
+  z-index: 60;
+  padding: 20px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.24);
+
+  h3 {
+    margin: 0 0 8px;
+    color: #12365f;
+    font-size: 18px;
+    font-weight: 900;
+  }
+
+  p {
+    margin: 0 0 18px;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 600;
+
+    strong {
+      color: #0f172a;
+      font-weight: 800;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+
+/* Top photo section: show full photo, no duplicate heading, no bottom crop */
+
+:host ::ng-deep .photo-card--face admin-file-preview,
+:host ::ng-deep .photo-card--face file-preview {
+  display: block;
+  width: 100% !important;
+ 
+  
+  overflow: hidden !important;
+  
+}
+
+:host ::ng-deep .photo-card--face img,
+:host ::ng-deep .photo-card--face .file-preview img,
+:host ::ng-deep .photo-card--face .preview-image,
+:host ::ng-deep .photo-card--face .file-preview__image {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  display: block !important;
+  background: #ffffff !important;
+}
+
+:host ::ng-deep .photo-card--face .file-preview,
+:host ::ng-deep .photo-card--face .preview,
+:host ::ng-deep .photo-card--face .file-preview__body,
+:host ::ng-deep .photo-card--face .file-preview-container {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: visible !important;
+  background: #ffffff !important;
+}
+
+/* Documents: full image must be visible, not cropped */
+
+:host ::ng-deep .document-preview--contain admin-file-preview,
+:host ::ng-deep .document-preview--contain file-preview {
+  display: block;
+  width: 100% !important;
+  overflow: visible !important;
+}
+
+:host ::ng-deep .document-preview--contain admin-file-preview *,
+:host ::ng-deep .document-preview--contain file-preview * {
+  box-sizing: border-box !important;
+}
+
+:host ::ng-deep .document-preview--contain img,
+:host ::ng-deep .document-preview--contain .file-preview img,
+:host ::ng-deep .document-preview--contain .preview-image,
+:host ::ng-deep .document-preview--contain .file-preview__image {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: calc(100% - 42px) !important;
+
+  object-fit: contain !important;
+  object-position: center center !important;
+  display: block !important;
+  background: #ffffff !important;
+}
+
+:host ::ng-deep .document-preview--contain .file-preview,
+:host ::ng-deep .document-preview--contain .preview,
+:host ::ng-deep .document-preview--contain .file-preview__body,
+:host ::ng-deep .document-preview--contain .file-preview-container {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: visible !important;
+  background: #ffffff !important;
+}
+
+/* Shared file preview container */
+
+:host ::ng-deep admin-file-preview {
+  display: block;
+}
+
+:host ::ng-deep admin-file-preview .file-preview,
+:host ::ng-deep file-preview .file-preview {
+  border-radius: 6px;
+}
+
+/* Responsive */
+
+@media (max-width: 1280px) {
+  .photo-compare-grid {
+  }
+
+  .details-main-grid {
+  }
+
+  .documents-grid {
+  }
+}
+
+@media (max-width: 980px) {
+  .details-main-grid {
+  }
+
+  .profile-grid,
+  .documents-grid {
+  }
+}
+
+@media (max-width: 720px) {
+  .customer-details {
+    &__header {
+
+      h1 {
+        font-size: 24px;
+      }
+    }
+
+    &__header-actions {
+      flex-wrap: wrap;
+    }
+  }
+
+  .photo-compare-grid {
+  }
+
+  .alert-panel__grid {
+  }
+
+  .status-panel {
+    &__row {
+      gap: 4px;
+
+      span {
+        text-align: left;
+      }
+    }
+
+    &__actions {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .user-modal {
+    left: 16px;
+    right: 16px;
+    width: auto;
+  }
+}
+
+:host ::ng-deep .admin-btn-authorize:hover,
+:host ::ng-deep button.admin-btn-authorize:hover {
+  background: #15803d !important;
+  border-color: #15803d !important;
+}
+
+:host ::ng-deep .admin-btn-decline,
+:host ::ng-deep button.admin-btn-decline {
+  background: #dc2626 !important;
+  border-color: #dc2626 !important;
+  color: #ffffff !important;
+}
+
+:host ::ng-deep .admin-btn-decline:hover,
+:host ::ng-deep button.admin-btn-decline:hover {
+  background: #b91c1c !important;
+  border-color: #b91c1c !important;
+}
+
+.customer-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 14px 0 24px;
+  
+}
+/* Customer Profile / Nominee Profile details font control */
+
+.profile-grid {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* admin-info-row wrapper er vitore label/value control */
+:host ::ng-deep admin-info-row {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #0f172a !important;
+}
+
+/* Label: Full Name, Father Name, Mobile No etc. */
+:host ::ng-deep admin-info-row strong,
+:host ::ng-deep admin-info-row label,
+:host ::ng-deep admin-info-row .label,
+:host ::ng-deep admin-info-row .info-label,
+:host ::ng-deep admin-info-row .admin-info-row__label {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+}
+
+/* Value: Fahim Shahryer Sizan, md Abdur Rouf etc. */
+:host ::ng-deep admin-info-row span,
+:host ::ng-deep admin-info-row p,
+:host ::ng-deep admin-info-row .value,
+:host ::ng-deep admin-info-row .info-value,
+:host ::ng-deep admin-info-row .admin-info-row__value {
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  color: #0f172a !important;
+}
+/* Make Retry / Download File buttons smaller inside admin-file-preview */
+
+:host ::ng-deep admin-file-preview .file-preview__actions,
+:host ::ng-deep file-preview .file-preview__actions,
+:host ::ng-deep admin-file-preview .preview-actions,
+:host ::ng-deep file-preview .preview-actions,
+:host ::ng-deep admin-file-preview .file-preview-actions,
+:host ::ng-deep file-preview .file-preview-actions {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 6px 8px !important;
+  flex-wrap: nowrap !important;
+}
+
+:host ::ng-deep admin-file-preview .file-preview__actions button,
+:host ::ng-deep file-preview .file-preview__actions button,
+:host ::ng-deep admin-file-preview .preview-actions button,
+:host ::ng-deep file-preview .preview-actions button,
+:host ::ng-deep admin-file-preview .file-preview-actions button,
+:host ::ng-deep file-preview .file-preview-actions button {
+  min-width: 74px !important;
+  max-width: 92px !important;
+  height: 30px !important;
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+  line-height: 1.1 !important;
+  border-radius: 18px !important;
+  white-space: normal !important;
+}
+
+:host ::ng-deep admin-file-preview .file-preview__actions svg,
+:host ::ng-deep file-preview .file-preview__actions svg,
+:host ::ng-deep admin-file-preview .preview-actions svg,
+:host ::ng-deep file-preview .preview-actions svg,
+:host ::ng-deep admin-file-preview .file-preview-actions svg,
+:host ::ng-deep file-preview .file-preview-actions svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+/* Extra compact version */
+
+:host ::ng-deep admin-file-preview button,
+:host ::ng-deep file-preview button {
+  min-width: 110px !important;
+  max-width: 78px !important;
+  height: 48px !important;
+  padding: 3px 6px !important;
+  font-size: 12px !important;
+}
+
+/* File preview Retry / Download icon actual control */
+
+:host ::ng-deep .photo-card--face .preview-error button mat-icon,
+:host ::ng-deep .photo-card--face .no-preview button mat-icon,
+:host ::ng-deep .photo-card--face button mat-icon,
+:host ::ng-deep .document-preview--contain .preview-error button mat-icon,
+:host ::ng-deep .document-preview--contain .no-preview button mat-icon,
+:host ::ng-deep .document-preview--contain button mat-icon {
+  font-size: 28px !important;
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  margin-right: 4px !important;
+}
+

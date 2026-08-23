@@ -1,0 +1,119 @@
+<admin-layout
+  [title]="'Digital Onboarding'"
+  [username]="getAdminName()"
+  [activeMenu]="getActiveMenu()"
+  [drawerOpened]="state.drawerOpened()"
+  (menuClicked)="state.toggleDrawer()"
+  (userClicked)="state.openUserModal()"
+  (dashboardClicked)="backToDashboard()"
+  (channelManagementClicked)="state.goToChannelManagement()"
+  (productManagementClicked)="state.goToProductManagement()"
+  (workflowManagementClicked)="state.goToWorkflowManagement()"
+  (parametersClicked)="state.goToParameters()"
+  (apiManagementClicked)="state.goToApiManagement()"
+  (authorizedClicked)="goToList('authorized')"
+  (unauthorizedClicked)="goToList('unauthorized')"
+  (incompleteClicked)="goToList('incomplete')"
+  (declinedClicked)="goToList('declined')"
+  (ecVerificationClicked)="state.goToEcVerification()"
+  (userActivityLogClicked)="state.goToUserActivityLog()"
+  (kycReportByYearClicked)="state.goToKycReportByYear()">
+
+  <admin-filter-panel
+    [form]="searchForm()"
+    (formChanged)="updateSearchForm($event)"
+    (resetClicked)="resetSearch()"
+    (searchClicked)="searchCustomers()">
+  </admin-filter-panel>
+
+  <section class="customer-result-header w-full min-w-0 space-y-2 px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6">
+    <div class="customer-result-header__line"></div>
+
+    <div class="customer-result-header__row flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between md:gap-4">
+      <h2>
+        {{ pageTitle() }}:
+        <span>{{ totalCount() }}</span>
+      </h2>
+
+      <generic-button
+        label="Download this Customers Photos and Signatures"
+        cssClass="admin-btn-primary">
+      </generic-button>
+    </div>
+  </section>
+
+  @if (errorMessage()) {
+    <div class="customer-list-error mx-auto mb-3 w-full max-w-[1120px] rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 sm:mb-4 sm:px-4">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <section class="customer-list-card w-full min-w-0 space-y-3 p-2 sm:space-y-4 sm:p-3 md:p-4 lg:p-5 xl:p-6">
+    @if (isLoading()) {
+      <div class="customer-list-state w-full min-w-0 p-3 text-center sm:p-4 md:p-5">
+        Loading customers...
+      </div>
+    } @else if (!customers().length) {
+      <div class="customer-list-state w-full min-w-0 p-3 text-center sm:p-4 md:p-5">
+        {{ pageConfig().emptyMessage }}
+      </div>
+    } @else {
+      @for (customer of customers(); track customer.id) {
+        <admin-customer-summary-card
+          [customer]="customer"
+          (detailsClicked)="viewDetails($event)">
+        </admin-customer-summary-card>
+      }
+    }
+  </section>
+
+  @if (!isLoading() && totalPages() > 1) {
+    <div class="customer-pagination mx-auto mt-4 flex w-full max-w-[1120px] flex-wrap items-center justify-center gap-2 px-2 sm:mt-5 sm:gap-3 sm:px-3 md:px-4">
+      <button
+        type="button"
+        [disabled]="!canGoPrevious()"
+        (click)="goToPreviousPage()">
+        Previous
+      </button>
+
+      <span>
+        Page {{ currentPage() }} of {{ totalPages() }}
+        - {{ pageSize() }} per page
+      </span>
+
+      <button
+        type="button"
+        [disabled]="!canGoNext()"
+        (click)="goToNextPage()">
+        Next
+      </button>
+    </div>
+  }
+
+  @if (state.userModalOpened()) {
+    <div class="user-modal-backdrop" (click)="state.closeUserModal()"></div>
+
+    <div class="user-modal left-3 right-3 top-16 w-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 md:right-6 lg:right-8 xl:right-10">
+      <h3>Digital Onboarding</h3>
+
+      <p>
+        Logged in as:
+        <strong>{{ auth.currentAdmin()?.name || 'Admin' }}</strong>
+      </p>
+
+      <div class="user-modal__actions flex flex-wrap justify-end gap-2 sm:gap-3">
+        <generic-button
+          label="Close"
+          cssClass="admin-btn-secondary"
+          (onClick)="state.closeUserModal()">
+        </generic-button>
+
+        <generic-button
+          label="Sign Out"
+          cssClass="admin-btn-danger"
+          (onClick)="logout()">
+        </generic-button>
+      </div>
+    </div>
+  }
+</admin-layout>

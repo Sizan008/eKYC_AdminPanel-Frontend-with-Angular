@@ -1,0 +1,62 @@
+<div class="adminekyc-shell min-h-screen w-full min-w-0 overflow-x-hidden">
+  @switch (currentPage()) {
+    @case ('login') {
+      <app-login (loginSuccess)="onLoginSuccess()"></app-login>
+    }
+
+    @case ('dashboard') {
+      <app-dashboard></app-dashboard>
+    }
+   @case ('channelManagement') {
+  <app-channel-management></app-channel-management>
+}
+
+@case ('productManagement') {
+    <app-product-management></app-product-management>
+  }
+@case ('workflowManagement') {
+  <app-workflow-management></app-workflow-management>
+}
+@case ('parameters') {
+  <app-parameters></app-parameters>
+}
+
+@case ('apiManagement') {
+  <app-api-management></app-api-management>
+}
+    @case ('authorizedCustomers') {
+      <app-customer-list></app-customer-list>
+    }
+
+    @case ('unauthorizedCustomers') {
+      <app-customer-list></app-customer-list>
+    }
+
+    @case ('incompleteCustomers') {
+      <app-customer-list></app-customer-list>
+    }
+    @case ('declinedCustomers') {
+    <app-customer-list></app-customer-list>
+}
+    @case ('customerDetails') {
+      <app-customer-details></app-customer-details>
+    }
+    
+    @case ('ecVerification') {
+  <app-ec-verification></app-ec-verification>
+}
+@case ('userActivityLog') {
+  <app-user-activity-log></app-user-activity-log>
+}
+
+@case ('kycReportByYear') {
+  <app-kyc-report-by-year></app-kyc-report-by-year>
+}
+@case ('kycReportDetails') {
+  <app-kyc-report-details></app-kyc-report-details>
+}
+    @default {
+      <app-dashboard></app-dashboard>
+    }
+  }
+</div>

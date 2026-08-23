@@ -1,0 +1,341 @@
+<admin-layout
+  [title]="'Digital Onboarding'"
+  [username]="getAdminName()"
+  [activeMenu]="'ecVerification'"
+  [drawerOpened]="state.drawerOpened()"
+  (menuClicked)="state.toggleDrawer()"
+  (userClicked)="state.openUserModal()"
+  (dashboardClicked)="state.goToDashboard()"
+  (channelManagementClicked)="state.goToChannelManagement()"
+  (productManagementClicked)="state.goToProductManagement()"
+  (workflowManagementClicked)="state.goToWorkflowManagement()"
+  (parametersClicked)="state.goToParameters()"
+  (apiManagementClicked)="state.goToApiManagement()"
+  (authorizedClicked)="state.goToAuthorizedCustomers()"
+  (unauthorizedClicked)="state.goToUnauthorizedCustomers()"
+  (incompleteClicked)="state.goToIncompleteCustomers()"
+  (declinedClicked)="state.goToDeclinedCustomers()"
+  (ecVerificationClicked)="state.goToEcVerification()"
+  (userActivityLogClicked)="state.goToUserActivityLog()"
+  (kycReportByYearClicked)="state.goToKycReportByYear()">
+
+  <section class="ec-verification mx-auto w-full min-w-0 max-w-7xl space-y-3 p-2 sm:space-y-4 sm:p-3 md:p-4 lg:p-5 xl:p-6">
+    <header class="ec-verification__header flex flex-col gap-2 sm:gap-3 md:flex-row md:items-center md:justify-between">
+      <h1>EC Verification</h1>
+    </header>
+
+    @if (errorMessage()) {
+      <div class="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <form class="ec-verification__form flex w-full flex-col gap-4 sm:gap-5 md:gap-6" [formGroup]="ecForm">
+      <div class="form-grid grid w-full grid-cols-1 gap-3 sm:gap-4 md:gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_280px] xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_320px] xl:gap-6">
+        <div class="ec-fields-grid grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:col-span-2 lg:grid-cols-2">
+          <div class="min-w-0">
+            <input-text-box
+              displayMode="outline"
+              label="NID"
+              placeholder="Enter NID"
+              [frmGroup]="ecForm"
+              controlName="nid"
+              [maxLength]="17"
+              [customErrorMessages]="{ pattern: 'NID must be 10 or 17 digits' }"
+              [tooltip]="'Enter 10 or 17 digit NID number'">
+            </input-text-box>
+            @if (fieldMatch('nationalId') !== null) {
+              <p class="mt-1 text-xs font-semibold"
+                 [class.text-emerald-600]="fieldMatch('nationalId') === true"
+                 [class.text-red-600]="fieldMatch('nationalId') === false">
+                {{ fieldMatch('nationalId') === true ? '✓' : '✕' }} {{ matchLabel('nationalId') }}
+              </p>
+            }
+          </div>
+
+          <div class="min-w-0">
+            <input-date
+              displayMode="outline"
+              label="Birth Date"
+              [frmGroup]="ecForm"
+              controlName="birthDate">
+            </input-date>
+            @if (fieldMatch('dateOfBirth') !== null) {
+              <p class="mt-1 text-xs font-semibold"
+                 [class.text-emerald-600]="fieldMatch('dateOfBirth') === true"
+                 [class.text-red-600]="fieldMatch('dateOfBirth') === false">
+                {{ fieldMatch('dateOfBirth') === true ? '✓' : '✕' }} {{ matchLabel('dateOfBirth') }}
+              </p>
+            }
+          </div>
+
+          <div class="min-w-0">
+            <input-text-box
+              displayMode="outline"
+              label="Name (Bengali)"
+              placeholder="Enter Name (Bengali)"
+              [frmGroup]="ecForm"
+              controlName="nameBangla">
+            </input-text-box>
+            @if (fieldMatch('name') !== null) {
+              <p class="mt-1 text-xs font-semibold"
+                 [class.text-emerald-600]="fieldMatch('name') === true"
+                 [class.text-red-600]="fieldMatch('name') === false">
+                {{ fieldMatch('name') === true ? '✓' : '✕' }} {{ matchLabel('name') }}
+              </p>
+            }
+          </div>
+
+          <div class="min-w-0">
+            <input-text-box
+              displayMode="outline"
+              label="Name (English)"
+              placeholder="Enter Name (English)"
+              [frmGroup]="ecForm"
+              controlName="nameEnglish">
+            </input-text-box>
+            @if (fieldMatch('nameEn') !== null) {
+              <p class="mt-1 text-xs font-semibold"
+                 [class.text-emerald-600]="fieldMatch('nameEn') === true"
+                 [class.text-red-600]="fieldMatch('nameEn') === false">
+                {{ fieldMatch('nameEn') === true ? '✓' : '✕' }} {{ matchLabel('nameEn') }}
+              </p>
+            }
+          </div>
+
+          <div class="min-w-0">
+            <input-text-box
+              displayMode="outline"
+              label="Father's Name (Bengali)"
+              placeholder="Enter Father's Name (Bengali)"
+              [frmGroup]="ecForm"
+              controlName="fatherNameBangla">
+            </input-text-box>
+            @if (fieldMatch('father') !== null) {
+              <p class="mt-1 text-xs font-semibold"
+                 [class.text-emerald-600]="fieldMatch('father') === true"
+                 [class.text-red-600]="fieldMatch('father') === false">
+                {{ fieldMatch('father') === true ? '✓' : '✕' }} {{ matchLabel('father') }}
+              </p>
+            }
+          </div>
+
+          <div class="min-w-0">
+            <input-text-box
+              displayMode="outline"
+              label="Mother's Name (Bengali)"
+              placeholder="Enter Mother's Name (Bengali)"
+              [frmGroup]="ecForm"
+              controlName="motherNameBangla">
+            </input-text-box>
+            @if (fieldMatch('mother') !== null) {
+              <p class="mt-1 text-xs font-semibold"
+                 [class.text-emerald-600]="fieldMatch('mother') === true"
+                 [class.text-red-600]="fieldMatch('mother') === false">
+                {{ fieldMatch('mother') === true ? '✓' : '✕' }} {{ matchLabel('mother') }}
+              </p>
+            }
+          </div>
+
+          <div class="min-w-0">
+            <input-text-box
+              displayMode="outline"
+              label="Spouse's Name (Bengali)"
+              placeholder="Enter Spouse's Name (Bengali)"
+              [frmGroup]="ecForm"
+              controlName="spouseNameBangla">
+            </input-text-box>
+            @if (fieldMatch('spouse') !== null) {
+              <p class="mt-1 text-xs font-semibold"
+                 [class.text-emerald-600]="fieldMatch('spouse') === true"
+                 [class.text-red-600]="fieldMatch('spouse') === false">
+                {{ fieldMatch('spouse') === true ? '✓' : '✕' }} {{ matchLabel('spouse') }}
+              </p>
+            }
+          </div>
+
+          <div class="min-w-0">
+            <input-select-option-field
+              displayMode="outline"
+              label="Division"
+              placeholder="Select Division"
+              [frmGroup]="ecForm"
+              controlName="division"
+              [options]="divisionOptions()"
+              [searchable]="true"
+              [isReadonly]="isLoadingDivisions()">
+            </input-select-option-field>
+            @if (fieldMatch('permanentAddressDivision') !== null) {
+              <p class="mt-1 text-xs font-semibold"
+                 [class.text-emerald-600]="fieldMatch('permanentAddressDivision') === true"
+                 [class.text-red-600]="fieldMatch('permanentAddressDivision') === false">
+                {{ fieldMatch('permanentAddressDivision') === true ? '✓' : '✕' }} {{ matchLabel('permanentAddressDivision') }}
+              </p>
+            }
+          </div>
+
+          <div class="min-w-0">
+            <input-select-option-field
+              displayMode="outline"
+              label="District"
+              placeholder="Select District"
+              [frmGroup]="ecForm"
+              controlName="district"
+              [options]="districtOptions()"
+              [searchable]="true"
+              [isReadonly]="!ecForm.controls.division.value || isLoadingDistricts()">
+            </input-select-option-field>
+            @if (fieldMatch('permanentAddressDistrict') !== null) {
+              <p class="mt-1 text-xs font-semibold"
+                 [class.text-emerald-600]="fieldMatch('permanentAddressDistrict') === true"
+                 [class.text-red-600]="fieldMatch('permanentAddressDistrict') === false">
+                {{ fieldMatch('permanentAddressDistrict') === true ? '✓' : '✕' }} {{ matchLabel('permanentAddressDistrict') }}
+              </p>
+            }
+          </div>
+
+          <div class="min-w-0">
+            <input-select-option-field
+              displayMode="outline"
+              label="Upazila"
+              placeholder="Select Upazila"
+              [frmGroup]="ecForm"
+              controlName="upazila"
+              [options]="upazilaOptions()"
+              [searchable]="true"
+              [isReadonly]="!ecForm.controls.district.value || isLoadingUpazilas()">
+            </input-select-option-field>
+            @if (fieldMatch('permanentAddressUpozila') !== null) {
+              <p class="mt-1 text-xs font-semibold"
+                 [class.text-emerald-600]="fieldMatch('permanentAddressUpozila') === true"
+                 [class.text-red-600]="fieldMatch('permanentAddressUpozila') === false">
+                {{ fieldMatch('permanentAddressUpozila') === true ? '✓' : '✕' }} {{ matchLabel('permanentAddressUpozila') }}
+              </p>
+            }
+          </div>
+
+          <div class="min-w-0">
+            <input-select-option-field
+              displayMode="outline"
+              label="Post Office"
+              placeholder="Select Post Office"
+              [frmGroup]="ecForm"
+              controlName="postOffice"
+              [options]="postOfficeOptions()"
+              [searchable]="true"
+              [isReadonly]="!ecForm.controls.upazila.value || isLoadingPostOffices()">
+            </input-select-option-field>
+            @if (fieldMatch('permanentAddressPostOffice') !== null) {
+              <p class="mt-1 text-xs font-semibold"
+                 [class.text-emerald-600]="fieldMatch('permanentAddressPostOffice') === true"
+                 [class.text-red-600]="fieldMatch('permanentAddressPostOffice') === false">
+                {{ fieldMatch('permanentAddressPostOffice') === true ? '✓' : '✕' }} {{ matchLabel('permanentAddressPostOffice') }}
+              </p>
+            }
+          </div>
+
+          <div class="min-w-0">
+            <input-text-box
+              displayMode="outline"
+              label="Postal Code"
+              placeholder="Enter Postal Code"
+              [frmGroup]="ecForm"
+              controlName="postalCode"
+              [maxLength]="10"
+              [tooltip]="'Enter postal code'">
+            </input-text-box>
+            @if (fieldMatch('permanentAddressPostalCode') !== null) {
+              <p class="mt-1 text-xs font-semibold"
+                 [class.text-emerald-600]="fieldMatch('permanentAddressPostalCode') === true"
+                 [class.text-red-600]="fieldMatch('permanentAddressPostalCode') === false">
+                {{ fieldMatch('permanentAddressPostalCode') === true ? '✓' : '✕' }} {{ matchLabel('permanentAddressPostalCode') }}
+              </p>
+            }
+          </div>
+        </div>
+
+        <div class="ec-photo-column w-full min-w-0 sm:col-span-2 lg:col-span-1">
+          <div class="ec-photo-box mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-[280px] xl:max-w-[320px]">
+            <div class="w-full min-w-0">
+              <file-preview
+                [fileData]="getFilePreviewData(ecPhotoUrl(), 'ec-profile-photo', 'image/jpeg')"
+                [width]="'100%'"
+                [height]="'260px'"
+                [showControls]="false"
+                [showDownload]="false"
+                [showFullscreen]="false"
+                placeholder="No EC photo available">
+              </file-preview>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ec-verification__actions flex flex-wrap items-center justify-end gap-2 sm:gap-3 md:gap-4">
+        <generic-button
+          label="Clear"
+          cssClass="admin-btn-decline"
+          (onClick)="clearForm()">
+        </generic-button>
+
+        <generic-button
+          [label]="isLoading() ? 'Verifying...' : 'Verify'"
+          cssClass="admin-btn-search"
+          (onClick)="verifyEcInformation()">
+        </generic-button>
+      </div>
+    </form>
+  </section>
+
+  <generic-modal
+    [isVisible]="resultModalOpened()"
+    [modalTitle]="verificationSuccess() ? 'EC Verification Successful' : 'EC Verification Completed'"
+    [cssClass]="'admin-ec-result-modal'"
+    [closeOnBackdropClick]="true"
+    [showDefaultFooter]="true"
+    [showOkButton]="true"
+    [okButtonText]="'Close'"
+    [showCancelButton]="false"
+    (isVisibleChanged)="resultModalOpened.set($event)"
+    (modalClosed)="closeResultModal()"
+    (modalResult)="closeResultModal()">
+
+    <section class="ec-result-content">
+      @if (verificationSuccess()) {
+        <div class="ec-result-content__icon ec-result-content__icon--success">✓</div>
+        <h2>EC Verification Successful</h2>
+        <p>All provided information matched with EC records.</p>
+      } @else {
+        <div class="ec-result-content__icon ec-result-content__icon--failed">!</div>
+        <h2>EC Verification Completed</h2>
+        <p>One or more provided fields did not match. Check the field results shown on the form.</p>
+      }
+    </section>
+  </generic-modal>
+
+  @if (state.userModalOpened()) {
+    <div class="user-modal-backdrop" (click)="state.closeUserModal()"></div>
+
+    <div class="user-modal left-3 right-3 top-16 w-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 md:right-6 lg:right-8 xl:right-10">
+      <h3>Digital Onboarding</h3>
+      <p>
+        Logged in as:
+        <strong>{{ auth.currentAdmin()?.name || 'Admin' }}</strong>
+      </p>
+
+      <div class="user-modal__actions flex flex-wrap justify-end gap-2 sm:gap-3">
+        <generic-button
+          label="Close"
+          cssClass="admin-btn-secondary"
+          (onClick)="state.closeUserModal()">
+        </generic-button>
+
+        <generic-button
+          label="Sign Out"
+          cssClass="admin-btn-danger"
+          (onClick)="logout()">
+        </generic-button>
+      </div>
+    </div>
+  }
+</admin-layout>

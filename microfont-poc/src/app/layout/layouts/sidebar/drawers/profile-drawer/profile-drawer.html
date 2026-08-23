@@ -1,0 +1,230 @@
+<div
+  class="h-full overflow-y-auto pb-16 profile-drawer bg-gradient-to-br from-[var(--theme-background)] to-gray-50"
+>
+  <div class="p-6 space-y-6 pt-4">
+    <!-- Profile Section -->
+    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/60 shadow-lg">
+      <div class="flex items-center space-x-4 mb-4">
+        <div class="relative">
+          <div
+            class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg"
+          >
+            <mat-icon class="text-white text-2xl">person</mat-icon>
+          </div>
+          <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white"></div>
+        </div>
+        <div>
+          <h3 class="font-medium text-gray-800">
+            {{ currentUser?.name || 'Loading user...' }}
+          </h3>
+          <p class="text-sm text-gray-600">
+            {{ currentUser?.email || 'Fetching email...' }}
+          </p>
+        </div>
+      </div>
+      <button
+        class="w-full bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-accent)] text-white py-3 rounded-xl hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200 flex items-center justify-center font-medium"
+        (click)="openEditProfileModal()">
+        <mat-icon class="mr-2">edit</mat-icon>
+        Edit Profile
+      </button>
+    </div>
+
+    <!-- Quick Actions Grid -->
+    <div class="grid grid-cols-1 gap-4">
+
+
+
+      <!-- Branch -->
+      <button
+        class="w-full bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-gray-200/60 shadow-sm hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] cursor-pointer"
+      >
+        <div class="flex items-center space-x-4">
+          <div
+            class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center shadow-md flex-shrink-0"
+          >
+            <mat-icon class="text-white text-xl">account_tree</mat-icon>
+          </div>
+          <div class="flex-1 text-left">
+            <p class="font-semibold text-gray-800 text-sm mb-1">Branch</p>
+            <div class="space-y-0.5">
+              <p class="text-xs font-medium text-gray-700"><span class="font-semibold">Office Code: </span>{{ officeCode || 'N/A' }}</p>
+              <p class="text-xs font-medium text-gray-700"><span class="font-semibold">Office Name: </span>{{ officeNm || 'No Name' }}</p>
+              <p class="text-xs font-medium text-gray-700"><span class="font-semibold">Txn Date: </span>{{ txnDt || 'No Date' }}</p>
+            </div>
+          </div>
+        </div>
+      </button>
+    </div>
+
+    <!-- Menu Items -->
+    <div class="space-y-3">
+
+           <button
+        class="w-full bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-gray-200/60 shadow-sm hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] cursor-pointer"
+        (click)="openServiceRequestModal()"
+      >
+        <div class="flex items-center space-x-4">
+          <div
+            class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center shadow-md"
+          >
+            <mat-icon class="text-white text-xl">support_agent</mat-icon>
+          </div>
+          <div>
+            <p class="font-semibold text-gray-800 text-sm">Service Request</p>
+          </div>
+        </div>
+      </button>
+
+
+      <!-- Notes -->
+      <button
+        class="w-full bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-gray-200/60 shadow-sm hover:shadow-lg transition-all duration-200 transform hover:scale-[1.02] cursor-pointer"
+        (click)="goToNotes()">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
+            <mat-icon class="text-white text-xl">list_alt</mat-icon>
+          </div>
+          <div class="flex-1 text-left">
+            <p class="font-semibold text-gray-800">Notes</p>
+            <p class="text-sm text-gray-600">My personal notes</p>
+          </div>
+          <mat-icon class="text-gray-400 transform transition-transform group-hover:translate-x-1">chevron_right</mat-icon>
+        </div>
+      </button>
+
+      <!-- Notifications -->
+      <div class="border-b border-gray-200 pb-2">
+        <div
+          class="flex items-center justify-between p-3 text-gray-700 hover:bg-blue-50 transition-colors duration-150 cursor-pointer"
+          (click)="toggleNotificationsPopover($event)">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+              <mat-icon class="text-blue-600">notifications</mat-icon>
+            </div>
+            <div>
+              <p class="font-medium text-gray-800">Notifications</p>
+              <p class="text-sm text-gray-600">Latest alerts</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2">
+          <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
+            {{ (novuService.getUnreadCount() | async) || 0 }}
+          </span>
+            <mat-icon class="text-slate-400">chevron_right</mat-icon>
+          </div>
+        </div>
+      </div>
+
+    <!-- Messaging -->
+    <div
+      class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-gray-200/60 shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer"
+      (click)="toggleSection('messaging')">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-md">
+          <mat-icon class="text-indigo-600">mail</mat-icon>
+        </div>
+        <div>
+          <p class="font-medium text-gray-800">Messaging</p>
+          <p class="text-sm text-gray-600">Send and receive messages</p>
+        </div>
+              <mat-icon class="text-slate-400">
+        {{ isSectionOpen('messaging') ? 'expand_less' : 'expand_more' }}
+      </mat-icon>
+      </div>
+
+    </div>
+
+      <div [@expandCollapse]="isSectionOpen('messaging') ? 'open' : 'closed'" class="overflow-hidden">
+        <div class="mt-2 space-y-2 p-4">
+          <div class="mb-3 px-4">
+            <form [formGroup]="searchForm" (submit)="$event.preventDefault()">
+              <input-text-box
+                [frmGroup]="searchForm"
+                [controlName]="'query'"
+                [label]="'Search users'"
+                [placeholder]="'Type name or email...'"
+                [displayMode]="'outline'"
+                [isAllowSpecialChars]="true"
+                (onChanged)="onSearchInput()">
+              </input-text-box>
+            </form>
+
+            <!-- Optional: show spinner while searching -->
+            <div *ngIf="searching" class="text-sm text-gray-500 mt-2">Searching...</div>
+          </div>
+          @for (chat of chatPreviews$ | async; track chat.chatId) {
+          <div (click)="openChat(chat)" class="flex items-center p-2 hover:bg-gray-100 cursor-pointer rounded-lg">
+            <div class="relative mr-3">
+              <div class="w-8 h-8 rounded-full bg-indigo-200 flex items-center justify-center">
+                <span class="text-indigo-800 font-semibold">{{ chat.partner[0].toUpperCase() }}</span>
+            </div>
+            @if (chat.unread > 0) {
+          <span
+            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              {{ chat.unread }}
+            </span>
+          }
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-center">
+              <p class="font-medium text-gray-900">{{ chat.partner }}</p>
+              <span class="text-xs text-gray-500">{{ chat.time }}</span>
+            </div>
+            <p class="text-sm text-gray-600 truncate">{{ chat.lastMessage }}</p>
+          </div>
+        </div>
+          }
+        </div>
+      </div>
+
+    <!-- Theme -->
+    <div class="border-b border-gray-200 pb-2">
+      <button
+        class="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-50 transition-colors duration-150 cursor-pointer">
+              <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded-xl flex items-center justify-center shadow-md">
+          <mat-icon class="text-white text-xl">palette</mat-icon>
+        </div>
+        <div class="flex-1 text-left">
+          <p class="font-medium text-gray-800">Theme</p>
+          <p class="text-sm text-gray-600">Choose your theme</p>
+        </div>
+        <app-theme-picker></app-theme-picker>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Chat Drawer -->
+<div
+  class="fixed bottom-[20px] right-[10px] w-[300px] h-[380px] bg-white shadow-2xl
+         transform transition-all duration-300 ease-in-out border border-gray-200
+         rounded-lg flex flex-col z-50"
+  [style.transform]="isChatOpen() ? 'translateY(0)' : 'translateY(100%)'"
+  [style.opacity]="isChatOpen() ? '1' : '0'"
+  [style.visibility]="isChatOpen() ? 'visible' : 'hidden'">
+
+  <app-chat-box
+    class="flex-1"
+    [chatId]="selectedChat?.chatId ?? ''"
+    [partner]="selectedChat?.partner ?? ''"
+    (closeChat)="closeChatFromChild()">
+  </app-chat-box>
+
+  <!-- Resize bar -->
+  <div class="absolute right-0 top-0 h-full w-1 bg-gray-200 hover:bg-blue-400 cursor-col-resize"></div>
+</div>
+
+<!-- Notification Detail Modal -->
+<app-notification-detail-modal *ngIf="showDetailModal && selectedNotification" [notification]="selectedNotification!"
+  (close)="closeDetailModal()">
+</app-notification-detail-modal>
+
+<!-- Dynamic Modal -->
+<generic-modal #modalComponentRef [isVisible]="showModal || showEditProfileModal"
+  [modalTitle]="showEditProfileModal ? 'Edit Profile' : 'Service Request'" [modalComponent]="modalComponent"
+  [modalComponentData]="showEditProfileModal ? modalData : modalComponentData"
+  [okButtonText]="showEditProfileModal ? 'Update Profile' : modalOkButtonText()"
+  (isVisibleChanged)="onModalVisibilityChange($event)" (modalResult)="onModalResult($event)"
+  (modalClosed)="onModalClosed()" [cssClass]="'modal-lg'" [showOkButton]="true" [showDefaultFooter]="true">
+</generic-modal>

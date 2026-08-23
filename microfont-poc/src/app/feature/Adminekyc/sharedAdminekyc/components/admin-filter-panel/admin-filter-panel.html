@@ -1,0 +1,131 @@
+<section
+  class="admin-filter-panel
+         grid w-full min-w-0 grid-cols-1 items-start
+         gap-3 pb-5
+         sm:grid-cols-2 sm:gap-4 sm:pb-3
+         md:gap-5
+         lg:grid-cols-3
+         xl:gap-6">
+  <div class="filter-column min-w-0 space-y-2">
+    <h3>Search By</h3>
+
+    <input-text-box
+      displayMode="outline"
+      label="Branch ID"
+      placeholder="Branch Id"
+      [frmGroup]="filterForm"
+      controlName="branchId">
+    </input-text-box>
+
+    <input-number
+      displayMode="outline"
+      label="Mobile Number"
+      placeholder="Mobile Number"
+      [frmGroup]="filterForm"
+      controlName="mobileNumber"
+      [maxLen]="11"
+      [tooltip]="'Enter mobile number'">
+    </input-number>
+
+    <input-number
+      displayMode="outline"
+      label="Tracking Number"
+      placeholder="Tracking Number"
+      [frmGroup]="filterForm"
+      controlName="trackingNumber"
+      [maxLen]="20"
+      [tooltip]="'Enter tracking number'">
+    </input-number>
+
+    <input-number
+      displayMode="outline"
+      label="NID"
+      placeholder="NID Number"
+      [frmGroup]="filterForm"
+      controlName="nidNumber"
+      [maxLen]="17"
+      [tooltip]="'Enter NID number'">
+    </input-number>
+
+    <input-text-box
+      displayMode="outline"
+      label="Customer ID"
+      placeholder="Customer ID"
+      [frmGroup]="filterForm"
+      controlName="customerId">
+    </input-text-box>
+  </div>
+
+  <div class="filter-column min-w-0 space-y-2">
+    <h3>By Date</h3>
+
+    <input-date
+      displayMode="outline"
+      label="From"
+      [frmGroup]="filterForm"
+      controlName="fromDate">
+    </input-date>
+
+    <input-date
+      displayMode="outline"
+      label="To"
+      [frmGroup]="filterForm"
+      controlName="toDate">
+    </input-date>
+
+    <!-- <input-text-box
+      displayMode="outline"
+      label="Customers Per Page"
+      placeholder="Customers Per Page"
+      [frmGroup]="filterForm"
+      controlName="customersPerPage">
+    </input-text-box> -->
+  </div>
+
+  <div class="filter-column min-w-0 space-y-2">
+    <h3>By Account No</h3>
+
+    <input-number
+      displayMode="outline"
+      label="From"
+      placeholder="From"
+      [frmGroup]="filterForm"
+      controlName="accountFrom"
+      [maxLen]="20"
+      [tooltip]="'Enter account number from'">
+    </input-number>
+
+    <input-number
+      displayMode="outline"
+      label="To"
+      placeholder="To"
+      [frmGroup]="filterForm"
+      controlName="accountTo"
+      [maxLen]="20"
+      [tooltip]="'Enter account number to'">
+    </input-number>
+
+    <div
+      class="filter-actions
+             mt-4 mb-1
+             -translate-y-2
+             flex flex-row flex-wrap
+             items-center justify-end
+             gap-2
+             sm:translate-y-0
+             sm:gap-3">
+
+      <generic-button
+        label="Reset"
+        cssClass="admin-btn-reset"
+        (onClick)="onReset()">
+      </generic-button>
+
+      <generic-button
+        label="Search"
+        cssClass="admin-btn-search"
+        (onClick)="onSearch()">
+      </generic-button>
+    </div>
+  </div>
+</section>

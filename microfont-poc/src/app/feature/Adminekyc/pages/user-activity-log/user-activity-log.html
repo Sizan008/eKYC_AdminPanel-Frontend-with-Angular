@@ -1,0 +1,213 @@
+<admin-layout
+  [title]="'Digital Onboarding'"
+  [username]="getAdminName()"
+  [activeMenu]="'userActivityLog'"
+  [drawerOpened]="state.drawerOpened()"
+  (menuClicked)="state.toggleDrawer()"
+  (userClicked)="state.openUserModal()"
+  (dashboardClicked)="state.goToDashboard()"
+  (channelManagementClicked)="state.goToChannelManagement()"
+  (productManagementClicked)="state.goToProductManagement()"
+  (workflowManagementClicked)="state.goToWorkflowManagement()"
+  (parametersClicked)="state.goToParameters()"
+  (apiManagementClicked)="state.goToApiManagement()"
+  (authorizedClicked)="state.goToAuthorizedCustomers()"
+  (unauthorizedClicked)="state.goToUnauthorizedCustomers()"
+  (incompleteClicked)="state.goToIncompleteCustomers()"
+  (declinedClicked)="state.goToDeclinedCustomers()"
+  (ecVerificationClicked)="state.goToEcVerification()"
+  (userActivityLogClicked)="state.goToUserActivityLog()"
+  (kycReportByYearClicked)="state.goToKycReportByYear()">
+
+  <header class="user-activity-log__header flex flex-col gap-2 px-2 sm:px-3 md:flex-row md:items-center md:justify-between md:px-4 lg:px-5 xl:px-6">
+    <div>
+      <h1>Logs</h1>
+      <span>User Activity Log</span>
+    </div>
+
+    <p>Logs &gt; User Activity Log</p>
+  </header>
+
+  <section class="user-activity-log w-full min-w-0 space-y-3 p-2 sm:space-y-4 sm:p-3 md:p-4 lg:p-5 xl:p-6">
+
+    <section class="user-activity-filter-panel w-full min-w-0">
+      <form [formGroup]="searchForm" class="activity-search grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-2 xl:gap-6">
+
+        <div class="activity-search__group min-w-0 space-y-2">
+          <h3>Search By User Information</h3>
+
+          <input-text-box
+            displayMode="outline"
+            label="Tracking Number"
+            placeholder="Tracking Number"
+            [frmGroup]="searchForm"
+            controlName="trackingNumber">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="User ID"
+            placeholder="User ID"
+            [frmGroup]="searchForm"
+            controlName="userId">
+          </input-text-box>
+        </div>
+
+        <div class="activity-search__group min-w-0 space-y-2">
+          <h3>By Date</h3>
+
+          <input-date
+            displayMode="outline"
+            label="From"
+            [frmGroup]="searchForm"
+            controlName="fromDate">
+          </input-date>
+
+          <input-date
+            displayMode="outline"
+            label="To"
+            [frmGroup]="searchForm"
+            controlName="toDate">
+          </input-date>
+        </div>
+
+        <div class="activity-search__actions flex flex-row flex-wrap items-center justify-start gap-2 sm:col-span-2 sm:gap-3 lg:justify-end">
+          <generic-button
+            label="Reset"
+            cssClass="admin-btn-search"
+            (onClick)="resetSearch()">
+          </generic-button>
+
+          <generic-button
+            [label]="isLoading() ? 'Loading...' : 'Search'"
+            cssClass="admin-btn-search"
+            (onClick)="searchLogs()">
+          </generic-button>
+        </div>
+
+      </form>
+    </section>
+
+    @if (errorMessage()) {
+      <div class="w-full rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 sm:px-4">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <div class="activity-divider"></div>
+
+    <div class="activity-summary flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <generic-button
+        [label]="isDownloading() ? 'Downloading...' : 'Download Logs'"
+        cssClass="admin-btn-download"
+        (onClick)="downloadLogs()">
+      </generic-button>
+
+      <h2>Total Data Found: {{ totalCount() }}</h2>
+    </div>
+
+    <section class="activity-table-card w-full min-w-0 overflow-x-auto rounded-lg">
+      <table class="activity-table w-full min-w-[860px] lg:min-w-full">
+        <thead>
+          <tr>
+            <th>Admin<br /> User ID</th>
+            <th>Activity Sl No</th>
+            <th>Tracking No</th>
+            <th>Step ID</th>
+            <th>Action Type</th>
+            <th>Action Particulars</th>
+            <th>Action Date</th>
+            <th>Action Terminal Ip</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @if (isLoading()) {
+            <tr>
+              <td colspan="8" class="empty-cell">
+                Loading user activity logs...
+              </td>
+            </tr>
+          } @else {
+            @for (log of logs(); track log.id) {
+              <tr>
+                <td>{{ log.adminUserId }}</td>
+                <td>{{ log.activitySlNo }}</td>
+                <td>{{ log.trackingNo }}</td>
+                <td>{{ log.stepId }}</td>
+                <td>{{ log.actionType }}</td>
+                <td>{{ log.actionParticulars }}</td>
+                <td>
+                  {{ log.actionDate }}
+                  @if (log.actionTime) {
+                    <br />
+                    {{ log.actionTime }}
+                  }
+                </td>
+                <td>{{ log.actionTerminalIp }}</td>
+              </tr>
+            }
+
+            @if (logs().length === 0) {
+              <tr>
+                <td colspan="8" class="empty-cell">
+                  No activity log found.
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+
+      @if (!isLoading() && totalPages() > 1) {
+        <div class="activity-pagination flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+          <button
+            type="button"
+            [disabled]="!canGoPrevious()"
+            (click)="goToPreviousPage()">
+            Previous
+          </button>
+
+          <span>
+            Page {{ currentPage() }} of {{ totalPages() }}
+            - {{ pageSize() }} per page
+          </span>
+
+          <button
+            type="button"
+            [disabled]="!canGoNext()"
+            (click)="goToNextPage()">
+            Next
+          </button>
+        </div>
+      }
+    </section>
+  </section>
+
+  @if (state.userModalOpened()) {
+    <div class="user-modal-backdrop" (click)="state.closeUserModal()"></div>
+
+    <div class="user-modal left-3 right-3 top-16 w-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 md:right-6 lg:right-8 xl:right-10">
+      <h3>Digital Onboarding</h3>
+
+      <p>
+        Logged in as:
+        <strong>{{ auth.currentAdmin()?.name || 'Admin' }}</strong>
+      </p>
+
+      <div class="user-modal__actions flex flex-wrap justify-end gap-2 sm:gap-3">
+        <generic-button
+          label="Close"
+          cssClass="admin-btn-secondary"
+          (onClick)="state.closeUserModal()">
+        </generic-button>
+
+        <generic-button
+          label="Sign Out"
+          cssClass="admin-btn-danger"
+          (onClick)="logout()">
+        </generic-button>
+      </div>
+    </div>
+  }
+</admin-layout>

@@ -1,0 +1,214 @@
+<aside class="admin-sidebar fixed bottom-0 left-0 top-[62px] z-40 h-[calc(100vh-62px)] w-[min(86vw,250px)] max-w-[250px] shadow-2xl lg:relative lg:inset-auto lg:z-auto lg:h-full lg:min-h-0 lg:w-[250px] lg:max-w-none lg:flex-none lg:shadow-none xl:w-[260px]" [class.closed]="!drawerOpened()">
+  <div class="admin-sidebar__user gap-2 p-3 sm:gap-3 sm:p-4">
+    <div class="admin-sidebar__avatar">CB</div>
+
+    <div class="admin-sidebar__user-info">
+      <strong>Citizens Bank</strong>
+      <span>Admin Panel</span>
+    </div>
+  </div>
+
+  <div class="admin-sidebar__menu-title">MENU</div>
+
+  <nav class="admin-sidebar__nav pb-4">
+    <button
+      type="button"
+      class="admin-sidebar__item admin-sidebar__item--parent"
+      [class.active]="activeMenu() === 'dashboard'"
+      (click)="onDashboardClicked()">
+      <span class="admin-sidebar__icon">▣</span>
+      <span>Dashboard</span>
+    </button>
+
+    <div class="admin-sidebar__group">
+  <div class="admin-sidebar__item admin-sidebar__item--parent admin-sidebar__item--queue">
+    <span class="admin-sidebar__icon">▣</span>
+    <span>Product & Channel</span>
+
+    <generic-switch
+      class="admin-sidebar__toggle"
+      [frmGroup]="sidebarForm"
+      controlName="productChannelOpened"
+      [id]="'productChannelOpened'"
+      [label]="''"
+      [displayMode]="'horizontal'"
+      
+      [enable]="true"
+      [visible]="true">
+    </generic-switch>
+  </div>
+
+  @if (isProductChannelOpened()) {
+    <div class="admin-sidebar__children">
+      <button
+        type="button"
+        class="admin-sidebar__item admin-sidebar__item--child"
+        [class.active]="activeMenu() === 'channelManagement'"
+        (click)="onChannelManagementClicked()">
+        Channel Management
+      </button>
+
+      <button
+        type="button"
+        class="admin-sidebar__item admin-sidebar__item--child"
+        [class.active]="activeMenu() === 'productManagement'"
+        (click)="onProductManagementClicked()">
+        Product Management
+      </button>
+
+      <button
+        type="button"
+        class="admin-sidebar__item admin-sidebar__item--child"
+        [class.active]="activeMenu() === 'workflowManagement'"
+        (click)="onWorkflowManagementClicked()">
+        Workflow Management
+      </button>
+    </div>
+  }
+</div>
+<div class="admin-sidebar__group">
+  <div class="admin-sidebar__parent">
+    <div class="admin-sidebar__parent-left">
+      <span class="admin-sidebar__parent-icon">▣</span>
+      <span class="admin-sidebar__parent-text">CONFIGURATIONS</span>
+    </div>
+
+    <generic-switch
+      class="admin-sidebar__toggle"
+      [frmGroup]="sidebarForm"
+      controlName="configurationsOpened"
+      [id]="'configurationsOpened'"
+      [label]="''"
+      [displayMode]="'horizontal'"
+     
+      [enable]="true"
+      [visible]="true">
+    </generic-switch>
+  </div>
+
+  @if (isConfigurationsOpened()) {
+    <div class="admin-sidebar__children">
+      <button
+        type="button"
+        class="admin-sidebar__child"
+        [class.admin-sidebar__child--active]="activeMenu() === 'parameters'"
+        (click)="onParametersClicked()">
+        Parameters
+      </button>
+
+      <button
+        type="button"
+        class="admin-sidebar__child"
+        [class.admin-sidebar__child--active]="activeMenu() === 'apiManagement'"
+        (click)="onApiManagementClicked()">
+        API Management
+      </button>
+    </div>
+  }
+</div>
+
+    <div class="admin-sidebar__group">
+      <div class="admin-sidebar__item admin-sidebar__item--parent admin-sidebar__item--queue">
+        <span class="admin-sidebar__icon">▣</span>
+        <span>Authorization Queue</span>
+
+        <generic-switch
+          class="admin-sidebar__toggle"
+          [frmGroup]="sidebarForm"
+          controlName="authorizationQueueOpened"
+          [id]="'authorizationQueueOpened'"
+          [label]="''"
+          [displayMode]="'horizontal'"
+          
+          [enable]="true"
+          [visible]="true">
+        </generic-switch>
+      </div>
+
+      @if (isAuthorizationQueueOpened()) {
+        <div class="admin-sidebar__children">
+          <button
+            type="button"
+            class="admin-sidebar__item admin-sidebar__item--child"
+            [class.active]="activeMenu() === 'authorized'"
+            (click)="onAuthorizedClicked()">
+            Authorized Customers
+          </button>
+
+          <button
+            type="button"
+            class="admin-sidebar__item admin-sidebar__item--child"
+            [class.active]="activeMenu() === 'unauthorized'"
+            (click)="onUnauthorizedClicked()">
+            Unauthorized Customers
+          </button>
+
+          <button
+            type="button"
+            class="admin-sidebar__item admin-sidebar__item--child"
+            [class.active]="activeMenu() === 'incomplete'"
+            (click)="onIncompleteClicked()">
+            Incomplete Customers
+          </button>
+
+          <button
+            type="button"
+            class="admin-sidebar__item admin-sidebar__item--child"
+            [class.active]="activeMenu() === 'declined'"
+            (click)="onDeclinedClicked()">
+            Declined Customers
+          </button>
+        </div>
+      }
+    </div>
+
+    <button
+      type="button"
+      class="admin-sidebar__item admin-sidebar__item--parent"
+      [class.active]="activeMenu() === 'ecVerification'"
+      (click)="onEcVerificationClicked()">
+      <span class="admin-sidebar__icon">▣</span>
+      <span>EC Verification</span>
+    </button>
+    <div class="admin-sidebar__group">
+  <div class="admin-sidebar__parent">
+    <div class="admin-sidebar__parent-left">
+      <span class="admin-sidebar__parent-icon">▣</span>
+      <span class="admin-sidebar__parent-text">LOGS</span>
+    </div>
+
+    <generic-switch
+      class="admin-sidebar__toggle"
+      [frmGroup]="sidebarForm"
+      controlName="logsOpened"
+      [id]="'logsOpened'"
+      [label]="''"
+      [displayMode]="'horizontal'"
+      
+      [enable]="true"
+      [visible]="true">
+    </generic-switch>
+  </div>
+
+  @if (isLogsOpened()) {
+    <div class="admin-sidebar__children">
+      <button
+        type="button"
+        class="admin-sidebar__child"
+        [class.admin-sidebar__child--active]="activeMenu() === 'userActivityLog'"
+        (click)="onUserActivityLogClicked()">
+        User Activity Log
+      </button>
+
+      <button
+        type="button"
+        class="admin-sidebar__child"
+        [class.admin-sidebar__child--active]="activeMenu() === 'kycReportByYear'"
+        (click)="onKycReportByYearClicked()">
+        KYC Report by Year
+      </button>
+    </div>
+  }
+</div>
+  </nav>
+</aside>

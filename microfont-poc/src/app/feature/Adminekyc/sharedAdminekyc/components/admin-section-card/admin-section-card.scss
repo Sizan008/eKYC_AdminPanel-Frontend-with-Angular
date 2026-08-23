@@ -1,0 +1,31 @@
+.admin-section-card {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #d8dee8;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+
+  &__header {
+    padding: 14px 18px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f8fafc;
+
+    h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: #64748b;
+    }
+  }
+
+  &__content {
+    padding: 18px;
+  }
+}

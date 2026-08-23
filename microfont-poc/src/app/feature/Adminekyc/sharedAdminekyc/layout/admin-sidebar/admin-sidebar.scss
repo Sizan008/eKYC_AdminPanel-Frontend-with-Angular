@@ -1,0 +1,352 @@
+:host {
+  display: contents;
+}
+
+.admin-sidebar {
+  width: 250px;
+  height: 100%;
+  min-height: 0;
+  flex: 0 0 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  overflow-x: hidden;
+  background: linear-gradient(180deg, #03226b, #1e293b);
+  color: #ffffff;
+  transition: width 0.2s ease;
+
+  &.closed {
+    width: 0;
+  }
+
+  &__user {
+    min-height: 70px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #052ddf, #0d9488);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  &__avatar {
+    width: 44px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 0.6px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+  }
+
+  &__user-info {
+    display: grid;
+    gap: 4px;
+
+    strong {
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    span {
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 11px;
+      font-weight: 500;
+    }
+  }
+
+  &__menu-title {
+    padding: 14px 16px 8px;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  &__nav {
+    display: grid;
+    gap: 2px;
+  }
+
+  &__group {
+    width: 100%;
+    display: grid;
+    gap: 0;
+    
+  }
+
+  &__children {
+    width: 100%;
+    display: grid;
+    padding: 4px 0 8px;
+    background: rgba(255, 255, 255, 0.04);
+    
+  }
+
+  &__item {
+    width: 100%;
+    min-height: 48px;
+    border: 0;
+    outline: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: #cbd5e1;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      background 0.25s ease,
+      color 0.25s ease;
+    box-sizing: border-box;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+    }
+
+    &.active {
+      background: #223f46;
+      color: #ffffff;
+    }
+
+    &--parent {
+      min-height: 48px;
+      padding: 0 16px;
+      text-transform: uppercase;
+      justify-content: flex-start;
+    }
+
+    &--queue {
+      cursor: default;
+    }
+
+    &--child {
+      min-height: 36px;
+      padding: 0 16px 0 38px;
+      color: #9fc6cf;
+      font-size: 16px;
+      font-weight: 400;
+      text-transform: none;
+      justify-content: flex-start;
+      
+
+      &.active {
+        background: #274b54;
+        color: #ffffff;
+      }
+    }
+  }
+
+  &__icon {
+    width: 16px;
+    min-width: 16px;
+    display: inline-grid;
+    place-items: center;
+    color: #e2e8f0;
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  /*
+    New parent structure support:
+    This is for:
+    <div class="admin-sidebar__parent">
+      <div class="admin-sidebar__parent-left">
+        <span class="admin-sidebar__parent-icon"></span>
+        <span class="admin-sidebar__parent-text"></span>
+      </div>
+      <generic-switch class="admin-sidebar__toggle"></admin-toggle>
+    </div>
+  */
+  &__parent {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 16px;
+    border: 0;
+    outline: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: transparent;
+    color: #cbd5e1;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    text-transform: uppercase;
+    box-sizing: border-box;
+  }
+
+  &__parent-left {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__parent-icon {
+    width: 16px;
+    min-width: 16px;
+    display: inline-grid;
+    place-items: center;
+    color: #e2e8f0;
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  &__parent-text {
+    min-width: 0;
+    flex: 1;
+    color: #cbd5e1;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  /*
+    New child structure support:
+    This is for:
+    <button class="admin-sidebar__child"></button>
+  */
+  &__child {
+    width: 100%;
+    min-height: 36px;
+    padding: 0 16px 0 38px;
+    border: 0;
+    outline: 0;
+    display: flex;
+    align-items: center;
+    background: transparent;
+    color: #9fc6cf;
+    font-size: 16px;
+    font-weight: 400;
+    text-align: left;
+    cursor: pointer;
+    box-sizing: border-box;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+    }
+
+    &--active {
+      background: #274b54;
+      color: #ffffff;
+    }
+  }
+
+  &__label {
+    min-width: 0;
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.2;
+  }
+
+  &__toggle {
+    margin-left: auto;
+    width: 56px;
+    min-width: 56px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    align-self: center;
+    line-height: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Microfont generic-switch compact override inside sidebar */
+:host ::ng-deep .admin-sidebar__toggle {
+  width: 56px;
+  min-width: 56px;
+  height: 28px;
+  margin-left: auto;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  align-self: center;
+  transform: translateY(0);
+
+  generic-switch {
+    height: 28px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+  }
+}
+
+:host ::ng-deep .admin-sidebar__toggle,
+:host ::ng-deep .admin-sidebar__toggle * {
+  box-sizing: border-box;
+}
+
+:host ::ng-deep .admin-sidebar__toggle label,
+:host ::ng-deep .admin-sidebar__toggle .label,
+:host ::ng-deep .admin-sidebar__toggle .switch-label,
+:host ::ng-deep .admin-sidebar__toggle .form-label,
+:host ::ng-deep .admin-sidebar__toggle .field-label {
+  display: none !important;
+}
+
+:host ::ng-deep .admin-sidebar__toggle .form-group,
+:host ::ng-deep .admin-sidebar__toggle .field,
+:host ::ng-deep .admin-sidebar__toggle .input-wrapper,
+:host ::ng-deep .admin-sidebar__toggle .switch-wrapper {
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+}
+
+/* Your existing Microfont switch size/color override kept */
+:host ::ng-deep .admin-sidebar__toggle .w-11 {
+  width: 56px !important;
+  background: white !important;
+}
+
+:host ::ng-deep .admin-sidebar__toggle .h-6\.5 {
+  height: 24px !important;
+  background: skyblue !important;
+}
+
+:host ::ng-deep .admin-sidebar__toggle .w-5 {
+  width: 16px !important;
+  background: grey !important;
+}
+
+:host ::ng-deep .admin-sidebar__toggle .h-5 {
+  height: 20px !important;
+  background: green !important;
+}
+
+:host ::ng-deep .admin-sidebar__toggle .translate-x-5 {
+  transform: translateX(14px) !important;
+  background: green !important;
+}
+
+@media (max-width: 820px) {
+  .admin-sidebar {
+    width: 240px;
+
+    &.closed {
+      width: 0;
+    }
+  }
+}

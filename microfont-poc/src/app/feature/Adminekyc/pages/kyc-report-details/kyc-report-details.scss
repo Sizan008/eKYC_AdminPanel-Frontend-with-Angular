@@ -1,0 +1,418 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.kyc-details-page {
+  padding: 42px 28px 70px;
+  color: #0f172a;
+}
+
+.kyc-details-tab {
+  width: fit-content;
+  padding: 13px 20px;
+  border: 1px solid #dbe4ea;
+  background: #ffffff;
+  color: #334155;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.kyc-details-top-line {
+  width: min(980px, 100%);
+  height: 1px;
+  background: #cbd5e1;
+  margin-bottom: 52px;
+}
+
+.kyc-details-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+
+  h1 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 30px;
+    font-weight: 400;
+  }
+}
+
+.kyc-details-back {
+  border: 0;
+  background: transparent;
+  color: #0284c7;
+  font-size: 15px;
+  font-weight: 400;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.kyc-details-blue-line {
+  width: 100%;
+  height: 1px;
+  background: #0ea5e9;
+  margin-bottom: 8px;
+}
+
+.kyc-details-service-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #0ea5e9;
+  color: #0f172a;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.kyc-details-service-grid {
+  display: grid;
+  gap: 24px;
+  margin-top: 12px;
+  margin-bottom: 18px;
+
+  h4 {
+    margin: 0 0 12px;
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 9px;
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 400;
+  }
+}
+
+.kyc-details-service-column {
+  display: grid;
+  align-content: start;
+
+  input[type='checkbox'] {
+    width: 16px;
+    height: 16px;
+
+    &:not(:disabled) {
+      cursor: pointer;
+    }
+  }
+}
+
+.kyc-details-service-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: -4px 0 18px;
+}
+
+/* Top photo comparison - same behavior as previous customer details */
+
+.kyc-details-top-images {
+  display: grid;
+  align-items: start;
+  gap: 28px;
+  margin: 22px 0;
+}
+
+.kyc-image-card {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+
+  h4 {
+    margin: 0 0 8px;
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  img,
+  .kyc-image-placeholder {
+    width: 100%;
+    height: 250px;
+    border: 1px solid #d9dee7;
+    border-radius: 6px;
+    background: #ffffff;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+  }
+}
+
+.kyc-image-placeholder,
+.kyc-document-placeholder,
+.kyc-signature-placeholder {
+  background: #ffffff !important;
+}
+
+/* Main details area */
+
+.kyc-details-main-grid {
+  display: grid;
+  gap: 30px;
+  align-items: start;
+}
+
+.kyc-status-card {
+  background: #ffffff;
+  border: 1px solid #d9dee7;
+  border-radius: 3px;
+  overflow: hidden;
+  align-self: start;
+
+  &__header {
+    padding: 14px 18px;
+    background: #334047;
+    color: #ffffff;
+    font-weight: 900;
+  }
+}
+
+.kyc-status-row {
+  display: grid;
+  gap: 10px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #0f172a;
+  font-size: 14px;
+
+  strong {
+    font-weight: 900;
+  }
+
+  span {
+    text-align: right;
+    font-weight: 600;
+  }
+}
+
+.kyc-status-download-actions {
+  padding: 12px 14px 14px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.kyc-profile-section {
+  min-width: 0;
+}
+
+.kyc-profile-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 22px;
+  border-bottom: 1px solid #cbd5e1;
+
+  button {
+    min-height: 42px;
+    padding: 0 18px;
+    border: 1px solid transparent;
+    border-bottom: 0;
+    background: transparent;
+    color: #0284c7;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+
+    &.active {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      color: #334155;
+    }
+  }
+}
+
+.kyc-profile-grid {
+  display: grid;
+  gap: 18px 34px;
+}
+
+.kyc-info-column {
+  display: grid;
+  align-content: start;
+  gap: 0;
+}
+
+.kyc-info-item {
+  min-height: 58px;
+  padding: 0 0 13px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #dbe4ea;
+
+  strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0;
+    color: #0066ff;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.35;
+  }
+}
+
+/* Documents - same contain behavior as previous customer details */
+
+.kyc-documents-grid {
+  display: grid;
+  gap: 22px 40px;
+  align-items: start;
+}
+
+.kyc-info-item--signature {
+  grid-column: 1 / 2;
+  max-width: 280px;
+}
+
+.kyc-document-image,
+.kyc-document-placeholder {
+  width: 100%;
+  max-width: 380px;
+  height: 420px;
+  margin-top: 8px;
+  border-radius: 6px;
+  object-fit: contain;
+  object-position: center center;
+  border: 1px solid #d9dee7;
+  background: #ffffff;
+  display: block;
+}
+
+.kyc-document-image--nid-card,
+.kyc-document-placeholder--nid-card {
+  height: auto;
+  aspect-ratio: 1.586 / 1;
+}
+
+.kyc-signature-image,
+.kyc-signature-placeholder {
+  width: 100%;
+  max-width: 280px;
+  height: 160px;
+  margin-top: 8px;
+  object-fit: contain;
+  object-position: center center;
+  border: 1px solid #d9dee7;
+  border-radius: 6px;
+  background: #ffffff;
+  display: block;
+}
+
+/* User modal */
+
+.user-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(15, 23, 42, 0.25);
+}
+
+.user-modal {
+  position: fixed;
+  z-index: 60;
+  padding: 20px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.24);
+
+  h3 {
+    margin: 0 0 8px;
+    color: #12365f;
+    font-size: 18px;
+    font-weight: 900;
+  }
+
+  p {
+    margin: 0 0 18px;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 600;
+
+    strong {
+      color: #0f172a;
+      font-weight: 900;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+
+.kyc-details-empty {
+  min-height: 280px;
+  display: grid;
+  place-items: center;
+  color: #334155;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+/* Responsive */
+
+@media (max-width: 1280px) {
+  .kyc-details-top-images {
+  }
+
+  .kyc-details-main-grid {
+  }
+
+  .kyc-documents-grid {
+  }
+}
+
+@media (max-width: 980px) {
+  .kyc-details-main-grid {
+  }
+
+  .kyc-profile-grid,
+  .kyc-documents-grid {
+  }
+
+  .kyc-info-item--signature {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .kyc-details-title-row {
+    align-items: flex-start;
+
+    h1 {
+      font-size: 24px;
+    }
+  }
+
+  .kyc-details-top-images {
+  }
+
+  .kyc-status-row {
+    gap: 4px;
+
+    span {
+      text-align: left;
+    }
+  }
+
+  .user-modal {
+    left: 16px;
+    right: 16px;
+    width: auto;
+  }
+}

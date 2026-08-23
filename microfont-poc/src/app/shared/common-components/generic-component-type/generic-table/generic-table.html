@@ -1,0 +1,78 @@
+<!-- dynamic-table.component.html -->
+
+<!-- ======================== LOADING STATE ======================== -->
+@if (isLoading()) {
+  <div class="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+    <div class="flex flex-col items-center space-y-4">
+      <div class="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-slate-600 font-medium tracking-wide">Loading Information...</p>
+    </div>
+  </div>
+}
+
+<!-- ======================== ERROR STATE ======================== -->
+@else if (errorMessage()) {
+  <div class="flex items-center justify-center min-h-screen bg-gradient-to-br from-red-50 to-rose-100">
+    <div class="bg-white p-8 rounded-2xl shadow-xl border-l-4 border-red-500">
+      <h2 class="text-2xl font-bold text-red-600 mb-2">Error Loading Data</h2>
+      <p class="text-slate-600">{{ errorMessage() }}</p>
+    </div>
+  </div>
+}
+
+<!-- ======================== MAIN CONTENT ======================== -->
+@else if (tableConfig()) {
+  <div class=" bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 p-8">
+    <div class="max-w-6xl mx-auto">
+
+      <!-- Header -->
+      @if (showHeader) {
+        <div class="mb-8 animate-slide-down">
+          <h1 class="header-title text-4xl font-bold text-slate-800 mb-2">
+            {{ customTitle || 'Data Overview' }}
+          </h1>
+          <p class="text-slate-600 text-lg">
+            {{ customSubtitle || 'Complete information display' }}
+          </p>
+        </div>
+      }
+
+      <!-- Sections Loop -->
+      <div class="space-y-6 animate-fade-in">
+        @for (section of tableConfig()!.sections; track trackByIndex($index)) {
+          <div class="bg-white rounded-xl shadow-2xl overflow-hidden border border-slate-200
+                      transform transition-all duration-300 hover:shadow-3xl">
+
+            <!-- Section Header -->
+            <div style="font-weight: 500;" class="bg-[var(--theme-primary)] text-white px-4 py-1  text-sm tracking-wide shadow-md"
+                 [ngClass]="section.headerClass || ''">
+              {{ section.title }}
+            </div>
+
+            <!-- Table -->
+            <table class="w-full border-collapse">
+              <tbody>
+                @for (row of section.rows; track trackByIndex($index)) {
+                  <tr [ngClass]="getRowClass(row, hasHighlightedCell(row))">
+
+                    @for (cell of row.cells; track trackByIndex($index)) {
+                      <td
+                        [ngClass]="getCellClass(cell)"
+                        [attr.colspan]="cell.colspan && cell.colspan > 1 ? cell.colspan : null"
+                        [attr.rowspan]="cell.rowspan && cell.rowspan > 1 ? cell.rowspan : null"
+                        [style]="cell.style"
+                        [style.width]="cell.width || null">
+                        {{ displayValue(cell) }}
+                      </td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+
+    </div>
+  </div>
+}

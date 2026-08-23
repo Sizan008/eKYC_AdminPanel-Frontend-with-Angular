@@ -1,0 +1,257 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.user-activity-log {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  color: #0f172a;
+}
+
+.user-activity-filter-panel {
+  width: min(980px, 100%);
+  margin: 18px auto 0;
+}
+
+.activity-search {
+  width: 100%;
+  margin: 0;
+  display: grid;
+  gap: 26px;
+
+  &__group {
+    display: grid;
+    gap: 14px;
+
+    h3 {
+      margin: 0;
+      color: #0f172a;
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+
+  &__actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
+    margin-top: 8px;
+  }
+}
+
+.activity-divider {
+  width: min(980px, 100%);
+  height: 1px;
+  margin: 22px auto 14px;
+  background: #cbd5e1;
+}
+
+.activity-summary {
+  width: min(980px, 100%);
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+
+  h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 25px;
+    font-weight: 400;
+    line-height: 1;
+  }
+}
+
+.activity-table-card {
+  width: min(1280px, 100%);
+  margin: 0 auto;
+  padding: 16px 14px 18px;
+  border: 1px solid #dbe4ea;
+  border-radius: 3px;
+  background: #ffffff;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+
+.activity-table {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: collapse;
+  color: #0f172a;
+  background: #ffffff;
+  table-layout: fixed;
+
+  th,
+  td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #cbd5e1;
+    text-align: left;
+    vertical-align: top;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.45;
+    background: #ffffff;
+    word-break: break-word;
+  }
+
+  th {
+    font-weight: 600;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .empty-cell {
+    text-align: center;
+    color: #64748b;
+  }
+}
+
+.activity-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 18px;
+
+  button {
+    min-width: 92px;
+    height: 34px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+  }
+
+  span {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+.user-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.user-modal {
+  position: fixed;
+  z-index: 90;
+  padding: 20px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.24);
+
+  h3 {
+    margin: 0 0 8px;
+    color: #12365f;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0 0 18px;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 500;
+
+    strong {
+      color: #0f172a;
+      font-weight: 700;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .user-activity-filter-panel {
+    width: 100%;
+  }
+
+  .activity-search {
+  }
+
+  .activity-search__actions {
+    justify-content: flex-start;
+  }
+
+  .activity-table-card {
+    width: 100%;
+  }
+
+  .activity-table {
+    min-width: 920px;
+  }
+
+  .activity-summary {
+    width: 100%;
+    align-items: flex-start;
+    gap: 10px;
+
+    h2 {
+      margin-left: 0;
+    }
+  }
+}
+
+//header Design
+.user-activity-log {
+  padding: 24px 28px;
+  color: #0f172a;
+  width: 100%;
+
+  &__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    width: 100%;
+    gap: 16px;
+    margin-bottom: 32px;
+
+    div {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    span {
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+      color: #0f172a;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+  }
+}

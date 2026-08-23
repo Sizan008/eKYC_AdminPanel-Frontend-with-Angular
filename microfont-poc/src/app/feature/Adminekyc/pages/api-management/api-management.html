@@ -1,0 +1,324 @@
+<admin-layout
+  [title]="'Digital Onboarding'"
+  [username]="getAdminName()"
+  [activeMenu]="'apiManagement'"
+  [drawerOpened]="state.drawerOpened()"
+  (menuClicked)="state.toggleDrawer()"
+  (userClicked)="state.openUserModal()"
+  (dashboardClicked)="state.goToDashboard()"
+  (channelManagementClicked)="state.goToChannelManagement()"
+  (productManagementClicked)="state.goToProductManagement()"
+  (workflowManagementClicked)="state.goToWorkflowManagement()"
+  (parametersClicked)="state.goToParameters()"
+  (apiManagementClicked)="state.goToApiManagement()"
+  (authorizedClicked)="state.goToAuthorizedCustomers()"
+  (unauthorizedClicked)="state.goToUnauthorizedCustomers()"
+  (incompleteClicked)="state.goToIncompleteCustomers()"
+  (declinedClicked)="state.goToDeclinedCustomers()"
+  (ecVerificationClicked)="state.goToEcVerification()"
+  (userActivityLogClicked)="state.goToUserActivityLog()"
+  (kycReportByYearClicked)="state.goToKycReportByYear()">
+
+  <section class="api-management-page w-full min-w-0 space-y-3 p-2 sm:space-y-4 sm:p-3 md:p-4 lg:p-5 xl:p-6">
+    @if (pageErrorMessage()) {
+      <div class="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 sm:px-4">
+        {{ pageErrorMessage() }}
+      </div>
+    }
+
+    @if (pageMode() === 'list') {
+      <header class="api-management-page__header flex flex-col gap-2 sm:gap-3 md:flex-row md:items-center md:justify-between lg:gap-4 xl:gap-6">
+        <div>
+          <h1>Configuration</h1>
+          <span>API Management</span>
+        </div>
+
+        <p>Configuration &gt; API Management</p>
+      </header>
+
+      <div class="api-management-page__links flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4">
+        <button type="button" (click)="showCreate()">Create New</button>
+      </div>
+
+      <section class="api-table-card w-full min-w-0 overflow-x-auto rounded-lg">
+        <table class="api-table w-full min-w-[760px] lg:min-w-full">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Key</th>
+              <th>Port</th>
+              <th>URL</th>
+              <th>User</th>
+              <th>Password</th>
+              <th>Credential</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (apiItem of getPaginatedApiItems(); track apiItem.id) {
+              <tr>
+                <td>{{ apiItem.name }}</td>
+                <td>{{ apiItem.key }}</td>
+                <td>{{ apiItem.port }}</td>
+                <td>{{ apiItem.url }}</td>
+                <td>{{ apiItem.user }}</td>
+                <td>{{ apiItem.password }}</td>
+                <td>{{ apiItem.credential }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="api-table__edit"
+                    (click)="showEdit(apiItem)">
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            }
+
+            @if (apiItems().length === 0) {
+              <tr>
+                <td colspan="8" class="empty-cell">
+                  No API configuration found.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        @if (apiItems().length > itemsPerPage) {
+          <div class="api-pagination flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              [disabled]="currentPage() === 1"
+              (click)="goToPreviousPage()">
+              Previous
+            </button>
+
+            <span>Page {{ currentPage() }} of {{ getTotalPages() }}</span>
+
+            <button
+              type="button"
+              [disabled]="currentPage() === getTotalPages()"
+              (click)="goToNextPage()">
+              Next
+            </button>
+          </div>
+        }
+      </section>
+    }
+
+    @if (pageMode() === 'edit') {
+      <section class="api-form-page w-full min-w-0 space-y-3 p-2 sm:space-y-4 sm:p-3 md:p-4 lg:p-5 xl:p-6">
+        <header class="api-management-page__header flex flex-col gap-2 sm:gap-3 md:flex-row md:items-center md:justify-between lg:gap-4 xl:gap-6">
+          <div>
+            <h1>Configuration</h1>
+            <span>Edit API</span>
+          </div>
+
+          <p>Configuration &gt; API Management - Edit</p>
+        </header>
+
+        <form [formGroup]="apiForm" class="api-form grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-3 xl:gap-6">
+          <input-text-box
+            displayMode="outline"
+            label="Name"
+            placeholder=""
+            [frmGroup]="apiForm"
+            controlName="name">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Key"
+            placeholder=""
+            [frmGroup]="apiForm"
+            controlName="key">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Port"
+            placeholder=""
+            [frmGroup]="apiForm"
+            controlName="port">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="URL"
+            placeholder=""
+            [frmGroup]="apiForm"
+            controlName="url">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="User"
+            placeholder=""
+            [frmGroup]="apiForm"
+            controlName="user">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Password"
+            placeholder=""
+            [frmGroup]="apiForm"
+            controlName="password">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Credential"
+            placeholder=""
+            [frmGroup]="apiForm"
+            controlName="credential">
+          </input-text-box>
+
+          <div class="api-form__actions flex flex-row flex-wrap items-center gap-2 sm:gap-3 md:col-span-2 lg:col-span-3">
+            <generic-button
+              label="Save"
+              cssClass="admin-btn-primary"
+              (onClick)="saveApiManagement()">
+            </generic-button>
+
+            <button type="button" class="text-link" (click)="backToList()">
+              Back to List
+            </button>
+          </div>
+        </form>
+      </section>
+    }
+
+    @if (pageMode() === 'create') {
+      <section class="api-form-page w-full min-w-0 space-y-3 p-2 sm:space-y-4 sm:p-3 md:p-4 lg:p-5 xl:p-6">
+        <header class="api-management-page__header flex flex-col gap-2 sm:gap-3 md:flex-row md:items-center md:justify-between lg:gap-4 xl:gap-6">
+          <div>
+            <h1>Configuration</h1>
+            <span>API Management - Create</span>
+          </div>
+
+          <p>Configuration &gt; API Management - Create</p>
+        </header>
+
+        <form [formGroup]="apiForm" class="api-form grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-3 xl:gap-6">
+          <input-text-box
+            displayMode="outline"
+            label="Name"
+            placeholder=""
+            [frmGroup]="apiForm"
+            controlName="name">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Key"
+            placeholder=""
+            [frmGroup]="apiForm"
+            controlName="key">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Port"
+            placeholder=""
+            [frmGroup]="apiForm"
+            controlName="port">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="URL"
+            placeholder=""
+            [frmGroup]="apiForm"
+            controlName="url">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="User"
+            placeholder=""
+            [frmGroup]="apiForm"
+            controlName="user">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Password"
+            placeholder=""
+            [frmGroup]="apiForm"
+            controlName="password">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Credential"
+            placeholder=""
+            [frmGroup]="apiForm"
+            controlName="credential">
+          </input-text-box>
+
+          <div class="api-form__actions api-form__actions--row flex flex-row flex-wrap items-center gap-2 sm:gap-3 md:col-span-2 lg:col-span-3">
+            <generic-button
+              label="Create"
+              cssClass="admin-btn-primary"
+              (onClick)="createApiManagement()">
+            </generic-button>
+
+            <generic-button
+              label="Back to the list"
+              cssClass="admin-btn-search"
+              (onClick)="backToList()">
+            </generic-button>
+          </div>
+        </form>
+      </section>
+    }
+  </section>
+
+  <generic-modal
+    [isVisible]="successModalOpened()"
+    [modalTitle]="'Success'"
+    [cssClass]="'admin-api-success-modal'"
+    [closeOnBackdropClick]="true"
+    [showDefaultFooter]="true"
+    [showOkButton]="true"
+    [okButtonText]="'Close'"
+    [showCancelButton]="false"
+    (isVisibleChanged)="successModalOpened.set($event)"
+    (modalClosed)="closeSuccessModal()"
+    (modalResult)="closeSuccessModal()">
+
+    <section class="api-success-content">
+      <div class="api-success-content__icon">✓</div>
+      <h2>{{ successMessage() }}</h2>
+    </section>
+  </generic-modal>
+
+  @if (state.userModalOpened()) {
+    <div class="user-modal-backdrop" (click)="state.closeUserModal()"></div>
+
+    <div class="user-modal left-3 right-3 top-16 w-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 md:right-6 lg:right-8 xl:right-10">
+      <h3>Digital Onboarding</h3>
+      <p>
+        Logged in as:
+        <strong>{{ auth.currentAdmin()?.name || 'Admin' }}</strong>
+      </p>
+
+      <div class="user-modal__actions flex flex-wrap justify-end gap-2 sm:gap-3">
+        <generic-button
+          label="Close"
+          cssClass="admin-btn-secondary"
+          (onClick)="state.closeUserModal()">
+        </generic-button>
+
+        <generic-button
+          label="Sign Out"
+          cssClass="admin-btn-danger"
+          (onClick)="logout()">
+        </generic-button>
+      </div>
+    </div>
+  }
+</admin-layout>

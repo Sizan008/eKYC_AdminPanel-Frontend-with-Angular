@@ -1,0 +1,11 @@
+<div class="admin-customer-avatar">
+  @if (hasValidImage()) {
+    <img
+      [src]="imageUrl()"
+      [alt]="altText()"
+      loading="lazy"
+      (error)="onImageError()" />
+  } @else {
+    <span>{{ fallbackText() }}</span>
+  }
+</div>

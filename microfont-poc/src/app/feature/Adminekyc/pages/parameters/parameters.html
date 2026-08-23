@@ -1,0 +1,278 @@
+<admin-layout
+  [title]="'Digital Onboarding'"
+  [username]="getAdminName()"
+  [activeMenu]="'parameters'"
+  [drawerOpened]="state.drawerOpened()"
+  (menuClicked)="state.toggleDrawer()"
+  (userClicked)="state.openUserModal()"
+  (dashboardClicked)="state.goToDashboard()"
+  (channelManagementClicked)="state.goToChannelManagement()"
+  (productManagementClicked)="state.goToProductManagement()"
+  (workflowManagementClicked)="state.goToWorkflowManagement()"
+  (parametersClicked)="state.goToParameters()"
+  (apiManagementClicked)="state.goToApiManagement()"
+  (authorizedClicked)="state.goToAuthorizedCustomers()"
+  (unauthorizedClicked)="state.goToUnauthorizedCustomers()"
+  (incompleteClicked)="state.goToIncompleteCustomers()"
+  (declinedClicked)="state.goToDeclinedCustomers()"
+  (ecVerificationClicked)="state.goToEcVerification()"
+  (userActivityLogClicked)="state.goToUserActivityLog()"
+  (kycReportByYearClicked)="state.goToKycReportByYear()">
+
+  <section class="parameters-page w-full min-w-0 space-y-3 p-2 sm:space-y-4 sm:p-3 md:p-4 lg:p-5 xl:p-6">
+    @if (pageErrorMessage()) {
+      <div class="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 sm:px-4">
+        {{ pageErrorMessage() }}
+      </div>
+    }
+
+    @if (pageMode() === 'list') {
+      <header class="parameters-page__header flex flex-col gap-2 sm:gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1>Configurations</h1>
+          <span>Parameters</span>
+        </div>
+
+        <p>Configurations &gt; Parameters</p>
+      </header>
+
+      <div class="parameters-page__links flex flex-wrap items-center gap-2 sm:gap-3">
+        <button type="button" (click)="showCreate()">Create New Params</button>
+      </div>
+
+      <section class="parameters-table-card w-full min-w-0 overflow-x-auto rounded-lg">
+        <table class="parameters-table w-full min-w-[760px] lg:min-w-full">
+          <thead>
+            <tr>
+              <th>Parameter Name</th>
+              <th>Parameter Value</th>
+              <th>Parameter Description</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (parameter of getPaginatedParameters(); track parameter.id) {
+              <tr>
+                <td>{{ parameter.parameterName }}</td>
+                <td>{{ parameter.parameterValue }}</td>
+                <td>{{ parameter.parameterDescription }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="parameters-table__edit"
+                    (click)="showEdit(parameter)">
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            }
+
+            @if (parameters().length === 0) {
+              <tr>
+                <td colspan="4" class="empty-cell">
+                  No parameter found.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        @if (parameters().length > itemsPerPage) {
+          <div class="parameters-pagination flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              [disabled]="currentPage() === 1"
+              (click)="goToPreviousPage()">
+              Previous
+            </button>
+
+            <span>Page {{ currentPage() }} of {{ getTotalPages() }}</span>
+
+            <button
+              type="button"
+              [disabled]="currentPage() === getTotalPages()"
+              (click)="goToNextPage()">
+              Next
+            </button>
+          </div>
+        }
+      </section>
+    }
+
+    @if (pageMode() === 'edit') {
+      <section class="parameter-form-page w-full min-w-0 space-y-3 p-2 sm:space-y-4 sm:p-3 md:p-4 lg:p-5 xl:p-6">
+        <header class="parameters-page__header flex flex-col gap-2 sm:gap-3 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1>Configurations</h1>
+            <span>Edit Parameter</span>
+          </div>
+
+          <p>Configurations &gt; Parameters - Edit</p>
+        </header>
+
+        <form
+  [formGroup]="parameterForm"
+  class="parameter-form grid w-full grid-cols-1 gap-3
+         sm:grid-cols-2 sm:gap-4
+         md:gap-5
+         lg:grid-cols-3
+         xl:gap-6">
+          <input-text-box
+            displayMode="outline"
+            label="Parameter Name"
+            placeholder=""
+            [frmGroup]="parameterForm"
+            controlName="parameterName">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Parameter Value"
+            placeholder=""
+            [frmGroup]="parameterForm"
+            controlName="parameterValue">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Parameter Description"
+            placeholder=""
+            [frmGroup]="parameterForm"
+            controlName="parameterDescription">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Privacy Level"
+            placeholder=""
+            [frmGroup]="parameterForm"
+            controlName="privacyLevel">
+          </input-text-box>
+
+          <div class="parameter-form__actions flex flex-wrap items-center gap-2 sm:gap-3 sm:col-span-2 xl:col-span-3">
+            <generic-button
+              label="Save"
+              cssClass="admin-btn-primary"
+              (onClick)="saveParameter()">
+            </generic-button>
+
+            <button type="button" class="text-link" (click)="backToList()">
+              Back to List
+            </button>
+          </div>
+        </form>
+      </section>
+    }
+
+    @if (pageMode() === 'create') {
+      <section class="parameter-form-page w-full min-w-0 space-y-3 p-2 sm:space-y-4 sm:p-3 md:p-4 lg:p-5 xl:p-6">
+        <header class="parameters-page__header flex flex-col gap-2 sm:gap-3 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1>Configurations</h1>
+            <span>Parameters - Create</span>
+          </div>
+
+          <p>Configurations &gt; Parameters - Create</p>
+        </header>
+
+        <button type="button" class="text-link text-link--top" (click)="backToList()">
+          Back
+        </button>
+
+        <form [formGroup]="parameterForm" class="parameter-form grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-2 xl:grid-cols-3">
+          <input-text-box
+            displayMode="outline"
+            label="Parameter Name"
+            placeholder=""
+            [frmGroup]="parameterForm"
+            controlName="parameterName">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Parameter Value"
+            placeholder=""
+            [frmGroup]="parameterForm"
+            controlName="parameterValue">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Parameter Description"
+            placeholder=""
+            [frmGroup]="parameterForm"
+            controlName="parameterDescription">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Privacy Level"
+            placeholder=""
+            [frmGroup]="parameterForm"
+            controlName="privacyLevel">
+          </input-text-box>
+
+          <div class="parameter-form__actions parameter-form__actions--row flex flex-wrap items-center gap-2 sm:gap-3 sm:col-span-2 xl:col-span-3">
+            <generic-button
+              label="Create"
+              cssClass="admin-btn-primary"
+              (onClick)="createParameter()">
+            </generic-button>
+
+            <generic-button
+              label="Back to the list"
+              cssClass="admin-btn-search"
+              (onClick)="backToList()">
+            </generic-button>
+          </div>
+        </form>
+      </section>
+    }
+  </section>
+
+  <generic-modal
+    [isVisible]="successModalOpened()"
+    [modalTitle]="'Success'"
+    [cssClass]="'admin-parameter-success-modal'"
+    [closeOnBackdropClick]="true"
+    [showDefaultFooter]="true"
+    [showOkButton]="true"
+    [okButtonText]="'Close'"
+    [showCancelButton]="false"
+    (isVisibleChanged)="successModalOpened.set($event)"
+    (modalClosed)="closeSuccessModal()"
+    (modalResult)="closeSuccessModal()">
+
+    <section class="parameter-success-content">
+      <div class="parameter-success-content__icon">✓</div>
+      <h2>{{ successMessage() }}</h2>
+    </section>
+  </generic-modal>
+
+  @if (state.userModalOpened()) {
+    <div class="user-modal-backdrop" (click)="state.closeUserModal()"></div>
+
+    <div class="user-modal left-3 right-3 top-16 w-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 md:right-6 lg:right-8 xl:right-10">
+      <h3>Digital Onboarding</h3>
+      <p>
+        Logged in as:
+        <strong>{{ auth.currentAdmin()?.name || 'Admin' }}</strong>
+      </p>
+
+      <div class="user-modal__actions flex flex-wrap justify-end gap-2 sm:gap-3">
+        <generic-button
+          label="Close"
+          cssClass="admin-btn-secondary"
+          (onClick)="state.closeUserModal()">
+        </generic-button>
+
+        <generic-button
+          label="Sign Out"
+          cssClass="admin-btn-danger"
+          (onClick)="logout()">
+        </generic-button>
+      </div>
+    </div>
+  }
+</admin-layout>

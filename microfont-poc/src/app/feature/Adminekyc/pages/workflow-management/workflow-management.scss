@@ -1,0 +1,300 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.workflow-management,
+.workflow-create {
+  color: #0f172a;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+
+    div {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      color: #0f172a;
+      font-size: 25px;
+      font-weight: 500;
+    }
+
+    span {
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    p {
+      margin: 0;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
+
+  &__links {
+    margin-bottom: 22px;
+
+    button {
+      border: 0;
+      background: transparent;
+      color: #0284c7;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__select-row {
+    width: min(560px, 100%);
+    margin: 0 auto 18px;
+    display: grid;
+    gap: 8px;
+
+    label {
+      color: #0f172a;
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+
+  &__select {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 400;
+    outline: none;
+
+    &:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 1px rgba(2, 132, 199, 0.15);
+    }
+  }
+}
+
+.workflow-table-card {
+  width: min(1080px, 100%);
+  margin: 22px auto 0;
+}
+
+.workflow-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0;
+  color: #0f172a;
+
+  th,
+  td {
+    padding: 15px 14px;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  th {
+    font-weight: 600;
+  }
+
+  tbody tr:nth-child(odd) {
+    background: #dbe2e8;
+  }
+
+  tbody tr:nth-child(even) {
+    background: #eef3f7;
+  }
+
+  .empty-cell {
+    text-align: center;
+    color: #64748b;
+  }
+}
+
+.workflow-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+:host ::ng-deep .admin-btn-step-action,
+:host ::ng-deep button.admin-btn-step-action {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 30px !important;
+  padding: 0 !important;
+  border: 2px solid #0793a8 !important;
+  border-radius: 0 !important;
+  background: #eef9fb !important;
+  color: #0793a8 !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+  font-weight: 600 !important;
+}
+
+.workflow-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 18px;
+
+  button {
+    min-width: 92px;
+    height: 34px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+  }
+
+  span {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.workflow-create {
+  &__form {
+    width: min(980px, 100%);
+    margin: 22px auto 0;
+    display: grid;
+    gap: 18px 30px;
+  }
+
+  &__actions {
+    grid-column: 1 / -1;
+    display: grid;
+    justify-items: start;
+    gap: 16px;
+    margin-top: 4px;
+  }
+}
+
+.text-link {
+  border: 0;
+  background: transparent;
+  color: #0284c7;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.workflow-success-content {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 12px 6px 4px;
+  text-align: center;
+
+  &__icon {
+    width: 58px;
+    height: 58px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #16a34a;
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 800;
+  }
+
+  h2 {
+    margin: 4px 0 0;
+    color: #0f172a;
+    font-size: 22px;
+    font-weight: 600;
+  }
+}
+
+.user-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.user-modal {
+  position: fixed;
+  z-index: 90;
+  padding: 20px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.24);
+
+  h3 {
+    margin: 0 0 8px;
+    color: #12365f;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0 0 18px;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 500;
+
+    strong {
+      color: #0f172a;
+      font-weight: 700;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+
+:host ::ng-deep .admin-workflow-success-modal {
+  max-width: 420px !important;
+}
+
+@media (max-width: 900px) {
+  .workflow-management,
+  .workflow-create {
+    &__header {
+      align-items: flex-start;
+    }
+  }
+
+  .workflow-create__form {
+  }
+
+  .workflow-management__select-row {
+    width: 100%;
+  }
+}

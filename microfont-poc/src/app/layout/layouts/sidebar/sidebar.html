@@ -1,0 +1,530 @@
+<div class="flex h-[]  p-1 m-1" >
+
+      <div
+  class="sidebar-container flex flex-col items-center relative z-[60] md:z-50 md:border-r sidebar md:border-gray-100 bg-white md:bg-transparent transition-all duration-300 ease-in-out transform md:transform-none fixed md:relative  md:top-auto left-0 h-[calc(100vh-8rem)] md:h-auto md:left-auto md:flex  max-w-[320px]  shadow-2xl md:shadow-none border-none md:border "
+  [class.hidden]="!sidebarExpanded && isMobileOpen"
+  [class.translate-x-0]="sidebarExpanded && isMobileOpen"
+  [class.w-21]="!sidebarExpanded && !isMobileOpen"
+  [class.w-44]="sidebarExpanded && !isMobileOpen"
+  [class.w-43]="sidebarExpanded && isMobileOpen"
+>
+  <div class="flex w-full">
+
+    <!-- Logo/Search Section -->
+    <div class="sidebar-brand flex space-x-1 justify-start items-center shadow-xl/30 mb-2 h-10 rounded px-2 transition-transform duration-300  "
+    [class.w-21]="!sidebarExpanded"
+    [class.w-63]="sidebarExpanded"
+
+     >
+      <app-search></app-search>
+    </div>
+  </div>
+
+  <!-- Mobile backdrop for sidebar overlay -->
+  <div *ngIf="sidebarExpanded && isMobileOpen"  (click)="toggleSidebar()"></div>
+
+
+    <!-- Navigation Items -->
+    <div class="flex-1 flex flex-col space-y-2 w-full px-2">
+
+      <!-- Menu Item -->
+      <div class="group"
+      [class.flex]="!sidebarExpanded"
+      [class.justify-center]="!sidebarExpanded"
+      >
+        <div (click)="toggleDrawer('Menu'); setActiveItem('Menu')"
+             data-drawer-trigger="Menu"
+             class="rounded-lg cursor-pointer transition-all duration-200 relative flex items-center overflow-visible"
+             [class.w-10]="!sidebarExpanded"
+             [class.h-10]="!sidebarExpanded"
+             [class.hover:bg-gray-100]="activeItem !== 'menu'"
+             [class.px-4]="sidebarExpanded"
+             [class.py-3]="sidebarExpanded"
+             [class.justify-center]="!sidebarExpanded"
+             [class.justify-start]="sidebarExpanded">
+
+          @if(activeTheme === 'blue') {
+            <img src="/asset/icons/menu1.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'rose') {
+            <img src="/asset/icons/roseMenu.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'MidnightBlue') {
+            <img src="/asset/icons/menu_midnight.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'emerald') {
+            <img src="/asset/icons/greenMenu.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'purple') {
+            <img src="/asset/icons/purpleMenu.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'Lavendar') {
+            <img src="/asset/icons/lavendarMenu.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'dark') {
+            <img src="/asset/icons/blackMenu.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          }
+
+
+          <!-- Label (shown when expanded) -->
+          <span class="ml-4 text-sm font-medium text-gray-700 whitespace-nowrap transition-all duration-300 "
+                [class.opacity-0]="!sidebarExpanded"
+                [class.opacity-100]="sidebarExpanded"
+                [class.hidden]="!sidebarExpanded">
+            Menu
+          </span>
+
+          <!-- Tooltip (only shown when collapsed) -->
+          <div class="tooltip absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-2 py-1 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap pointer-events-none"
+          [class.hidden]="sidebarExpanded">
+            Menu
+            <div class="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1 w-1.5 h-1.5 bg-gray-900 rotate-45"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module Item -->
+      <div class="group"
+      [class.flex]="!sidebarExpanded"
+      [class.justify-center]="!sidebarExpanded"
+      >
+        <div (click)="toggleDrawer('Modules'); setActiveItem('Modules')"
+             data-drawer-trigger="Modules"
+             class="rounded-lg cursor-pointer transition-all duration-200 relative  flex items-center overflow-visible"
+             [class.w-10]="!sidebarExpanded"
+             [class.h-10]="!sidebarExpanded"
+             [class.hover:bg-gray-100]="activeItem !== 'application'"
+             [class.px-4]="sidebarExpanded"
+             [class.py-3]="sidebarExpanded"
+             [class.justify-center]="!sidebarExpanded"
+             [class.justify-start]="sidebarExpanded">
+
+            @if(activeTheme === 'blue') {
+            <img src="/asset/icons/application.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'modules'"/>
+          } @else if(activeTheme === 'rose') {
+            <img src="/asset/icons/roseApplication.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'modules'"/>
+          } @else if(activeTheme === 'MidnightBlue') {
+            <img src="/asset/icons/midnightApplication.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'modules'"/>
+          } @else if(activeTheme === 'emerald') {
+            <img src="/asset/icons/greenApplication.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'modules'"/>
+          } @else if(activeTheme === 'purple') {
+            <img src="/asset/icons/purpleApplication.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'modules'"/>
+          } @else if(activeTheme === 'Lavendar') {
+            <img src="/asset/icons/lavendarApplication.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'modules'"/>
+          } @else if(activeTheme === 'dark') {
+            <img src="/asset/icons/blackApplication.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'modules'"/>
+          }
+          <!-- Label (shown when expanded) -->
+          <span class="ml-4 text-sm font-medium text-gray-700 whitespace-nowrap transition-all duration-300"
+                [class.opacity-0]="!sidebarExpanded"
+                [class.opacity-100]="sidebarExpanded"
+                [class.hidden]="!sidebarExpanded">
+             Modules
+          </span>
+
+          <!-- Tooltip (only shown when collapsed) -->
+          <div class="tooltip absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap pointer-events-none z-50"
+               [class.hidden]="sidebarExpanded">
+             Application
+            <div class="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Menu -->
+      <div class="group "
+      [class.flex]="!sidebarExpanded"
+      [class.justify-center]="!sidebarExpanded">
+        <div routerLink="/landing/dashboard" (click)="setActiveItem('Dashboard')"
+             class="rounded-lg cursor-pointer transition-all duration-200 relative flex items-center overflow-visible"
+             [class.w-10]="!sidebarExpanded"
+             [class.h-10]="!sidebarExpanded"
+             [class.hover:bg-gray-100]="activeItem !== 'dashboard'"
+             [class.px-4]="sidebarExpanded"
+             [class.py-3]="sidebarExpanded"
+             [class.justify-center]="!sidebarExpanded"
+             [class.justify-start]="sidebarExpanded">
+
+          @if(activeTheme === 'blue') {
+            <img src="/asset/icons/dashboard1.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'rose') {
+            <img src="/asset/icons/roseDashboard.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'MidnightBlue') {
+            <img src="/asset/icons/midnightDashboard.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'emerald') {
+            <img src="/asset/icons/greenDashboard.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'purple') {
+            <img src="/asset/icons/purpleDashboard.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'Lavendar') {
+            <img src="/asset/icons/lavendarDashboard.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'dark') {
+            <img src="/asset/icons/blackDashboard.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          }
+
+          <span class="ml-4 text-sm font-medium text-gray-700 whitespace-nowrap transition-all duration-300"
+                [class.opacity-0]="!sidebarExpanded"
+                [class.opacity-100]="sidebarExpanded"
+                [class.hidden]="!sidebarExpanded">
+            Dashboard
+          </span>
+
+          <div class="tooltip absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap pointer-events-none z-50"
+               [class.hidden]="sidebarExpanded">
+            Dashboard
+            <div class="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Transaction Menu -->
+      <div class="group "
+      [class.flex]="!sidebarExpanded"
+      [class.justify-center]="!sidebarExpanded">
+        <div  routerLink="/rpt/report-generation" (click)="setActiveItem('Report')"
+             class="rounded-lg cursor-pointer transition-all duration-200 relative flex items-center overflow-visible"
+             [class.w-10]="!sidebarExpanded"
+             [class.h-10]="!sidebarExpanded"
+             [class.hover:bg-gray-100]="activeItem !== 'transaction'"
+             [class.px-4]="sidebarExpanded"
+             [class.py-3]="sidebarExpanded"
+             [class.justify-center]="!sidebarExpanded"
+             [class.justify-start]="sidebarExpanded">
+
+            @if(activeTheme === 'blue') {
+            <img src="/asset/icons/report.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'rose') {
+            <img src="/asset/icons/roseReport.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'MidnightBlue') {
+            <img src="/asset/icons/midnightReport.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'emerald') {
+            <img src="/asset/icons/greenReport.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'purple') {
+            <img src="/asset/icons/purpleReport.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'Lavendar') {
+            <img src="/asset/icons/lavendarReport.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'dark') {
+            <img src="/asset/icons/blackReport.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          }
+
+          <span class="ml-4 text-sm font-medium text-gray-700 whitespace-nowrap transition-all duration-300"
+                [class.opacity-0]="!sidebarExpanded"
+                [class.opacity-100]="sidebarExpanded"
+                [class.hidden]="!sidebarExpanded">
+            Reports
+          </span>
+
+          <div class="tooltip absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap pointer-events-none z-50"
+               [class.hidden]="sidebarExpanded">
+            Reports
+            <div class="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Approval Menu -->
+      <div class="group "
+           [class.flex]="!sidebarExpanded"
+           [class.justify-center]="!sidebarExpanded">
+        <div (click)="setActiveItem('Approval')"
+             routerLink="/poc/approval-items"
+             class="rounded-lg cursor-pointer transition-all duration-200 relative flex items-center overflow-visible"
+             [class.w-10]="!sidebarExpanded"
+             [class.h-10]="!sidebarExpanded"
+             [class.hover:bg-gray-100]="activeItem !== 'approval'"
+             [class.px-4]="sidebarExpanded"
+             [class.py-3]="sidebarExpanded"
+             [class.justify-center]="!sidebarExpanded"
+             [class.justify-start]="sidebarExpanded">
+
+          @if(activeTheme === 'blue') {
+          <img src="/asset/icons/security.svg"
+             class="flex-shrink-0"
+             [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'rose') {
+          <img src="/asset/icons/roseSecurity.svg"
+             class="flex-shrink-0"
+             [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'MidnightBlue') {
+          <img src="/asset/icons/midnightSecurity.svg"
+             class="flex-shrink-0"
+             [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'emerald') {
+          <img src="/asset/icons/greenSecurity.svg"
+             class="flex-shrink-0"
+             [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'purple') {
+          <img src="/asset/icons/purpleSecurity.svg"
+             class="flex-shrink-0"
+             [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'Lavendar') {
+          <img src="/asset/icons/lavendarSecurity.svg"
+             class="flex-shrink-0"
+             [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'dark') {
+          <img src="/asset/icons/blackSecurity.svg"
+             class="flex-shrink-0"
+             [class.filter]="activeItem === 'menu'"/>
+          }
+
+          <span class="ml-4 text-sm font-medium text-gray-700 whitespace-nowrap transition-all duration-300"
+                [class.opacity-0]="!sidebarExpanded"
+                [class.opacity-100]="sidebarExpanded"
+                [class.hidden]="!sidebarExpanded">
+            Approval Steps
+          </span>
+
+          <div class="tooltip absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap pointer-events-none z-50"
+               [class.hidden]="sidebarExpanded">
+            Approval Steps
+            <div class="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Items -->
+    <div class="sidebar-bottom flex flex-col space-y-3 rounded-lg py-5 border-gray-200 shadow-[0_-6px_12px_rgba(0,0,0,0.40)] z-30 w-full"
+         [class.space-x-1]="!sidebarExpanded"
+         [class.px-4.5]="!sidebarExpanded"
+         [class.px-2]="sidebarExpanded">
+
+      <div class="group" [class.flex]="!sidebarExpanded" [class.justify-center]="!sidebarExpanded">
+  <div
+    (click)="toggleDrawer('Profile'); setActiveItem('Profile')"
+    data-drawer-trigger="Profile"
+    class="rounded-lg cursor-pointer transition-all duration-200 relative flex items-center overflow-visible hover:bg-[var(--theme-accent)]"
+    [class.w-10]="!sidebarExpanded"
+    [class.h-10]="!sidebarExpanded"
+    [class.px-4]="sidebarExpanded"
+    [class.py-3]="sidebarExpanded"
+    [class.justify-center]="!sidebarExpanded"
+    [class.justify-start]="sidebarExpanded">
+
+    <!-- Avatar wrapper (relative for absolute badges) -->
+    <div class="relative profile-icon-wrapper flex items-center">
+      <!-- theme-based image (existing logic preserved) -->
+      @if(activeTheme === 'blue') {
+        <img src="/asset/icons/profile3.svg" class="flex-shrink-0" [class.filter]="activeItem === 'menu'"/>
+      } @else if(activeTheme === 'rose') {
+        <img src="/asset/icons/roseProfile.svg" class="flex-shrink-0" [class.filter]="activeItem === 'menu'"/>
+      } @else if(activeTheme === 'MidnightBlue') {
+        <img src="/asset/icons/midnightProfile.svg" class="flex-shrink-0" [class.filter]="activeItem === 'menu'"/>
+      } @else if(activeTheme === 'emerald') {
+        <img src="/asset/icons/greenProfile.svg" class="flex-shrink-0" [class.filter]="activeItem === 'menu'"/>
+      } @else if(activeTheme === 'purple') {
+        <img src="/asset/icons/purpleProfile.svg" class="flex-shrink-0" [class.filter]="activeItem === 'menu'"/>
+      } @else if(activeTheme === 'Lavendar') {
+        <img src="/asset/icons/lavendarProfile.svg" class="flex-shrink-0" [class.filter]="activeItem === 'menu'"/>
+      } @else if(activeTheme === 'dark') {
+        <img src="/asset/icons/blackProfile.svg" class="flex-shrink-0" [class.filter]="activeItem === 'menu'"/>
+      }
+
+      <!-- Notification badge: top-right (like WhatsApp) -->
+      <ng-container *ngIf="(notifications$ | async) as n">
+        <span *ngIf="n > 0" class="icon-badge notification-badge">
+          {{ n > 99 ? '99+' : n }}
+        </span>
+      </ng-container>
+
+      <!-- Message badge: top-left (optional, small) -->
+      <ng-container *ngIf="(messages$ | async) as m">
+        <span *ngIf="m > 0" class="icon-badge message-badge">
+          {{ m > 99 ? '99+' : m }}
+        </span>
+      </ng-container>
+    </div>
+
+    <!-- Label (shown when expanded) -->
+    <span class="ml-4 text-sm font-medium text-white whitespace-nowrap transition-all duration-300"
+          [class.opacity-0]="!sidebarExpanded"
+          [class.opacity-100]="sidebarExpanded"
+          [class.hidden]="!sidebarExpanded">
+      Profile
+    </span>
+
+    <!-- Tooltip (only shown when collapsed) -->
+    <div class="tooltip absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-2 py-1 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap pointer-events-none z-50"
+         [class.hidden]="sidebarExpanded">
+      Profile
+      <div class="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45"></div>
+    </div>
+  </div>
+</div>
+
+      <!-- Logout -->
+
+            <div class="group " routerLink="/login"
+              [class.flex]="!sidebarExpanded"
+              [class.justify-center]="!sidebarExpanded">
+            <div (click)="authService.logout()"
+             class="rounded-lg cursor-pointer transition-all duration-200 relative flex items-center overflow-visible hover:bg-[var(--theme-accent)]"
+             [class.w-10]="!sidebarExpanded"
+             [class.h-10]="!sidebarExpanded"
+
+             [class.px-4]="sidebarExpanded"
+             [class.py-3]="sidebarExpanded"
+             [class.justify-center]="!sidebarExpanded"
+             [class.justify-start]="sidebarExpanded">
+
+            @if(activeTheme === 'blue') {
+            <img src="/asset/icons/logout1.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'rose') {
+            <img src="/asset/icons/roseLogout.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'MidnightBlue') {
+            <img src="/asset/icons/midnightLogout.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'emerald') {
+            <img src="/asset/icons/greenLogout.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'purple') {
+            <img src="/asset/icons/purpleLogout.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'Lavendar') {
+            <img src="/asset/icons/lavendarLogout.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          } @else if(activeTheme === 'dark') {
+            <img src="/asset/icons/blackLogout.svg"
+               class="flex-shrink-0"
+               [class.filter]="activeItem === 'menu'"/>
+          }
+
+          <span class="ml-4 text-sm font-medium text-white whitespace-nowrap transition-all duration-300"
+                [class.opacity-0]="!sidebarExpanded"
+                [class.opacity-100]="sidebarExpanded"
+                [class.hidden]="!sidebarExpanded">
+            Logout
+          </span>
+
+          <div class="tooltip absolute left-full top-1/2 transform -translate-y-1/2 ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap pointer-events-none z-50"
+               [class.hidden]="sidebarExpanded">
+            Logout
+            <div class="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45"></div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<!-- Drawer code with FIXED RESPONSIVE POSITIONING -->
+
+<div
+  *ngIf="drawerOpen"
+  class="fixed inset-0 z-[55] bg-black/30 transition-opacity duration-300"
+  [class.md:left-auto]="true"
+   [style.backgoundRadius]="'10px'"
+  [class.md:w-auto]="true"
+  (click)="closeDrawer()">
+</div>
+
+<!-- Drawer - NOW RESPONSIVE! -->
+<div
+  class="drawer-container fixed  z-[60] lg:z-[10] md:z-[10] bg-white shadow-2xl rounded  transition-all duration-300"
+  [class.left-0]="isMobile && drawerOpen"
+  [class.top-[73px]]="drawerOpen"
+  [class.w-full]="isMobile && drawerOpen"
+  [class.h-[calc(100vh-73px)]="drawerOpen"
+  [class.max-w-full]="isMobile"
+  [class.md:w-[350px]]="drawerOpen"
+  [class.md:left-[80px]]="!sidebarExpanded && drawerOpen"
+  [class.md:left-[180px]]="sidebarExpanded && drawerOpen"
+  [style.left]="!isMobile && drawerOpen ? (sidebarExpanded ? '185px' : '85px') : (drawerOpen ? '0' : '-480px')"
+  [style.opacity]="drawerOpen ? '1' : '0'"
+  [style.visibility]="drawerOpen ? 'visible' : 'hidden'"
+  [style.borderRadius]="'10px'"
+
+  (click)="$event.stopPropagation()">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center p-4 border-b rounded border-gray-200 bg-[var(--theme-background)]"[style.borderRadius]="'10px'">
+    <h2 class="text-lg font-medium text-gray-800 flex items-center">
+      <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+      </svg>
+      {{ drawerType | titlecase }}
+    </h2>
+    <button
+      (click)="closeDrawer()"
+      class="text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full p-2 transition-all duration-200 ease-in-out transform hover:scale-110">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div class="overflow-y-auto h-[calc(100vh-65px-65px)]">
+    @if (drawerType === 'Profile') {
+      <app-profile-drawer></app-profile-drawer>
+    } @else if (drawerType === 'Menu') {
+      <app-menu-drawer></app-menu-drawer>
+    } @else if (drawerType === 'Modules') {
+      <app-module-drawer></app-module-drawer>
+    }
+  </div>
+
+  <!-- Resize Handle (desktop only) -->
+  <!-- <div class="hidden md:block absolute right-0 top-0 h-full w-1 bg-gray-200 hover:bg-blue-400 cursor-col-resize transition-colors duration-200"></div> -->
+
+
+</div>

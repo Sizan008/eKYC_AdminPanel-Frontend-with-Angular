@@ -1,0 +1,76 @@
+:host {
+  display: block;
+}
+
+.admin-summary-card {
+  width: 100%;
+  min-height: 126px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border: 0;
+  border-radius: 18px;
+  color: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 14px 24px rgba(15, 23, 42, 0.14);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 30px rgba(15, 23, 42, 0.2);
+  }
+
+  &--disabled {
+    cursor: default;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  &__icon {
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.22);
+    font-size: 25px;
+    font-weight: 900;
+  }
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 800;
+    opacity: 0.9;
+  }
+
+  h2 {
+    margin: 8px 0 0;
+    font-size: 24px;
+    line-height: 1;
+    font-weight: 900;
+  }
+
+  &--total {
+    background: linear-gradient(135deg, #0b73bb, #074b85);
+  }
+
+  &--authorized {
+    background: linear-gradient(135deg, #059669, #047857);
+  }
+
+  &--unauthorized {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+  }
+
+  &--incomplete {
+    background: linear-gradient(135deg, #f59e0b, #b45309);
+  }
+}

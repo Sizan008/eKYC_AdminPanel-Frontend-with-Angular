@@ -1,0 +1,174 @@
+<div class="p-4">
+  @if (historyError) {
+  <div class="mb-4 p-3 border border-red-200 bg-red-50 text-red-700 rounded">
+  {{ historyError }}
+  </div>
+  }
+
+  @if (isLoadingHistory) {
+  <div class="flex items-center justify-center py-10 text-gray-500">
+    <mat-icon class="mr-2">sync</mat-icon>
+    Loading approval history...
+  </div>
+  } @else {
+  <div class="h-full overflow-y-auto">
+    <div class="relative pl-1 space-y-4">
+      @if (!steps.length) {
+  <div class="text-center text-gray-500 py-8">
+    <mat-icon class="text-4xl text-gray-400 mb-2">history</mat-icon>
+    <div>No approval history found.</div>
+  </div>
+  }
+
+  @for (step of steps; track step.stepOrder; let last = $last) {
+  <div class="relative mb-6 flex items-start">
+    @if (!last) {
+    <div
+      class="timeline-connector rounded-full transition-colors duration-300"
+      [ngClass]="{
+    'bg-emerald-500': getStepStatus(step.historyList) === 'APPROVED',
+    'bg-amber-400': getStepStatus(step.historyList) === 'PENDING',
+    'bg-red-500': getStepStatus(step.historyList) === 'REJECTED',
+    'bg-gray-200': getStepStatus(step.historyList) === 'CREATED'
+    }"
+              ></div>
+    }
+
+    <div
+      class="absolute left-3 w-8 h-8 rounded-full border-4 bg-white flex items-center justify-center z-10 shadow-sm"
+      [ngClass]="{
+                'border-emerald-500 text-emerald-600': getStepStatus(step.historyList) === 'APPROVED',
+                'border-amber-500 text-amber-600': getStepStatus(step.historyList) === 'PENDING',
+                'border-red-500 text-red-600': getStepStatus(step.historyList) === 'REJECTED',
+                'border-gray-300 text-gray-400': getStepStatus(step.historyList) === 'CREATED'
+              }"
+    >
+      @switch (getStepStatus(step.historyList)) {
+      @case ('APPROVED') {<mat-icon class="text-base">check</mat-icon>}
+      @case ('PENDING') {<mat-icon class="text-base">schedule</mat-icon>}
+      @case ('REJECTED') {<mat-icon class="text-base">close</mat-icon>}
+      @default {<mat-icon class="text-base">lens</mat-icon>}
+      }
+    </div>
+
+    <div
+      class="ml-16 flex-1 rounded-lg border transition-all duration-200 cursor-pointer hover:shadow-md"
+      [ngClass]="{
+                'border-emerald-500': getStepStatus(step.historyList) === 'APPROVED',
+                'border-amber-400': getStepStatus(step.historyList) === 'PENDING',
+                'border-red-500': getStepStatus(step.historyList) === 'REJECTED',
+                'border-gray-300': getStepStatus(step.historyList) === 'CREATED',
+                'ring-2 ring-blue-400': selectedStepId() === step.stepOrder
+              }"
+      (click)="toggleStep(step.stepOrder)"
+    >
+      <div class="p-3">
+        <div class="flex justify-between items-center mb-1">
+          <h3 class="font-semibold text-gray-800">{{ step.stepName }}</h3>
+          <span class="text-xs text-gray-500">
+                    {{ getApprovedCount(step.historyList) }}/{{ step.minReqSupervisor }}
+                  </span>
+        </div>
+
+        <div
+          class="text-xs text-gray-500"
+          *ngIf="step.historyList?.length && selectedStepId() !== step.stepOrder"
+          [matTooltip]="step.historyList[0].comment || 'Click to view details'"
+        >
+          Click to view {{ step.historyList.length }} approver(s)
+        </div>
+
+        @if (selectedStepId() === step.stepOrder) {
+        <div
+          class="mt-3 border-t border-gray-100 pt-2 transition-all duration-300 ease-in-out"
+          [class.max-h-0]="selectedStepId() !== step.stepOrder"
+          [class.opacity-0]="selectedStepId() !== step.stepOrder"
+          [class.max-h-[1600px]]="selectedStepId() === step.stepOrder"
+          [class.opacity-100]="selectedStepId() === step.stepOrder"
+        >
+          <div class="approvers-grid">
+            @for (a of step.historyList; track a.queueId; let idx = $index) {
+        <div
+          class="approver-card p-3 rounded border bg-white gap-2"
+          [ngClass]="{
+                            'border-emerald-200 bg-emerald-50/50': a.status === 'APPROVED',
+                            'border-red-200 bg-red-50/50': a.status === 'REJECTED',
+                            'border-amber-200 bg-amber-50/50': a.status === 'PENDING',
+                            'border-gray-200 bg-gray-50/50': a.status === 'CREATED'
+                          }"
+        >
+          <div class="approver-info">
+            <div class="avatar-large bg-blue-100 text-blue-700">
+              {{ a.performedBy.substring(0, 2).toUpperCase() }}
+            </div>
+            <div class="approver-details">
+              <div class="approver-name">{{ a.performedBy }}</div>
+              <div class="approver-role">{{ a.role }}</div>
+            </div>
+          </div>
+
+          <div class="approver-status">
+                            <span
+                              class="status-badge-small"
+                              [ngClass]="{
+                                'bg-emerald-100 text-emerald-800': a.status === 'APPROVED',
+                                'bg-red-100 text-red-800': a.status === 'REJECTED',
+                                'bg-amber-100 text-amber-800': a.status === 'PENDING',
+                                'bg-gray-100 text-gray-700': a.status === 'CREATED'
+                              }"
+                            >
+                              {{ a.status }}
+                            </span>
+          </div>
+
+          @if (a.performedTime) {
+          <div class="approver-timestamp flex items-center gap-1 text-[11px] text-gray-500">
+            <mat-icon class="text-[14px]">schedule</mat-icon>
+            <span>{{ a.performedTime | date: 'dd-MMM-yyyy, hh:mm a' }}</span>
+                            </div>
+          }
+
+          @if (a.comment) {
+          <div class="approver-comment">
+            <mat-icon class="comment-icon text-[16px]">chat_bubble_outline</mat-icon>
+            <span class="comment-text">"{{ a.comment }}"</span>
+                            </div>
+          }
+        </div>
+        }
+        </div>
+      </div>
+        }
+      </div>
+    </div>
+  </div>
+  }
+  </div>
+</div>
+  }
+
+  @if (!isLoadingHistory && steps.length) {
+  <section class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+    <div class="rounded-lg border p-3 bg-emerald-50 border-emerald-100">
+      <div class="text-2xl font-bold text-emerald-600">{{ approvedStepsCount() }}</div>
+        <div class="text-sm text-gray-700">Steps Approved</div>
+      </div>
+      <div class="rounded-lg border p-3 bg-amber-50 border-amber-100">
+        <div class="text-2xl font-bold text-amber-600">{{ pendingStepsCount() }}</div>
+        <div class="text-sm text-gray-700">Steps In Progress</div>
+      </div>
+      <div class="rounded-lg border p-3 bg-gray-50 border-gray-200">
+        <div class="text-2xl font-bold text-gray-500">{{ createdStepsCount() }}</div>
+        <div class="text-sm text-gray-700">Steps Waiting</div>
+      </div>
+      <div class="rounded-lg border p-3 bg-blue-50 border-blue-100">
+        <div class="text-2xl font-bold text-blue-600">{{ totalApprovalsCount() }}</div>
+        <div class="text-sm text-gray-700">Total Approvals</div>
+      </div>
+      <div class="rounded-lg border p-3 bg-purple-50 border-purple-100">
+        <div class="text-2xl font-bold text-purple-600">{{ totalApproversCount() }}</div>
+        <div class="text-sm text-gray-700">Total Approvers</div>
+      </div>
+    </section>
+  }
+</div>

@@ -1,0 +1,62 @@
+<div class="page-wrapper">
+    <!-- @if(frmUserNote) {
+    <form [formGroup]="frmUserNote" class="userNote-form"> -->
+    <div class="panel">
+        <div class="transaction-grid-container mb-5">
+            <section class="header-section">
+                <app-expansion-panel-header [isOpenSignal]="businessHeaderPanel" [panelTitle]="'All Notes'" />
+            </section>
+            <div class="form-grid-col-1">
+                <div class="notes-grid">
+                    <div class="note-card" *ngFor="let note of userNoteList" [style.background-color]="note.noteColor">
+                        <div class="corner-fold"></div>
+                        <div class="note-header">{{ note.noteTitle }}</div>
+
+                        <!-- Note content -->
+                        <div class="note-content" [class.collapsed]="!note.expanded" [innerHTML]="getSafeHtml(note.noteContent ?? '')">                  
+                        </div>
+                        <!-- See More / Collapse -->                        
+                        <a class="see-more" *ngIf="note && note.noteContent && note.noteContent.length > 150"
+                            (click)="note.expanded = !note.expanded">
+                            {{ note.expanded ? 'Collapse' : 'See More' }}
+                        </a>
+
+                        <!-- Footer -->
+                        <div class="note-footer mt-2">
+                            <button mat-icon-button aria-label="Edit" matTooltip="Update Note"
+                                (click)="onUpdateNote(note)">
+                                <mat-icon class="icon-box">edit</mat-icon>
+                            </button>
+                            <button mat-icon-button aria-label="Delete" matTooltip="Delete Note"
+                                (click)="onDeleteNote(note.noteId!)">
+                                <mat-icon class="icon-box">delete</mat-icon>
+                            </button>
+                            <button mat-icon-button aria-label="Pin Note"
+                                [matTooltip]="note.isPinned ? 'Pinned note. Click to unpin' : 'Unpinned note. Click to pin'"
+                                (click)="updateNotePinStatus(note)">
+                                <mat-icon class="icon-box" [ngClass]="note.isPinned ? 'pinned' : 'unpinned'">
+                                    push_pin
+                                </mat-icon>
+                            </button>
+
+                            <mat-icon *ngIf="note.isReminder" class="icon-box"
+                                matTooltip="Reminder: {{ note.reminderDate | date:'medium' }}">alarm</mat-icon>
+                            <!-- <mat-icon *ngIf="note.isPinned" class="icon-box"
+                                        matTooltip="Note is pinned">push_pin</mat-icon> -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Floating Action Button (FAB) -->
+                <button class="fab-btn" (click)="openModal()">
+                    <mat-icon>add</mat-icon>
+                    <span class="fab-text">Add Note</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- </form> -->
+    <!-- Data Selection Modal -->
+    <generic-modal [isVisible]="showModal" [modalTitle]="'Add/Update Note'" [cssClass]="'modal-lg'" [showOkButton]="false"
+        [okButtonText]="modalOkButtonText()" [modalComponent]="modalComponent" [modalComponentData]="modalComponentData"
+        (modalClosed)="onModalClose(false)" (modalResult)="onModalResult($event)"></generic-modal>
+</div>

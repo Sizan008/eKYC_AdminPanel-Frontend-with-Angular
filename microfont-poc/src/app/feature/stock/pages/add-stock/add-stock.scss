@@ -1,0 +1,96 @@
+:host {
+  display: block;
+  padding: 24px;
+}
+
+.stock-form {
+  display: grid;
+  gap: 20px;
+  width: min(100%, 1280px);
+  margin: 0 auto;
+}
+
+.panel-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+}
+
+.wide-card {
+  grid-column: 1 / -1;
+}
+
+.field-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.attachment-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.primary-button {
+  min-width: 170px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+}
+
+.secondary-button {
+  min-width: 170px;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.panel-summary {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 22px;
+}
+
+.preview-card {
+  max-width: 360px;
+}
+
+.stock-quill ::ng-deep .ql-container {
+  min-height: 220px;
+}
+
+@media (max-width: 1040px) {
+  .panel-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  :host {
+    padding: 16px;
+  }
+
+  .stock-form {
+    gap: 16px;
+  }
+
+  .card,
+  .panel-summary {
+    padding: 18px;
+  }
+}

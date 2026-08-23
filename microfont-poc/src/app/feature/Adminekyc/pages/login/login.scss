@@ -1,0 +1,231 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.admin-login-page {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(8, 65, 119, 0.95), rgba(18, 128, 108, 0.92)),
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 35%);
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.14), transparent 22%),
+      radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.12), transparent 25%);
+    pointer-events: none;
+  }
+
+  &__card-wrap {
+    position: relative;
+    z-index: 1;
+    width: min(1140px, 100%);
+  }
+
+  &__footer {
+    width: 100%;
+    margin-top: 18px;
+    text-align: left;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+  }
+}
+
+.login-card {
+  display: grid;
+  min-height: 520px;
+
+  &__brand {
+    padding: 42px 34px;
+    display: flex;
+    justify-content: center;
+    color: #ffffff;
+    background: linear-gradient(160deg, #064f89, #027a64);
+
+    h2 {
+      margin: 22px 0 8px;
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    p {
+      width: 100%;
+      margin: 0;
+      font-size: 15px;
+      opacity: 0.9;
+      text-align: left;
+    }
+  }
+
+  &__logo-box {
+      min-height: 160px;
+    display: grid;
+    place-items: center;
+    padding: 14px;
+    border-radius: 14px;
+    background: #ffffff;
+
+    img {
+      max-width: 100%;
+      max-height: 95px;
+      object-fit: contain;
+    }
+  }
+
+  &__form {
+    padding: 56px 60px;
+    background: #ffffff;
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 900;
+      color: #12365f;
+    }
+  }
+
+  &__subtitle {
+    margin: 8px 0 30px;
+    color: #64748b;
+    font-size: 14px;
+  }
+
+  &__field {
+    margin-bottom: 28px;
+  }
+
+  &__actions {
+    margin-top: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__links {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    color: #64748b;
+    font-size: 13px;
+
+    button {
+      border: 0;
+      background: transparent;
+      color: #0f766e;
+      font-weight: 700;
+      cursor: pointer;
+    }
+  }
+}
+
+/* Microfont input fields larger on desktop and mobile */
+
+:host ::ng-deep .login-card input,
+:host ::ng-deep .login-card input.p-inputtext,
+:host ::ng-deep .login-card .p-inputtext,
+:host ::ng-deep .login-card .form-control,
+:host ::ng-deep .login-card .input-control,
+:host ::ng-deep .login-card input[type='text'],
+:host ::ng-deep .login-card input[type='password'] {
+  width: 100% !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  padding: 14px 16px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  box-sizing: border-box !important;
+}
+
+/* Label clearer */
+
+:host ::ng-deep .login-card label,
+:host ::ng-deep .login-card .label,
+:host ::ng-deep .login-card .field-label {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  margin-bottom: 8px !important;
+  color: #12365f !important;
+}
+
+/* Login button bigger and centered */
+
+:host ::ng-deep #adminLoginBtn,
+:host ::ng-deep #adminLoginBtn button,
+:host ::ng-deep button#adminLoginBtn,
+:host ::ng-deep .login-card__actions button,
+:host ::ng-deep .login-card button[type='submit'] {
+  min-width: 220px !important;
+  min-height: 56px !important;
+  padding: 14px 36px !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  border-radius: 8px !important;
+}
+
+.login-error-modal {
+  padding: 8px 0;
+
+  p {
+    margin: 0 0 18px;
+    color: #334155;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 760px) {
+  .admin-login-page {
+    padding: 18px;
+  }
+
+  .login-card {
+    min-height: auto;
+
+    &__brand {
+      padding: 28px 24px;
+      align-items: center;
+      text-align: center;
+    }
+
+    &__logo-box {
+      width: 240px;
+      min-height: 120px;
+    }
+
+    &__form {
+      padding: 32px 24px;
+    }
+
+    &__actions {
+      justify-content: center;
+    }
+  }
+
+  :host ::ng-deep .login-card input,
+  :host ::ng-deep .login-card input.p-inputtext,
+  :host ::ng-deep .login-card .p-inputtext {
+    height: 52px !important;
+    min-height: 52px !important;
+    font-size: 15px !important;
+  }
+
+  :host ::ng-deep #adminLoginBtn,
+  :host ::ng-deep #adminLoginBtn button,
+  :host ::ng-deep .login-card__actions button {
+    width: 100% !important;
+    min-height: 52px !important;
+  }
+}

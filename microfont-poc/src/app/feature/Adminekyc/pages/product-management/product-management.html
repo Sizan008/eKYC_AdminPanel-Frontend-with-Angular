@@ -1,0 +1,384 @@
+<admin-layout
+  [title]="'Digital Onboarding'"
+  [username]="getAdminName()"
+  [activeMenu]="'productManagement'"
+  [drawerOpened]="state.drawerOpened()"
+  (menuClicked)="state.toggleDrawer()"
+  (userClicked)="state.openUserModal()"
+  (dashboardClicked)="state.goToDashboard()"
+  (channelManagementClicked)="state.goToChannelManagement()"
+  (productManagementClicked)="state.goToProductManagement()"
+  (workflowManagementClicked)="state.goToWorkflowManagement()"
+  (parametersClicked)="state.goToParameters()"
+  (apiManagementClicked)="state.goToApiManagement()"
+  (authorizedClicked)="state.goToAuthorizedCustomers()"
+  (unauthorizedClicked)="state.goToUnauthorizedCustomers()"
+  (incompleteClicked)="state.goToIncompleteCustomers()"
+  (declinedClicked)="state.goToDeclinedCustomers()"
+  (ecVerificationClicked)="state.goToEcVerification()"
+  (userActivityLogClicked)="state.goToUserActivityLog()"
+  (kycReportByYearClicked)="state.goToKycReportByYear()">
+
+  <section class="product-management w-full min-w-0 space-y-3 p-2 sm:space-y-4 sm:p-3 md:p-4 lg:p-5 xl:p-6">
+    <header class="product-management__header flex flex-col gap-2 sm:gap-3 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h1>Product & Channel</h1>
+        <span>Product Management</span>
+      </div>
+
+      <p>Product & Channel &gt; Product Management</p>
+    </header>
+
+    @if (pageErrorMessage()) {
+      <div class="product-management__error">
+        {{ pageErrorMessage() }}
+      </div>
+    }
+
+    @if (pageMode() === 'home') {
+      <div class="product-management__links flex flex-wrap items-center gap-2 sm:gap-3">
+        <button type="button" (click)="showList()">List of All Products</button>
+        <span>|</span>
+        <button type="button" (click)="showAssign()">Assign New Product</button>
+        <span>|</span>
+      </div>
+
+      <div class="product-management__select-row grid w-full grid-cols-1 gap-2 sm:grid-cols-[180px_minmax(0,1fr)] sm:items-center md:max-w-2xl lg:max-w-3xl xl:max-w-4xl">
+        <label for="channelSelect">Select Channel</label>
+
+        <select
+          id="channelSelect"
+          class="product-management__select w-full min-w-0"
+          [value]="selectedChannelId() ?? ''"
+          [disabled]="isLoadingChannels()"
+          (change)="onChannelChange($event)">
+          <option value="">{{ isLoadingChannels() ? 'Loading...' : 'Select' }}</option>
+
+          @for (channel of channels(); track channel.id) {
+            <option [value]="channel.id">
+              {{ channel.channelName }}
+            </option>
+          }
+        </select>
+      </div>
+
+      @if (selectedChannelId()) {
+        <section class="product-table-card w-full min-w-0 overflow-x-auto rounded-lg">
+          <table class="product-table w-full min-w-[680px] lg:min-w-full">
+            <thead>
+              <tr>
+                <th>Product Code</th>
+                <th>Product Name</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (product of channelProducts(); track product.id) {
+                <tr>
+                  <td>{{ product.productCode }}</td>
+                  <td>{{ product.productName }}</td>
+                  <td></td>
+                </tr>
+              }
+
+              @if (isLoadingChannelProducts()) {
+                <tr>
+                  <td colspan="3" class="empty-cell">Loading products...</td>
+                </tr>
+              } @else if (channelProducts().length === 0) {
+                <tr>
+                  <td colspan="3" class="empty-cell">
+                    No product found for selected channel.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </section>
+      }
+    }
+
+    @if (pageMode() === 'list') {
+      <div class="product-management__list-links flex flex-wrap items-center gap-2 sm:gap-3">
+        <button type="button" (click)="showCreate()">Create New</button>
+        <span>|</span>
+        <button type="button" (click)="showHome()">Back</button>
+        <span>|</span>
+      </div>
+
+      <section class="product-table-card w-full min-w-0 overflow-x-auto rounded-lg">
+        <table class="product-table w-full min-w-[680px] lg:min-w-full">
+          <thead>
+            <tr>
+              <th>Product ID</th>
+              <th>Product Name</th>
+              <th>Product Description</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (product of getPaginatedProducts(); track product.id) {
+              <tr>
+                <td>{{ product.productId }}</td>
+                <td>{{ product.productName }}</td>
+                <td class="product-description-cell" [innerHTML]="product.productDescription"></td>
+              </tr>
+            }
+
+            @if (isLoadingProducts()) {
+              <tr>
+                <td colspan="3" class="empty-cell">Loading products...</td>
+              </tr>
+            } @else if (products().length === 0) {
+              <tr>
+                <td colspan="3" class="empty-cell">No product found.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        @if (products().length > itemsPerPage) {
+          <div class="product-pagination flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              [disabled]="currentPage() === 1"
+              (click)="goToPreviousPage()">
+              Previous
+            </button>
+
+            <span>Page {{ currentPage() }} of {{ getTotalPages() }}</span>
+
+            <button
+              type="button"
+              [disabled]="currentPage() === getTotalPages()"
+              (click)="goToNextPage()">
+              Next
+            </button>
+          </div>
+        }
+      </section>
+    }
+
+    @if (pageMode() === 'assign') {
+      <section class="assign-panel w-full min-w-0">
+        <h2>Channel Name: {{ selectedChannelName() }}</h2>
+
+        <form
+          [formGroup]="assignForm"
+          class="assign-panel__form grid w-full grid-cols-1 gap-3
+                 sm:gap-4
+                 md:grid-cols-[minmax(280px,380px)_auto]
+                 md:items-end
+                 md:justify-center
+                 md:gap-5">
+          <div class="assign-panel__field min-w-0">
+            <label for="availableProduct">Available Product</label>
+
+            <select
+              id="availableProduct"
+              class="product-management__select w-full min-w-0"
+              formControlName="availableProduct"
+              [disabled]="isLoadingAvailableProducts() || isAssigning()">
+              <option value="">
+                {{ isLoadingAvailableProducts() ? 'Loading...' : 'Select' }}
+              </option>
+
+              @for (product of availableProducts(); track product.id) {
+                <option [value]="product.productCode">
+                  {{ product.productCode }} - {{ product.productName }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="assign-panel__actions flex flex-row flex-wrap items-center gap-2 sm:gap-4 md:mb-[3px]">
+            <generic-button
+              [label]="isAssigning() ? 'Assigning...' : 'Assign'"
+              cssClass="admin-btn-primary"
+              [enable]="!isAssigning() && !isLoadingAvailableProducts() && availableProducts().length > 0"
+              (onClick)="assignProduct()">
+            </generic-button>
+
+            <button type="button" class="text-link" (click)="showHome()">
+              Back
+            </button>
+          </div>
+        </form>
+
+        @if (!isLoadingAvailableProducts() && availableProducts().length === 0) {
+          <p class="product-management__empty">No available product found for this channel.</p>
+        }
+      </section>
+    }
+
+    @if (pageMode() === 'create') {
+      <section class="create-panel w-full min-w-0">
+        <h1>Create</h1>
+        <h2>ProductEditCreateModel</h2>
+
+        <form [formGroup]="createForm" class="create-panel__form grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6">
+          <input-text-box
+            label="ProductId"
+            displayMode="outline"
+            placeholder=""
+            [maxLength]="20"
+            [frmGroup]="createForm"
+            controlName="productId">
+          </input-text-box>
+
+          <input-select-option-field
+            label="ProductType"
+            displayMode="outline"
+            placeholder="Please Select"
+            [frmGroup]="createForm"
+            controlName="productType"
+            [options]="productTypeOptions"
+            [searchable]="false">
+          </input-select-option-field>
+
+          <input-text-box
+            label="ServiceTypeId"
+            displayMode="outline"
+            placeholder=""
+            [maxLength]="20"
+            [frmGroup]="createForm"
+            controlName="serviceTypeId">
+          </input-text-box>
+
+          <input-text-box
+            label="ProductName"
+            displayMode="outline"
+            placeholder=""
+            [maxLength]="100"
+            [frmGroup]="createForm"
+            controlName="productName">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="ProductDesc"
+            placeholder=""
+            [maxLength]="2000"
+            [frmGroup]="createForm"
+            controlName="productDescription">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="AmountMax"
+            placeholder="0.00"
+            [maxLength]="18"
+            [frmGroup]="createForm"
+            controlName="amountMax">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="AmountMin"
+            placeholder="0.00"
+            [maxLength]="18"
+            [frmGroup]="createForm"
+            controlName="amountMin">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Gender"
+            placeholder=""
+            [maxLength]="1"
+            [frmGroup]="createForm"
+            controlName="gender">
+          </input-text-box>
+
+          <input-text-box
+            displayMode="outline"
+            label="Profession"
+            placeholder=""
+            [maxLength]="5"
+            [frmGroup]="createForm"
+            controlName="profession">
+          </input-text-box>
+
+          <input-number
+            displayMode="outline"
+            label="AgeMax"
+            placeholder=""
+            [maxLen]="3"
+            [maxValue]="999"
+            [frmGroup]="createForm"
+            controlName="ageMax">
+          </input-number>
+
+          <input-number
+            displayMode="outline"
+            label="AgeMin"
+            placeholder=""
+            [maxLen]="3"
+            [maxValue]="999"
+            [frmGroup]="createForm"
+            controlName="ageMin">
+          </input-number>
+
+          <div class="create-panel__actions flex flex-row flex-wrap items-center gap-2 sm:col-span-2 sm:gap-3 lg:col-span-3 xl:col-span-4">
+            <generic-button
+              [label]="isCreating() ? 'Creating...' : 'Create'"
+              cssClass="admin-btn-primary"
+              [enable]="!isCreating() && !isLoadingCreateDefaults()"
+              (onClick)="createProduct()">
+            </generic-button>
+
+            <button type="button" class="text-link" (click)="showList()">
+              Back to List
+            </button>
+          </div>
+        </form>
+      </section>
+    }
+  </section>
+
+  <generic-modal
+    [isVisible]="successModalOpened()"
+    [modalTitle]="'Success'"
+    [cssClass]="'admin-product-success-modal'"
+    [closeOnBackdropClick]="true"
+    [showDefaultFooter]="true"
+    [showOkButton]="true"
+    [okButtonText]="'Close'"
+    [showCancelButton]="false"
+    (isVisibleChanged)="successModalOpened.set($event)"
+    (modalClosed)="closeSuccessModal()"
+    (modalResult)="closeSuccessModal()">
+
+    <section class="product-success-content">
+      <div class="product-success-content__icon">✓</div>
+      <h2>{{ successMessage() }}</h2>
+    </section>
+  </generic-modal>
+
+  @if (state.userModalOpened()) {
+    <div class="user-modal-backdrop" (click)="state.closeUserModal()"></div>
+
+    <div class="user-modal left-3 right-3 top-16 w-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 md:right-6 lg:right-8 xl:right-10">
+      <h3>Digital Onboarding</h3>
+      <p>
+        Logged in as:
+        <strong>{{ auth.currentAdmin()?.name || 'Admin' }}</strong>
+      </p>
+
+      <div class="user-modal__actions flex flex-wrap justify-end gap-2 sm:gap-3">
+        <generic-button
+          label="Close"
+          cssClass="admin-btn-secondary"
+          (onClick)="state.closeUserModal()">
+        </generic-button>
+
+        <generic-button
+          label="Sign Out"
+          cssClass="admin-btn-danger"
+          (onClick)="logout()">
+        </generic-button>
+      </div>
+    </div>
+  }
+</admin-layout>

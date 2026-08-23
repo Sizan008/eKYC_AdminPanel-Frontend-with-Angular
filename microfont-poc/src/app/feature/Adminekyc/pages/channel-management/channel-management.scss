@@ -1,0 +1,185 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.channel-management {
+  color: #0f172a;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+
+    div {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    span {
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 0;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 700;
+    }
+  }
+
+  &__select-row {
+    width: min(560px, 100%);
+    margin: 0 auto 18px;
+    display: grid;
+    gap: 8px;
+
+    label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+  }
+
+  &__select {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 14px;
+    outline: none;
+
+    &:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 1px rgba(2, 132, 199, 0.15);
+    }
+  }
+
+  &__form {
+    width: min(1120px, 100%);
+    margin: 0 auto;
+  }
+
+  &__actions {
+    width: 100%;
+    margin: 18px auto 0;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+}
+
+.form-grid {
+  display: grid;
+  gap: 16px 28px;
+  align-items: start;
+}
+
+.channel-save-content {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 12px 6px 4px;
+  text-align: center;
+
+  &__icon {
+    width: 58px;
+    height: 58px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #16a34a;
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 900;
+  }
+
+  h2 {
+    margin: 4px 0 0;
+    color: #0f172a;
+    font-size: 22px;
+    font-weight: 900;
+  }
+
+  p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.user-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.user-modal {
+  position: fixed;
+  z-index: 90;
+  padding: 20px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.24);
+
+  h3 {
+    margin: 0 0 8px;
+    color: #12365f;
+    font-size: 18px;
+    font-weight: 900;
+  }
+
+  p {
+    margin: 0 0 18px;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 600;
+
+    strong {
+      color: #0f172a;
+      font-weight: 900;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+
+:host ::ng-deep .admin-channel-saved-modal {
+  max-width: 420px !important;
+}
+
+@media (max-width: 900px) {
+  .form-grid {
+    gap: 16px;
+  }
+
+  .channel-management {
+    &__header {
+      align-items: flex-start;
+    }
+
+    &__actions {
+      justify-content: flex-start;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+<h2>Update Stock</h2>
+
+@for(item of stocks(); track item.id){
+
+  <div class="card">
+
+    <h3>{{item.brand}}</h3>
+
+    <p>Id: {{item.id}}</p>
+
+    <p>Quantity: {{item.quantity}}</p>
+
+    <p>Price: {{item.pricePerItem}} Tk</p>
+
+    <button (click)="increase(item)">
+      +
+    </button>
+
+    <button (click)="decrease(item)">
+      -
+    </button>
+
+    <button (click)="delete(item.id)">
+      Delete
+    </button>
+
+  </div>
+}

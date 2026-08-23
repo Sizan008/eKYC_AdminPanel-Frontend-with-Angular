@@ -1,0 +1,87 @@
+<div class="admin-login-page min-h-screen w-full px-3 py-4 sm:px-4 sm:py-6 md:px-6 lg:px-8 xl:px-10">
+  <div class="admin-login-page__overlay"></div>
+
+  <div class="admin-login-page__card-wrap mx-auto flex min-h-[calc(100vh-7rem)] w-full max-w-5xl items-center justify-center">
+    <admin-section-card>
+      <div class="login-card grid w-full grid-cols-1 overflow-hidden md:grid-cols-[minmax(220px,0.9fr)_minmax(0,1.35fr)] lg:max-w-5xl xl:max-w-6xl">
+        <div class="login-card__brand flex flex-col items-center justify-center p-5 sm:p-6 md:p-8 lg:p-10">
+          <div class="login-card__logo-box">
+            <img src="/ekycAdmin/citizens-bank.jpeg" alt="Citizens Bank" />
+          </div>
+
+          <h2>Citizens Bank PLC</h2>
+          <p>Digital Onboarding Admin Panel</p>
+          <div class="admin-login-page__footer mt-3 text-xs sm:text-sm">
+  Developed by LEADS Corporation.
+</div>
+        </div>
+
+        <div class="login-card__form min-w-0 p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12">
+          <h1>Admin Login</h1>
+          <p class="login-card__subtitle">
+            Sign in with your admin credentials.
+          </p>
+
+          <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <div class="login-card__field">
+              <input-text-box
+                [frmGroup]="loginForm"
+                controlName="username"
+                label="Username"
+                placeholder="Enter username"
+                displayMode="outline">
+              </input-text-box>
+            </div>
+
+            <div class="login-card__field">
+              <input-text-box
+                [frmGroup]="loginForm"
+                controlName="password"
+                label="Password"
+                type="password"
+                placeholder="Enter password"
+                displayMode="outline">
+              </input-text-box>
+            </div>
+
+            <div class="login-card__actions flex flex-wrap items-center gap-2 sm:gap-3">
+              <generic-button
+                id="adminLoginBtn"
+                [label]="isLoading() ? 'Logging in...' : 'LOGIN'"
+                cssClass="admin-btn-primary"
+                [enable]="!isLoading()"
+                (onClick)="login()">
+              </generic-button>
+            </div>
+          </form>
+
+          <div class="login-card__links flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+            <button type="button">Forgot Username?</button>
+            <span>|</span>
+            <button type="button">Forgot Password?</button>
+          </div>
+        </div>
+      </div>
+    </admin-section-card>
+
+  </div>
+
+  <generic-modal
+    [isVisible]="showErrorModal()"
+    modalTitle="Login Failed"
+    [showDefaultFooter]="false"
+    (closed)="closeErrorModal()"
+    (isVisibleChanged)="showErrorModal.set($event)">
+    <div class="login-error-modal">
+      <p>{{ errorMessage() }}</p>
+
+      <div class="login-error-modal__actions">
+        <generic-button
+          label="Close"
+          cssClass="admin-btn-primary"
+          (onClick)="closeErrorModal()">
+        </generic-button>
+      </div>
+    </div>
+  </generic-modal>
+</div>

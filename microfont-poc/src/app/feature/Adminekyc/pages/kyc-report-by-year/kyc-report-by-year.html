@@ -1,0 +1,166 @@
+<admin-layout
+  [title]="'Digital Onboarding'"
+  [username]="getAdminName()"
+  [activeMenu]="'kycReportByYear'"
+  [drawerOpened]="state.drawerOpened()"
+  (menuClicked)="state.toggleDrawer()"
+  (userClicked)="state.openUserModal()"
+  (dashboardClicked)="state.goToDashboard()"
+  (channelManagementClicked)="state.goToChannelManagement()"
+  (productManagementClicked)="state.goToProductManagement()"
+  (workflowManagementClicked)="state.goToWorkflowManagement()"
+  (parametersClicked)="state.goToParameters()"
+  (apiManagementClicked)="state.goToApiManagement()"
+  (authorizedClicked)="state.goToAuthorizedCustomers()"
+  (unauthorizedClicked)="state.goToUnauthorizedCustomers()"
+  (incompleteClicked)="state.goToIncompleteCustomers()"
+  (declinedClicked)="state.goToDeclinedCustomers()"
+  (ecVerificationClicked)="state.goToEcVerification()"
+  (userActivityLogClicked)="state.goToUserActivityLog()"
+  (kycReportByYearClicked)="state.goToKycReportByYear()">
+
+  <header class="kyc-report-by-year__header flex flex-col gap-2 px-2 sm:px-3 md:flex-row md:items-center md:justify-between md:px-4 lg:px-5 xl:px-6">
+    <div>
+      <h1>KYC Report</h1>
+      <span>KYC Report by Year</span>
+    </div>
+
+    <p>KYC Report &gt; KYC Report by Year</p>
+  </header>
+
+  <section class="kyc-report-page w-full min-w-0 space-y-3 p-2 sm:space-y-4 sm:p-3 md:p-4 lg:p-5 xl:p-6">
+    <form [formGroup]="yearForm" class="kyc-year-filter grid w-full grid-cols-1 gap-3 sm:grid-cols-[minmax(220px,320px)_auto] sm:items-end sm:gap-4 md:gap-5">
+      <input-number
+        displayMode="outline"
+        label="Year"
+        placeholder="1 = previous year"
+        [minValue]="0"
+        [frmGroup]="yearForm"
+        controlName="year">
+      </input-number>
+
+      <div
+        class="kyc-year-filter__actions flex flex-row flex-wrap items-center justify-start gap-2 sm:mb-[28px] sm:flex-nowrap sm:gap-3">
+        <generic-button
+          [label]="isDownloadingYear() ? 'Downloading...' : 'Year Kyc Report'"
+          cssClass="admin-btn-kyc-report"
+          [enable]="!isDownloadingYear()"
+          (onClick)="downloadYearReport()">
+        </generic-button>
+
+        <generic-button
+          label="Reset"
+          cssClass="admin-btn-kyc-reset"
+          [enable]="!isDownloadingYear()"
+          (onClick)="resetYear()">
+        </generic-button>
+      </div>
+    </form>
+
+    @if (errorMessage()) {
+      <div class="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <div class="kyc-report-divider"></div>
+
+    <h2 class="kyc-total">
+      Total Customers Found: {{ totalCount() }}
+    </h2>
+
+    @if (isLoading()) {
+      <div class="kyc-empty">Loading KYC report customers...</div>
+    } @else {
+      <section class="kyc-customer-list grid w-full grid-cols-1 gap-3 sm:gap-4 md:gap-5 xl:gap-6">
+        @for (customer of customers(); track customer.trackingNo) {
+          <article class="kyc-customer-card grid w-full min-w-0 grid-cols-1 gap-3 p-3 sm:grid-cols-[120px_minmax(0,1fr)] sm:gap-4 sm:p-4 lg:grid-cols-[140px_minmax(0,1fr)_minmax(0,1fr)] xl:gap-6">
+            <div class="kyc-customer-card__avatar-section min-w-0 lg:row-span-1">
+              <div class="kyc-customer-card__avatar">
+                @if (customer.imageUrl) {
+                  <img [src]="customer.imageUrl" alt="Customer photo" />
+                } @else {
+                  <span></span>
+                }
+              </div>
+
+              <button
+                type="button"
+                class="kyc-customer-card__details min-w-0"
+                (click)="openDetails(customer)">
+                Details
+              </button>
+            </div>
+
+            <div class="kyc-customer-card__info min-w-0">
+              <p>Name : {{ customer.fullName }}</p>
+              <p>Mobile No : {{ customer.mobileNo }}</p>
+              <p>NID No : {{ customer.nidNo }}</p>
+              <p>CustomerId : {{ customer.customerId }}</p>
+              <p>Branch : {{ customer.branch }}</p>
+            </div>
+
+            <div class="kyc-customer-card__info kyc-customer-card__info--right min-w-0">
+              <p>AccountNo : {{ customer.accountNo }}</p>
+              <p>Face Match : {{ getFaceMatch(customer) }}</p>
+              <p>Authentication : {{ customer.authStatus }}</p>
+            </div>
+          </article>
+        }
+
+        @if (customers().length === 0) {
+          <div class="kyc-empty">
+            No authorized customer found.
+          </div>
+        }
+      </section>
+    }
+
+    @if (!isLoading() && totalPages() > 1) {
+      <div class="kyc-pagination flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+        <button
+          type="button"
+          [disabled]="currentPage() === 1"
+          (click)="goToPreviousPage()">
+          Previous
+        </button>
+
+        <span>Page {{ currentPage() }} of {{ totalPages() }}</span>
+
+        <button
+          type="button"
+          [disabled]="currentPage() >= totalPages()"
+          (click)="goToNextPage()">
+          Next
+        </button>
+      </div>
+    }
+  </section>
+
+  @if (state.userModalOpened()) {
+    <div class="user-modal-backdrop" (click)="state.closeUserModal()"></div>
+
+    <div class="user-modal left-3 right-3 top-16 w-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 md:right-6 lg:right-8 xl:right-10">
+      <h3>Digital Onboarding</h3>
+
+      <p>
+        Logged in as:
+        <strong>{{ auth.currentAdmin()?.name || 'Admin' }}</strong>
+      </p>
+
+      <div class="user-modal__actions flex flex-wrap justify-end gap-2 sm:gap-3">
+        <generic-button
+          label="Close"
+          cssClass="admin-btn-secondary"
+          (onClick)="state.closeUserModal()">
+        </generic-button>
+
+        <generic-button
+          label="Sign Out"
+          cssClass="admin-btn-danger"
+          (onClick)="logout()">
+        </generic-button>
+      </div>
+    </div>
+  }
+</admin-layout>

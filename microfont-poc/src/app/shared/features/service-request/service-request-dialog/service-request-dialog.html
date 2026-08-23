@@ -1,0 +1,201 @@
+<div class="service-request-page-wrapper p-4">
+  <mat-tab-group
+    [selectedIndex]="tabIndex()"
+    (selectedIndexChange)="onTabChange($event)"
+  >
+    <mat-tab
+      [label]="
+        isUpdateMode() ? 'Update Service Request' : 'Create New Service Request'
+      "
+    >
+      <ng-template matTabContent>
+        <form
+          [formGroup]="frmGroup"
+          class="service-request-form overflow-x-hidden"
+        >
+          <section class="rounded-lg mb-6 grid">
+            <app-expansion-panel-header
+              [isOpenSignal]="businessHeaderPanel"
+              [panelTitle]="'Report an issue or request access'"
+            />
+          </section>
+
+          <section class="rounded-lg mb-6 grid grid-cols-2">
+            <!-- Employee ID Subsection -->
+            <div class="component-section">
+              <input-text-box
+                [frmGroup]="frmGroup"
+                [controlName]="'employeeId'"
+                [label]="'Employee ID'"
+                [isReadonly]="true"
+                displayMode="vertical"
+                [tooltip]="'Auto fill from user profile'"
+                [tooltipPosition]="'above'"
+                [tooltipDelay]="300"
+                [tooltipClass]="'success-tooltip'"
+                [customErrorMessages]="{
+                  required: 'Employee ID is required',
+                  minlength: 'Minimum 3 characters required',
+                  maxlength: 'Maximum 50 characters allowed'
+                }"
+              ></input-text-box>
+            </div>
+
+            <!-- Full Name Subsection -->
+            <div class="component-section">
+              <input-text-box
+                [frmGroup]="frmGroup"
+                [controlName]="'fullName'"
+                [label]="'Full Name'"
+                [isReadonly]="isUpdateMode()"
+                displayMode="vertical"
+                [tooltip]="'Auto fill from user profile'"
+                [tooltipPosition]="'above'"
+                [tooltipDelay]="300"
+                [tooltipClass]="'success-tooltip'"
+                [customErrorMessages]="{
+                  required: 'Full name is required',
+                  minlength: 'Minimum 3 characters required',
+                  maxlength: 'Maximum 50 characters allowed'
+                }"
+              ></input-text-box>
+            </div>
+          </section>
+
+          <section class="rounded-lg mb-6 grid grid-cols-2">
+            <!-- Email Subsection -->
+            <div class="component-section">
+              <input-text-box
+                [frmGroup]="frmGroup"
+                [controlName]="'email'"
+                [label]="'Email Address'"
+                [isReadonly]="isUpdateMode()"
+                displayMode="vertical"
+                [tooltip]="'Auto fill from user profile'"
+                [tooltipPosition]="'above'"
+                [tooltipDelay]="300"
+                [tooltipClass]="'success-tooltip'"
+                [customErrorMessages]="{
+                  required: 'Email address is required',
+                  email: 'Please enter a valid email address'
+                }"
+              ></input-text-box>
+            </div>
+            <!-- Department Subsection -->
+            <div class="component-section">
+              <input-select-option-field
+                [frmGroup]="frmGroup"
+                [controlName]="'department'"
+                [label]="'Department'"
+                
+                [isReadonly]="isUpdateMode()"
+                [options]="departmentOptions"
+                [tooltip]="'Select Department'"
+                (onSelect)="handleCategorySelection($event)"
+              ></input-select-option-field>
+            </div>
+          </section>
+
+          <section class="rounded-lg mb-6 grid grid-cols-2">
+            <!-- Request Type Subsection -->
+            <div class="component-section">
+              <input-select-option-field
+                [frmGroup]="frmGroup"
+                [controlName]="'requestType'"
+                [label]="'Request Type'"
+                
+                [isReadonly]="isUpdateMode()"
+                [options]="dropdownOptions"
+                [tooltip]="'Select Service Request type'"
+                (onSelect)="handleCategorySelection($event)"
+              ></input-select-option-field>
+            </div>
+            <!-- Priority Subsection -->
+            <div class="component-section">
+              <input-select-option-field
+                [frmGroup]="frmGroup"
+                [controlName]="'priority'"
+                [label]="'Priority Level'"
+                
+                [isReadonly]="isUpdateMode()"
+                [options]="priorityOptions"
+                [tooltip]="'Select Service Request priority'"
+                (onSelect)="handleCategorySelection($event)"
+              ></input-select-option-field>
+            </div>
+          </section>
+
+          <section class="rounded-lg mb-6 grid grid-cols-1">
+            <!-- Remarks Subsection -->
+            <div class="component-section" style="margin-bottom: 16px">
+              <input-text-area
+                [frmGroup]="frmGroup"
+                [controlName]="'remarks'"
+                [label]="'Remarks'"
+                
+                [rows]="3"
+                [minRows]="1"
+                [maxRows]="10"
+                [maxCols]="80"
+                [placeholder]="'Enter service request remarks...'"
+                [showRowCount]="true"
+                [autoResize]="false"
+                (onChanged)="onInputTextAreaChanged($event)"
+              ></input-text-area>
+            </div>
+          </section>
+
+          <section class="rounded-lg mb-6 grid grid-cols-1">
+            <!-- Document Upload Subsection -->
+            <div class="component-section">
+              <input-file
+                #supportingDocInput
+                [id]="'supporting-doc-upload'"
+                [multipleFile]="false"
+                [fileExtension]="'.jpg,.png,.pdf'"
+                [isVertical]="false"
+                [label]="'Upload Supporting Document (Max 5MB)'"
+                [cssClass]="'border-purple-300 bg-purple-50'"
+                [savePath]="'documents/transactions'"
+                [customFileName]="'transaction-document'"
+                (selectedFilesChanged)="onPdfSelected($event)"
+                (onFileChanged)="onFileInputChanged('Transaction Document')"
+              />
+            </div>
+          </section>
+        </form>
+      </ng-template>
+    </mat-tab>
+
+    <mat-tab label="View Your Service Requests">
+      <ng-template matTabContent>
+        <div class="overflow-x-hidden">
+          <section class="rounded-lg mb-6 grid">
+            <app-expansion-panel-header
+              [isOpenSignal]="businessHeaderPanel"
+              [panelTitle]="'My Service Requests'"
+            />
+          </section>
+
+          <generic-data-grid
+            [id]="'service-requests-grid'"
+            [dataSource]="serviceRequests()"
+            [initPageSize]="10"
+            [enableSelection]="false"
+            [showEditButton]="true"
+            [showDeleteButton]="false"
+            [showViewButton]="false"
+            [showPrintButton]="false"
+            [useInlineEdit]="false"
+            [selectedColumns]="selectedColumns"
+            [customColumnNames]="customColumnNames"
+            [tblClass]="'service-request-table'"
+            [searchEnabled]="false"
+            (onFHEditClick)="onReraiseClick($event)"
+          >
+          </generic-data-grid>
+        </div>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>

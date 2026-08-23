@@ -1,0 +1,30 @@
+.color-option {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 4px;
+  width: 200px; /* fixed width for all items */
+  min-width: 200px; /* ensures dropdown is consistent */
+  color: #000; /* text color */
+  box-sizing: border-box; /* include padding in width */
+}
+/* Optional: adjust text color for dark backgrounds */
+.color-option[style*="#ff6c40"],
+.color-option[style*="#40c2ff"] {
+  color: #fff;
+}
+.color-name {
+  margin-left: 8px;
+  font-weight: 500;
+}
+.mat-select-panel .mat-option .color-option {
+  width: 100%; /* span full panel width */
+}
+::ng-deep .ql-editor {
+  height: 150px !important;
+}
+.time-input-style
+{
+ border-color: 1px solid gray !important;
+ height: 50px !important;
+}

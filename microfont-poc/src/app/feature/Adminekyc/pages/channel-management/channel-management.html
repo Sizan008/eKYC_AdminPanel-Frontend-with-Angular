@@ -1,0 +1,242 @@
+<admin-layout
+  [title]="'Digital Onboarding'"
+  [username]="getAdminName()"
+  [activeMenu]="'channelManagement'"
+  [drawerOpened]="state.drawerOpened()"
+  (menuClicked)="state.toggleDrawer()"
+  (userClicked)="state.openUserModal()"
+  (dashboardClicked)="state.goToDashboard()"
+  (channelManagementClicked)="state.goToChannelManagement()"
+  (productManagementClicked)="state.goToProductManagement()"
+  (workflowManagementClicked)="state.goToWorkflowManagement()"
+  (parametersClicked)="state.goToParameters()"
+  (apiManagementClicked)="state.goToApiManagement()"
+  (authorizedClicked)="state.goToAuthorizedCustomers()"
+  (unauthorizedClicked)="state.goToUnauthorizedCustomers()"
+  (incompleteClicked)="state.goToIncompleteCustomers()"
+  (declinedClicked)="state.goToDeclinedCustomers()"
+  (ecVerificationClicked)="state.goToEcVerification()"
+  (userActivityLogClicked)="state.goToUserActivityLog()"
+  (kycReportByYearClicked)="state.goToKycReportByYear()">
+
+  <section class="channel-management w-full min-w-0 space-y-3 p-2 sm:space-y-4 sm:p-3 md:p-4 lg:p-5 xl:p-6">
+    <header class="channel-management__header flex flex-col gap-2 sm:gap-3 md:flex-row md:items-center md:justify-between lg:gap-4 xl:gap-6">
+      <div>
+        <h1>Product & Channel</h1>
+        <span>Channel Management</span>
+      </div>
+
+      <p>Product & Channel &gt; Channel Management</p>
+    </header>
+
+    <div class="channel-management__select-row grid w-full grid-cols-1 gap-2 sm:grid-cols-[160px_minmax(0,1fr)] sm:items-center md:max-w-3xl">
+      <label for="channelSelect">Select Channel</label>
+
+      <select
+        id="channelSelect"
+        class="channel-management__select w-full min-w-0"
+        [value]="selectedChannelId() ?? ''"
+        (change)="onChannelChange($event)">
+        <option value="">Select</option>
+
+        @for (channel of channels(); track channel.id) {
+          <option [value]="channel.id">
+            {{ channel.channelName }}
+          </option>
+        }
+      </select>
+    </div>
+
+    @if (errorMessage()) {
+      <div class="w-full rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 sm:px-4">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    @if (isLoadingDetails()) {
+      <div class="w-full py-4 text-center text-sm font-semibold text-slate-600">
+        Loading channel details...
+      </div>
+    }
+
+    @if (selectedChannelId() && !isLoadingDetails()) {
+  <form class="channel-management__form w-full min-w-0" [formGroup]="channelForm">
+    <div class="form-grid grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-2 xl:gap-6">
+      <input-text-box
+        displayMode="outline"
+        label="Channel Name"
+        placeholder=""
+        [frmGroup]="channelForm"
+        controlName="channelName">
+      </input-text-box>
+
+      <input-text-box
+        displayMode="outline"
+        label="Channel Description"
+        placeholder=""
+        [frmGroup]="channelForm"
+        controlName="channelDescription">
+      </input-text-box>
+
+      <input-number
+        displayMode="outline"
+        label="Workflow ID"
+        placeholder=""
+        [frmGroup]="channelForm"
+        controlName="workflowId">
+      </input-number>
+
+      <input-number
+        displayMode="outline"
+        label="Email Connection ID"
+        placeholder=""
+        [frmGroup]="channelForm"
+        controlName="emailConnectionId">
+      </input-number>
+
+      <input-number
+        displayMode="outline"
+        label="SMS API Connection ID"
+        placeholder=""
+        [frmGroup]="channelForm"
+        controlName="smsApiConnectionId">
+      </input-number>
+
+      <input-number
+        displayMode="outline"
+        label="SDN API Connection ID"
+        placeholder=""
+        [frmGroup]="channelForm"
+        controlName="sdnApiConnectionId">
+      </input-number>
+
+      <input-number
+        displayMode="outline"
+        label="CBS API Connection ID"
+        placeholder=""
+        [frmGroup]="channelForm"
+        controlName="cbsApiConnectionId">
+      </input-number>
+
+      <input-number
+        displayMode="outline"
+        label="VerifID API Connection ID"
+        placeholder=""
+        [frmGroup]="channelForm"
+        controlName="verifIdApiConnectionId">
+      </input-number>
+
+      <input-number
+        displayMode="outline"
+        label="VerifIDML API Connection ID"
+        placeholder=""
+        [frmGroup]="channelForm"
+        controlName="verifIdmlApiConnectionId">
+      </input-number>
+
+      <input-number
+        displayMode="outline"
+        label="VerifIDRPA API Connection ID"
+        placeholder=""
+        [frmGroup]="channelForm"
+        controlName="verifIdrpaApiConnectionId">
+      </input-number>
+
+      <input-text-box
+        displayMode="outline"
+        label="BIZ Time Control"
+        placeholder=""
+        [frmGroup]="channelForm"
+        controlName="bizTimeControl">
+      </input-text-box>
+
+      <input-text-box
+        displayMode="outline"
+        label="BIZ Start Time"
+        placeholder=""
+        [frmGroup]="channelForm"
+        controlName="bizStartTime">
+      </input-text-box>
+
+      <input-text-box
+        displayMode="outline"
+        label="BIZ End Time"
+        placeholder=""
+        [frmGroup]="channelForm"
+        controlName="bizEndTime">
+      </input-text-box>
+
+      <input-text-box
+        displayMode="outline"
+        label="Alien Net Access"
+        placeholder=""
+        [frmGroup]="channelForm"
+        controlName="alienNetAccess">
+      </input-text-box>
+    </div>
+
+    <div class="channel-management__actions flex flex-row flex-wrap items-center justify-center gap-2 sm:gap-3">
+      <generic-button
+        label="Edit"
+        cssClass="admin-btn-primary"
+        [enable]="!isEditMode() && !isSaving()"
+        (onClick)="enableEditMode()">
+      </generic-button>
+
+      <generic-button
+        label="Save"
+        cssClass="admin-btn-search"
+        [enable]="isEditMode() && !isSaving()"
+        (onClick)="saveChannel()">
+      </generic-button>
+    </div>
+  </form>
+}
+  </section>
+
+  <generic-modal
+    [isVisible]="savedModalOpened()"
+    [modalTitle]="'Saved Successfully'"
+    [cssClass]="'admin-channel-saved-modal'"
+    [closeOnBackdropClick]="true"
+    [showDefaultFooter]="true"
+    [showOkButton]="true"
+    [okButtonText]="'Close'"
+    [showCancelButton]="false"
+    (isVisibleChanged)="savedModalOpened.set($event)"
+    (modalClosed)="closeSavedModal()"
+    (modalResult)="closeSavedModal()">
+
+    <section class="channel-save-content">
+      <div class="channel-save-content__icon">✓</div>
+      <h2>Saved Successfully</h2>
+      <p>{{ savedMessage() }}</p>
+    </section>
+  </generic-modal>
+
+  @if (state.userModalOpened()) {
+    <div class="user-modal-backdrop" (click)="state.closeUserModal()"></div>
+
+    <div class="user-modal left-3 right-3 top-16 w-auto sm:left-auto sm:right-4 sm:top-20 sm:w-80 md:right-6 lg:right-8 xl:right-10">
+      <h3>Digital Onboarding</h3>
+      <p>
+        Logged in as:
+        <strong>{{ auth.currentAdmin()?.name || 'Admin' }}</strong>
+      </p>
+
+      <div class="user-modal__actions flex flex-wrap justify-end gap-2 sm:gap-3">
+        <generic-button
+          label="Close"
+          cssClass="admin-btn-secondary"
+          (onClick)="state.closeUserModal()">
+        </generic-button>
+
+        <generic-button
+          label="Sign Out"
+          cssClass="admin-btn-danger"
+          (onClick)="logout()">
+        </generic-button>
+      </div>
+    </div>
+  }
+</admin-layout>

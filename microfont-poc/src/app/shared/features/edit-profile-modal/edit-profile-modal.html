@@ -1,0 +1,140 @@
+<div class="other-page-wrapper p-6 space-y-4">
+
+  <!-- 🔹 Profile Image Section -->
+  <div class="flex flex-col items-center justify-center gap-3 mb-6">
+    <div class="relative group">
+      <div class="w-28 h-28 rounded-full bg-gradient-to-br from-blue-100 via-white to-blue-200 p-[3px] shadow-[0_10px_25px_-15px_rgba(37,99,235,0.75)] transition duration-300 group-hover:scale-105">
+        <div class="w-full h-full rounded-full overflow-hidden border border-white bg-gray-50 flex items-center justify-center">
+          <ng-container *ngIf="imgPreviewUrl; else noImage">
+            <img
+              [src]="imgPreviewUrl"
+              alt="Profile Preview"
+              class="w-full h-full object-cover text-sm"
+            />
+          </ng-container>
+
+          <ng-template #noImage>
+            <img
+              src="asset/icons/blackProfile.svg"
+              alt="Default Profile"
+              class="w-full h-full object-cover opacity-80"
+            />
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- Edit Icon Button -->
+      <label
+        class="absolute -bottom-1 -right-1 cursor-pointer"
+        title="Change Profile Photo"
+      >
+        <span class="w-11 h-11 flex items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 shadow-xl text-white border-2 border-white transition duration-300 group-hover:scale-110 group-hover:shadow-blue-300/40">
+          <mat-icon fontIcon="edit" class="text-base"></mat-icon>
+        </span>
+        <input
+          type="file"
+          accept=".png,.jpg,.jpeg"
+          (change)="onProfilePicSelected($event)"
+          hidden
+        />
+      </label>
+    </div>
+
+    <p class="text-sm text-gray-500 mt-2 text-center font-medium tracking-wide flex items-center justify-center gap-2">
+      <mat-icon fontIcon="photo_camera" class="text-blue-500 text-base"></mat-icon>
+      Upload a new profile photo
+      <span *ngIf="imageUploadInProgress" class="text-xs text-blue-500 animate-pulse">(processing...)</span>
+    </p>
+  </div>
+
+  <!-- 🔹 Form Fields -->
+  <form [formGroup]="frmGroup" class="transaction-form">
+    <div class="panel">
+      <div class="transaction-grid-container mb-10">
+
+        <!-- Header -->
+        <section class="header-section">
+          <app-expansion-panel-header
+            [isOpenSignal]="headerOpen"
+            [panelTitle]="'Profile Information'"
+          ></app-expansion-panel-header>
+        </section>
+
+        <!-- Form Inputs -->
+        <section
+          class="primary-fields-section bg-gray-50 rounded-lg mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4 p-4"
+        >
+          <!-- User ID -->
+          <input-id-box
+            [frmGroup]="frmGroup"
+            [controlName]="'user_id'"
+            [label]="'User ID'"
+            
+            [isDotsVisible]="false"
+          ></input-id-box>
+
+          <!-- Login ID (Readonly) -->
+          <input-text-box
+            [frmGroup]="frmGroup"
+            [controlName]="'login_id'"
+            [label]="'Login ID'"
+            [isReadonly]="true"
+            displayMode="vertical"
+          ></input-text-box>
+
+          <!-- Home Office -->
+          <input-office-box
+            [frmGroup]="frmGroup"
+            [controlName]="'home_office_id'"
+            [label]="'Home Office ID'"
+            
+            [enable]="false"
+          ></input-office-box>
+
+          <!-- User Name -->
+          <input-text-box
+            [frmGroup]="frmGroup"
+            [controlName]="'user_nm'"
+            [label]="'User Name'"
+            displayMode="vertical"
+            [customErrorMessages]="{
+              required: 'User name is required',
+              maxlength: 'Max 100 characters'
+            }"
+          ></input-text-box>
+
+          <!-- Email -->
+          <input-text-box
+            [frmGroup]="frmGroup"
+            [controlName]="'user_email_id'"
+            [label]="'Email'"
+            displayMode="vertical"
+            [customErrorMessages]="{
+              required: 'Email is required',
+              email: 'Enter valid email'
+            }"
+          ></input-text-box>
+
+          <!-- Mobile Number -->
+          <input-text-box
+            [frmGroup]="frmGroup"
+            [controlName]="'mobile_number'"
+            [label]="'Mobile Number'"
+            displayMode="vertical"
+            [placeholder]="'e.g. +8801XXXXXXXXX'"
+          ></input-text-box>
+
+          <!-- Description -->
+          <input-text-area
+            class="md:col-span-2"
+            [frmGroup]="frmGroup"
+            [controlName]="'user_descrip'"
+            [label]="'Description'"
+            
+            [rows]="3"
+          ></input-text-area>
+        </section>
+      </div>
+    </div>
+  </form>
+</div>
