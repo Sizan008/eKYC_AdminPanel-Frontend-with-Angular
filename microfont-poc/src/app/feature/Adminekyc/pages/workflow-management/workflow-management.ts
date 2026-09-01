@@ -13,6 +13,7 @@ import { WorkflowManagementService } from '../../core/services/workflow-manageme
 
 import { AdminLayout } from '../../sharedAdminekyc/layout/admin-layout/admin-layout';
 import { GenericButton } from '../../../../shared/common-components/generic-component-type/generic-button/generic-button';
+import { GenericDataGrid } from '../../../../shared/common-components/generic-component-type/generic-data-grid';
 import { InputTextBox } from '../../../../shared/common-components/input-types/input-text-box/input-text-box';
 import { InputNumber } from '../../../../shared/common-components/input-types/input-number/input-number';
 import { GenericModal } from '../../../../shared/common-components/generic-component-type/generic-modal/generic-modal';
@@ -33,6 +34,7 @@ type WorkflowCreateFormGroup = {
     ReactiveFormsModule,
     AdminLayout,
     GenericButton,
+    GenericDataGrid,
     InputTextBox,
     InputNumber,
     GenericModal
@@ -56,6 +58,23 @@ export class WorkflowManagement implements OnInit {
 
   readonly currentPage = signal<number>(1);
   readonly itemsPerPage = 8;
+
+  readonly workflowGridColumns = ['stepSequenceNo', 'stepName'];
+  readonly workflowGridColumnNames = {
+    stepSequenceNo: 'Step Sequence No',
+    stepName: 'Step Name'
+  };
+  readonly moveUpSvg = '<path d="M12 7l-5 5h3v5h4v-5h3l-5-5z" fill="currentColor"></path>';
+  readonly moveDownSvg = '<path d="M12 17l5-5h-3V7h-4v5H7l5 5z" fill="currentColor"></path>';
+  readonly workflowActionVisibility = (row: WorkflowManagementStep) => {
+    const index = this.steps().findIndex((item) => item.id === row.id);
+    const busy = this.reorderingSequenceId() !== null;
+
+    return {
+      customAction1: !busy && index > 0,
+      customAction2: !busy && index >= 0 && index < this.steps().length - 1
+    };
+  };
 
   readonly successModalOpened = signal<boolean>(false);
   readonly successMessage = signal<string>('Workflow created successfully.');
@@ -230,6 +249,20 @@ export class WorkflowManagement implements OnInit {
     }
   }
 
+  moveStepUpFromGrid(payload: string): void {
+    const step = this.parseGridStep(payload);
+    if (step) {
+      this.moveStepUp(step);
+    }
+  }
+
+  moveStepDownFromGrid(payload: string): void {
+    const step = this.parseGridStep(payload);
+    if (step) {
+      this.moveStepDown(step);
+    }
+  }
+
   moveStepUp(step: WorkflowManagementStep): void {
     const currentSteps = this.steps();
     const index = currentSteps.findIndex((item) => item.id === step.id);
@@ -323,6 +356,16 @@ export class WorkflowManagement implements OnInit {
       this.pageErrorMessage.set(
         this.getErrorMessage(error, 'Unable to reorder workflow steps.')
       );
+    }
+  }
+
+  private parseGridStep(payload: string): WorkflowManagementStep | null {
+    try {
+      const parsed = JSON.parse(payload) as WorkflowManagementStep;
+      return parsed && Number.isFinite(Number(parsed.id)) ? parsed : null;
+    } catch {
+      this.pageErrorMessage.set('Unable to read the selected workflow step.');
+      return null;
     }
   }
 

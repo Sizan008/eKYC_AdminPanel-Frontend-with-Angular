@@ -12,6 +12,7 @@ import { ApiManagementService } from '../../core/services/api-management.service
 
 import { AdminLayout } from '../../sharedAdminekyc/layout/admin-layout/admin-layout';
 import { GenericButton } from '../../../../shared/common-components/generic-component-type/generic-button/generic-button';
+import { GenericDataGrid } from '../../../../shared/common-components/generic-component-type/generic-data-grid';
 import { InputTextBox } from '../../../../shared/common-components/input-types/input-text-box/input-text-box';
 import { GenericModal } from '../../../../shared/common-components/generic-component-type/generic-modal/generic-modal';
 
@@ -34,6 +35,7 @@ type ApiManagementFormGroup = {
     ReactiveFormsModule,
     AdminLayout,
     GenericButton,
+    GenericDataGrid,
     InputTextBox,
     GenericModal
   ],
@@ -55,6 +57,25 @@ export class ApiManagement implements OnInit {
 
   readonly currentPage = signal<number>(1);
   readonly itemsPerPage = 10;
+
+  readonly apiGridColumns = [
+    'name',
+    'key',
+    'port',
+    'url',
+    'user',
+    'password',
+    'credential'
+  ];
+  readonly apiGridColumnNames = {
+    name: 'Name',
+    key: 'Key',
+    port: 'Port',
+    url: 'URL',
+    user: 'User',
+    password: 'Password',
+    credential: 'Credential'
+  };
 
   readonly apiForm = new FormGroup<ApiManagementFormGroup>({
     name: new FormControl('', { nonNullable: true }),
@@ -134,6 +155,14 @@ export class ApiManagement implements OnInit {
         );
       }
     });
+  }
+
+  showEditFromGrid(payload: string): void {
+    try {
+      this.showEdit(JSON.parse(payload) as AdminApiManagement);
+    } catch {
+      this.pageErrorMessage.set('Unable to read the selected API configuration.');
+    }
   }
 
   showEdit(apiItem: AdminApiManagement): void {

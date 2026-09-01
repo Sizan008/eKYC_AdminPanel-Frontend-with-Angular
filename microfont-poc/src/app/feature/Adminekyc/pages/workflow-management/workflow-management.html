@@ -64,75 +64,32 @@
       </div>
 
       @if (selectedWorkflowId()) {
-        <section class="workflow-table-card w-full min-w-0 overflow-x-auto rounded-lg">
-          <table class="workflow-table w-full min-w-[720px] lg:min-w-full">
-            <thead>
-              <tr>
-                <th>Step Sequence No</th>
-                <th>Step Name</th>
-                <th>Action</th>
-              </tr>
-            </thead>
+        <section class="workflow-table-card w-full min-w-0 rounded-lg">
+          @if (isLoadingSteps()) {
+            <div class="empty-cell">Loading workflow steps...</div>
+          } @else {
+            <generic-data-grid
+              [id]="'adminekyc-workflow-steps-' + selectedWorkflowId()"
+              [dataSource]="steps()"
+              [selectedColumns]="workflowGridColumns"
+              [customColumnNames]="workflowGridColumnNames"
+              [initPageSize]="itemsPerPage"
+              [pageSizeOptions]="[itemsPerPage, 16, 24]"
+              [showPaginator]="steps().length > itemsPerPage"
+              [showCustomAction1]="true"
+              [customActionSvg1]="moveUpSvg"
+              [customActionTooltip1]="'Move Up'"
+              [showCustomAction2]="true"
+              [customActionSvg2]="moveDownSvg"
+              [customActionTooltip2]="'Move Down'"
+              [actionVisibility]="workflowActionVisibility"
+              (onExtraAction1Click)="moveStepUpFromGrid($event)"
+              (onExtraAction2Click)="moveStepDownFromGrid($event)">
+            </generic-data-grid>
 
-            <tbody>
-              @if (isLoadingSteps()) {
-                <tr>
-                  <td colspan="3" class="empty-cell">
-                    Loading workflow steps...
-                  </td>
-                </tr>
-              } @else {
-                @for (step of getPaginatedSteps(); track step.id) {
-                  <tr>
-                    <td>{{ step.stepSequenceNo }}</td>
-                    <td>{{ step.stepName || ('Step ' + step.stepId) }}</td>
-                    <td>
-                      <div class="workflow-actions flex flex-wrap items-center gap-1 sm:gap-2">
-                        <generic-button
-                          label="⌃"
-                          cssClass="admin-btn-step-action"
-                          (onClick)="moveStepUp(step)">
-                        </generic-button>
-
-                        <generic-button
-                          label="⌄"
-                          cssClass="admin-btn-step-action"
-                          (onClick)="moveStepDown(step)">
-                        </generic-button>
-                      </div>
-                    </td>
-                  </tr>
-                }
-
-                @if (steps().length === 0) {
-                  <tr>
-                    <td colspan="3" class="empty-cell">
-                      No workflow step found.
-                    </td>
-                  </tr>
-                }
-              }
-            </tbody>
-          </table>
-
-          @if (!isLoadingSteps() && steps().length > itemsPerPage) {
-            <div class="workflow-pagination flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-              <button
-                type="button"
-                [disabled]="currentPage() === 1"
-                (click)="goToPreviousPage()">
-                Previous
-              </button>
-
-              <span>Page {{ currentPage() }} of {{ getTotalPages() }}</span>
-
-              <button
-                type="button"
-                [disabled]="currentPage() === getTotalPages()"
-                (click)="goToNextPage()">
-                Next
-              </button>
-            </div>
+            @if (steps().length === 0) {
+              <div class="empty-cell">No workflow step found.</div>
+            }
           }
         </section>
       }

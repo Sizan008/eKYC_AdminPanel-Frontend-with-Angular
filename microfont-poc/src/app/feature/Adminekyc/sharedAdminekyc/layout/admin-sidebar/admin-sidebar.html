@@ -21,109 +21,87 @@
     </button>
 
     <div class="admin-sidebar__group">
-  <div class="admin-sidebar__item admin-sidebar__item--parent admin-sidebar__item--queue">
-    <span class="admin-sidebar__icon">▣</span>
-    <span>Product & Channel</span>
-
-    <generic-switch
-      class="admin-sidebar__toggle"
-      [frmGroup]="sidebarForm"
-      controlName="productChannelOpened"
-      [id]="'productChannelOpened'"
-      [label]="''"
-      [displayMode]="'horizontal'"
-      
-      [enable]="true"
-      [visible]="true">
-    </generic-switch>
-  </div>
-
-  @if (isProductChannelOpened()) {
-    <div class="admin-sidebar__children">
       <button
         type="button"
-        class="admin-sidebar__item admin-sidebar__item--child"
-        [class.active]="activeMenu() === 'channelManagement'"
-        (click)="onChannelManagementClicked()">
-        Channel Management
+        class="admin-sidebar__item admin-sidebar__item--parent admin-sidebar__item--expandable"
+        [attr.aria-expanded]="isProductChannelOpened()"
+        (click)="toggleParentMenu('productChannelOpened')">
+        <span class="admin-sidebar__icon">▣</span>
+        <span>Product & Channel</span>
+        <mat-icon class="admin-sidebar__arrow" [class.open]="isProductChannelOpened()">expand_more</mat-icon>
       </button>
 
-      <button
-        type="button"
-        class="admin-sidebar__item admin-sidebar__item--child"
-        [class.active]="activeMenu() === 'productManagement'"
-        (click)="onProductManagementClicked()">
-        Product Management
-      </button>
+      @if (isProductChannelOpened()) {
+        <div class="admin-sidebar__children">
+          <button
+            type="button"
+            class="admin-sidebar__item admin-sidebar__item--child"
+            [class.active]="activeMenu() === 'channelManagement'"
+            (click)="onChannelManagementClicked()">
+            Channel Management
+          </button>
 
-      <button
-        type="button"
-        class="admin-sidebar__item admin-sidebar__item--child"
-        [class.active]="activeMenu() === 'workflowManagement'"
-        (click)="onWorkflowManagementClicked()">
-        Workflow Management
-      </button>
+          <button
+            type="button"
+            class="admin-sidebar__item admin-sidebar__item--child"
+            [class.active]="activeMenu() === 'productManagement'"
+            (click)="onProductManagementClicked()">
+            Product Management
+          </button>
+
+          <button
+            type="button"
+            class="admin-sidebar__item admin-sidebar__item--child"
+            [class.active]="activeMenu() === 'workflowManagement'"
+            (click)="onWorkflowManagementClicked()">
+            Workflow Management
+          </button>
+        </div>
+      }
     </div>
-  }
-</div>
-<div class="admin-sidebar__group">
-  <div class="admin-sidebar__parent">
-    <div class="admin-sidebar__parent-left">
-      <span class="admin-sidebar__parent-icon">▣</span>
-      <span class="admin-sidebar__parent-text">CONFIGURATIONS</span>
-    </div>
-
-    <generic-switch
-      class="admin-sidebar__toggle"
-      [frmGroup]="sidebarForm"
-      controlName="configurationsOpened"
-      [id]="'configurationsOpened'"
-      [label]="''"
-      [displayMode]="'horizontal'"
-     
-      [enable]="true"
-      [visible]="true">
-    </generic-switch>
-  </div>
-
-  @if (isConfigurationsOpened()) {
-    <div class="admin-sidebar__children">
-      <button
-        type="button"
-        class="admin-sidebar__child"
-        [class.admin-sidebar__child--active]="activeMenu() === 'parameters'"
-        (click)="onParametersClicked()">
-        Parameters
-      </button>
-
-      <button
-        type="button"
-        class="admin-sidebar__child"
-        [class.admin-sidebar__child--active]="activeMenu() === 'apiManagement'"
-        (click)="onApiManagementClicked()">
-        API Management
-      </button>
-    </div>
-  }
-</div>
 
     <div class="admin-sidebar__group">
-      <div class="admin-sidebar__item admin-sidebar__item--parent admin-sidebar__item--queue">
+      <button
+        type="button"
+        class="admin-sidebar__item admin-sidebar__item--parent admin-sidebar__item--expandable"
+        [attr.aria-expanded]="isConfigurationsOpened()"
+        (click)="toggleParentMenu('configurationsOpened')">
+        <span class="admin-sidebar__icon">▣</span>
+        <span>Configurations</span>
+        <mat-icon class="admin-sidebar__arrow" [class.open]="isConfigurationsOpened()">expand_more</mat-icon>
+      </button>
+
+      @if (isConfigurationsOpened()) {
+        <div class="admin-sidebar__children">
+          <button
+            type="button"
+            class="admin-sidebar__child"
+            [class.admin-sidebar__child--active]="activeMenu() === 'parameters'"
+            (click)="onParametersClicked()">
+            Parameters
+          </button>
+
+          <button
+            type="button"
+            class="admin-sidebar__child"
+            [class.admin-sidebar__child--active]="activeMenu() === 'apiManagement'"
+            (click)="onApiManagementClicked()">
+            API Management
+          </button>
+        </div>
+      }
+    </div>
+
+    <div class="admin-sidebar__group">
+      <button
+        type="button"
+        class="admin-sidebar__item admin-sidebar__item--parent admin-sidebar__item--expandable"
+        [attr.aria-expanded]="isAuthorizationQueueOpened()"
+        (click)="toggleParentMenu('authorizationQueueOpened')">
         <span class="admin-sidebar__icon">▣</span>
         <span>Authorization Queue</span>
-
-        <generic-switch
-          class="admin-sidebar__toggle"
-          [frmGroup]="sidebarForm"
-          controlName="authorizationQueueOpened"
-          [id]="'authorizationQueueOpened'"
-          [label]="''"
-          [displayMode]="'horizontal'"
-          
-          [enable]="true"
-          [visible]="true">
-        </generic-switch>
-      </div>
+        <mat-icon class="admin-sidebar__arrow" [class.open]="isAuthorizationQueueOpened()">expand_more</mat-icon>
+      </button>
 
       @if (isAuthorizationQueueOpened()) {
         <div class="admin-sidebar__children">
@@ -170,45 +148,37 @@
       <span class="admin-sidebar__icon">▣</span>
       <span>EC Verification</span>
     </button>
+
     <div class="admin-sidebar__group">
-  <div class="admin-sidebar__parent">
-    <div class="admin-sidebar__parent-left">
-      <span class="admin-sidebar__parent-icon">▣</span>
-      <span class="admin-sidebar__parent-text">LOGS</span>
-    </div>
-
-    <generic-switch
-      class="admin-sidebar__toggle"
-      [frmGroup]="sidebarForm"
-      controlName="logsOpened"
-      [id]="'logsOpened'"
-      [label]="''"
-      [displayMode]="'horizontal'"
-      
-      [enable]="true"
-      [visible]="true">
-    </generic-switch>
-  </div>
-
-  @if (isLogsOpened()) {
-    <div class="admin-sidebar__children">
       <button
         type="button"
-        class="admin-sidebar__child"
-        [class.admin-sidebar__child--active]="activeMenu() === 'userActivityLog'"
-        (click)="onUserActivityLogClicked()">
-        User Activity Log
+        class="admin-sidebar__item admin-sidebar__item--parent admin-sidebar__item--expandable"
+        [attr.aria-expanded]="isLogsOpened()"
+        (click)="toggleParentMenu('logsOpened')">
+        <span class="admin-sidebar__icon">▣</span>
+        <span>Logs</span>
+        <mat-icon class="admin-sidebar__arrow" [class.open]="isLogsOpened()">expand_more</mat-icon>
       </button>
 
-      <button
-        type="button"
-        class="admin-sidebar__child"
-        [class.admin-sidebar__child--active]="activeMenu() === 'kycReportByYear'"
-        (click)="onKycReportByYearClicked()">
-        KYC Report by Year
-      </button>
+      @if (isLogsOpened()) {
+        <div class="admin-sidebar__children">
+          <button
+            type="button"
+            class="admin-sidebar__child"
+            [class.admin-sidebar__child--active]="activeMenu() === 'userActivityLog'"
+            (click)="onUserActivityLogClicked()">
+            User Activity Log
+          </button>
+
+          <button
+            type="button"
+            class="admin-sidebar__child"
+            [class.admin-sidebar__child--active]="activeMenu() === 'kycReportByYear'"
+            (click)="onKycReportByYearClicked()">
+            KYC Report by Year
+          </button>
+        </div>
+      }
     </div>
-  }
-</div>
   </nav>
 </aside>

@@ -255,3 +255,10 @@
     }
   }
 }
+
+
+/* The log API is already server-paginated. Hide the grid's local-page status so
+   it does not say "8 of 8" while the page summary shows the server total. */
+:host ::ng-deep .activity-table-card generic-data-grid .status-bar {
+  display: none;
+}

@@ -40,70 +40,26 @@
         <button type="button" (click)="showCreate()">Create New</button>
       </div>
 
-      <section class="api-table-card w-full min-w-0 overflow-x-auto rounded-lg">
-        <table class="api-table w-full min-w-[760px] lg:min-w-full">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Key</th>
-              <th>Port</th>
-              <th>URL</th>
-              <th>User</th>
-              <th>Password</th>
-              <th>Credential</th>
-              <th>Action</th>
-            </tr>
-          </thead>
+      <section class="api-table-card w-full min-w-0 rounded-lg">
+        @if (isLoading()) {
+          <div class="empty-cell">Loading API configurations...</div>
+        } @else {
+          <generic-data-grid
+            [id]="'adminekyc-api-management-grid'"
+            [dataSource]="apiItems()"
+            [selectedColumns]="apiGridColumns"
+            [customColumnNames]="apiGridColumnNames"
+            [initPageSize]="itemsPerPage"
+            [pageSizeOptions]="[itemsPerPage, 20, 50]"
+            [showPaginator]="apiItems().length > itemsPerPage"
+            [showEditButton]="true"
+            [useInlineEdit]="false"
+            (onFHEditClick)="showEditFromGrid($event)">
+          </generic-data-grid>
 
-          <tbody>
-            @for (apiItem of getPaginatedApiItems(); track apiItem.id) {
-              <tr>
-                <td>{{ apiItem.name }}</td>
-                <td>{{ apiItem.key }}</td>
-                <td>{{ apiItem.port }}</td>
-                <td>{{ apiItem.url }}</td>
-                <td>{{ apiItem.user }}</td>
-                <td>{{ apiItem.password }}</td>
-                <td>{{ apiItem.credential }}</td>
-                <td>
-                  <button
-                    type="button"
-                    class="api-table__edit"
-                    (click)="showEdit(apiItem)">
-                    Edit
-                  </button>
-                </td>
-              </tr>
-            }
-
-            @if (apiItems().length === 0) {
-              <tr>
-                <td colspan="8" class="empty-cell">
-                  No API configuration found.
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-
-        @if (apiItems().length > itemsPerPage) {
-          <div class="api-pagination flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-            <button
-              type="button"
-              [disabled]="currentPage() === 1"
-              (click)="goToPreviousPage()">
-              Previous
-            </button>
-
-            <span>Page {{ currentPage() }} of {{ getTotalPages() }}</span>
-
-            <button
-              type="button"
-              [disabled]="currentPage() === getTotalPages()"
-              (click)="goToNextPage()">
-              Next
-            </button>
-          </div>
+          @if (apiItems().length === 0) {
+            <div class="empty-cell">No API configuration found.</div>
+          }
         }
       </section>
     }

@@ -106,58 +106,23 @@
       <h2>Total Data Found: {{ totalCount() }}</h2>
     </div>
 
-    <section class="activity-table-card w-full min-w-0 overflow-x-auto rounded-lg">
-      <table class="activity-table w-full min-w-[860px] lg:min-w-full">
-        <thead>
-          <tr>
-            <th>Admin<br /> User ID</th>
-            <th>Activity Sl No</th>
-            <th>Tracking No</th>
-            <th>Step ID</th>
-            <th>Action Type</th>
-            <th>Action Particulars</th>
-            <th>Action Date</th>
-            <th>Action Terminal Ip</th>
-          </tr>
-        </thead>
+    <section class="activity-table-card w-full min-w-0 rounded-lg">
+      @if (isLoading()) {
+        <div class="empty-cell">Loading user activity logs...</div>
+      } @else {
+        <generic-data-grid
+          [id]="'adminekyc-user-activity-log-grid'"
+          [dataSource]="logGridRows()"
+          [selectedColumns]="logGridColumns"
+          [customColumnNames]="logGridColumnNames"
+          [initPageSize]="1000"
+          [showPaginator]="false">
+        </generic-data-grid>
 
-        <tbody>
-          @if (isLoading()) {
-            <tr>
-              <td colspan="8" class="empty-cell">
-                Loading user activity logs...
-              </td>
-            </tr>
-          } @else {
-            @for (log of logs(); track log.id) {
-              <tr>
-                <td>{{ log.adminUserId }}</td>
-                <td>{{ log.activitySlNo }}</td>
-                <td>{{ log.trackingNo }}</td>
-                <td>{{ log.stepId }}</td>
-                <td>{{ log.actionType }}</td>
-                <td>{{ log.actionParticulars }}</td>
-                <td>
-                  {{ log.actionDate }}
-                  @if (log.actionTime) {
-                    <br />
-                    {{ log.actionTime }}
-                  }
-                </td>
-                <td>{{ log.actionTerminalIp }}</td>
-              </tr>
-            }
-
-            @if (logs().length === 0) {
-              <tr>
-                <td colspan="8" class="empty-cell">
-                  No activity log found.
-                </td>
-              </tr>
-            }
-          }
-        </tbody>
-      </table>
+        @if (logs().length === 0) {
+          <div class="empty-cell">No activity log found.</div>
+        }
+      }
 
       @if (!isLoading() && totalPages() > 1) {
         <div class="activity-pagination flex flex-wrap items-center justify-center gap-2 sm:gap-3">

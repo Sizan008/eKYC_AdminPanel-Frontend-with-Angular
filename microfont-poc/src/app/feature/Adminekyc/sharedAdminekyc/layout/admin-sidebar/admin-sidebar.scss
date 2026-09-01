@@ -254,91 +254,22 @@
     line-height: 1.2;
   }
 
-  &__toggle {
+  &__arrow {
+    width: 20px;
+    min-width: 20px;
+    height: 20px;
     margin-left: auto;
-    width: 56px;
-    min-width: 56px;
-    height: 28px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-end;
-    align-self: center;
-    line-height: 1;
-    transform: translateY(0);
+    color: #cbd5e1;
+    font-size: 20px;
+    line-height: 20px;
+    transition: transform 0.2s ease, color 0.2s ease;
+
+    &.open {
+      transform: rotate(180deg);
+      color: #ffffff;
+    }
   }
-}
 
-/* Microfont generic-switch compact override inside sidebar */
-:host ::ng-deep .admin-sidebar__toggle {
-  width: 56px;
-  min-width: 56px;
-  height: 28px;
-  margin-left: auto;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  align-self: center;
-  transform: translateY(0);
-
-  generic-switch {
-    height: 28px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
-  }
-}
-
-:host ::ng-deep .admin-sidebar__toggle,
-:host ::ng-deep .admin-sidebar__toggle * {
-  box-sizing: border-box;
-}
-
-:host ::ng-deep .admin-sidebar__toggle label,
-:host ::ng-deep .admin-sidebar__toggle .label,
-:host ::ng-deep .admin-sidebar__toggle .switch-label,
-:host ::ng-deep .admin-sidebar__toggle .form-label,
-:host ::ng-deep .admin-sidebar__toggle .field-label {
-  display: none !important;
-}
-
-:host ::ng-deep .admin-sidebar__toggle .form-group,
-:host ::ng-deep .admin-sidebar__toggle .field,
-:host ::ng-deep .admin-sidebar__toggle .input-wrapper,
-:host ::ng-deep .admin-sidebar__toggle .switch-wrapper {
-  min-height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-}
-
-/* Your existing Microfont switch size/color override kept */
-:host ::ng-deep .admin-sidebar__toggle .w-11 {
-  width: 56px !important;
-  background: white !important;
-}
-
-:host ::ng-deep .admin-sidebar__toggle .h-6\.5 {
-  height: 24px !important;
-  background: skyblue !important;
-}
-
-:host ::ng-deep .admin-sidebar__toggle .w-5 {
-  width: 16px !important;
-  background: grey !important;
-}
-
-:host ::ng-deep .admin-sidebar__toggle .h-5 {
-  height: 20px !important;
-  background: green !important;
-}
-
-:host ::ng-deep .admin-sidebar__toggle .translate-x-5 {
-  transform: translateX(14px) !important;
-  background: green !important;
 }
 
 @media (max-width: 820px) {

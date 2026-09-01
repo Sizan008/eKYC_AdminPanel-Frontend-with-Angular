@@ -14,6 +14,7 @@ import { UserActivityLogService } from '../../core/services/user-activity-log.se
 
 import { AdminLayout } from '../../sharedAdminekyc/layout/admin-layout/admin-layout';
 import { GenericButton } from '../../../../shared/common-components/generic-component-type/generic-button/generic-button';
+import { GenericDataGrid } from '../../../../shared/common-components/generic-component-type/generic-data-grid';
 import { InputDate } from '../../../../shared/common-components/input-types/input-date/input-date';
 import { InputTextBox } from '../../../../shared/common-components/input-types/input-text-box/input-text-box';
 
@@ -31,6 +32,7 @@ type UserActivitySearchFormGroup = {
     ReactiveFormsModule,
     AdminLayout,
     GenericButton,
+    GenericDataGrid,
     InputDate,
     InputTextBox
   ],
@@ -48,6 +50,35 @@ export class UserActivityLogPage implements OnInit {
   readonly pageSize = signal<number>(8);
   readonly totalPages = signal<number>(0);
   readonly totalCount = signal<number>(0);
+
+  readonly logGridRows = computed(() =>
+    this.logs().map((log) => ({
+      ...log,
+      actionDateTime: [log.actionDate, log.actionTime]
+        .filter((value) => Boolean(value))
+        .join(' ')
+    }))
+  );
+  readonly logGridColumns = [
+    'adminUserId',
+    'activitySlNo',
+    'trackingNo',
+    'stepId',
+    'actionType',
+    'actionParticulars',
+    'actionDateTime',
+    'actionTerminalIp'
+  ];
+  readonly logGridColumnNames = {
+    adminUserId: 'Admin User ID',
+    activitySlNo: 'Activity Sl No',
+    trackingNo: 'Tracking No',
+    stepId: 'Step ID',
+    actionType: 'Action Type',
+    actionParticulars: 'Action Particulars',
+    actionDateTime: 'Action Date',
+    actionTerminalIp: 'Action Terminal IP'
+  };
 
   readonly canGoPrevious = computed(
     () => this.currentPage() > 1 && !this.isLoading()

@@ -9,6 +9,7 @@ import { ParametersService } from '../../core/services/parameters.service';
 
 import { AdminLayout } from '../../sharedAdminekyc/layout/admin-layout/admin-layout';
 import { GenericButton } from '../../../../shared/common-components/generic-component-type/generic-button/generic-button';
+import { GenericDataGrid } from '../../../../shared/common-components/generic-component-type/generic-data-grid';
 import { InputTextBox } from '../../../../shared/common-components/input-types/input-text-box/input-text-box';
 import { GenericModal } from '../../../../shared/common-components/generic-component-type/generic-modal/generic-modal';
 
@@ -28,6 +29,7 @@ type ParameterFormGroup = {
     ReactiveFormsModule,
     AdminLayout,
     GenericButton,
+    GenericDataGrid,
     InputTextBox,
     GenericModal
   ],
@@ -49,6 +51,17 @@ export class Parameters implements OnInit {
 
   readonly currentPage = signal<number>(1);
   readonly itemsPerPage = 12;
+
+  readonly parameterGridColumns = [
+    'parameterName',
+    'parameterValue',
+    'parameterDescription'
+  ];
+  readonly parameterGridColumnNames = {
+    parameterName: 'Parameter Name',
+    parameterValue: 'Parameter Value',
+    parameterDescription: 'Parameter Description'
+  };
 
   readonly parameterForm = new FormGroup<ParameterFormGroup>({
     parameterName: new FormControl('', { nonNullable: true }),
@@ -125,6 +138,14 @@ export class Parameters implements OnInit {
         );
       }
     });
+  }
+
+  showEditFromGrid(payload: string): void {
+    try {
+      this.showEdit(JSON.parse(payload) as AdminParameter);
+    } catch {
+      this.pageErrorMessage.set('Unable to read the selected parameter.');
+    }
   }
 
   showEdit(parameter: AdminParameter): void {

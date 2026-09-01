@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, forkJoin, map, of, switchMap, throwError } from 'rxjs';
 
 import { ADMINEKYC_API_ENDPOINTS } from '../constants/adminekyc-api.constants';
@@ -7,6 +8,7 @@ import {
   AdminekycCustomerActionResponse,
   AdminekycCustomerDetailsResponse,
   AdminekycCustomerNomineeResponse,
+  AdminekycCustomerPhotosResponse,
   AdminekycCustomerProductResponse,
   AdminekycDeclineCustomerRequest
 } from '../models/adminekyc-customer-details.model';
@@ -16,6 +18,7 @@ import {
   AdminekycCustomerPageResponse,
   AdminekycCustomerSearchQuery
 } from '../models/adminekyc-customer-list.model';
+import { AdminekycApiError } from '../models/adminekyc-api-response.model';
 import { CustomerListType } from './adminekyc-state';
 import { AdminekycApi } from './adminekyc-api';
 import { toAdminekycStaticUrl } from '../utils/adminekyc-url.util';
@@ -39,7 +42,10 @@ export class AdminekycCustomer {
         this.getListEndpoint(type),
         { pageNumber }
       )
-      .pipe(map((response) => this.mapCustomerPage(response, type)));
+      .pipe(
+        map((response) => this.mapCustomerPage(response, type)),
+        switchMap((page) => this.enrichCustomerPagePhotos(page))
+      );
   }
 
   /** Spring Search uses the auth type previously stored by the selected list endpoint. */
@@ -64,7 +70,10 @@ export class AdminekycCustomer {
           pageNumber
         }
       )
-      .pipe(map((response) => this.mapCustomerPage(response, type)));
+      .pipe(
+        map((response) => this.mapCustomerPage(response, type)),
+        switchMap((page) => this.enrichCustomerPagePhotos(page))
+      );
   }
 
   /**
@@ -219,6 +228,70 @@ export class AdminekycCustomer {
       authType: this.mapAuthStatus(response.AuthType, fallbackType),
       isHeadOffice: Boolean(response.IsHeadOffice)
     };
+  }
+
+  /**
+   * Spring customer-list DTO currently does not populate ImageBase64 for every
+   * authorization queue row. KYC Report by Year already resolves the thumbnail
+   * through PhotosAndDocs, so use the same source for all four queue pages.
+   */
+  private enrichCustomerPagePhotos(page: AdminCustomerPage): Observable<AdminCustomerPage> {
+    if (page.customers.length === 0) {
+      return of(page);
+    }
+
+    return forkJoin(
+      page.customers.map((customer) => this.enrichListPhoto(customer))
+    ).pipe(
+      map((customers) => ({
+        ...page,
+        customers
+      }))
+    );
+  }
+
+  private enrichListPhoto(customer: AdminCustomer): Observable<AdminCustomer> {
+    if (customer.documents?.customerPhotoUrl || customer.id <= 0) {
+      return of(customer);
+    }
+
+    return this.api
+      .getApi<AdminekycCustomerPhotosResponse>(
+        ADMINEKYC_API_ENDPOINTS.customerProfile.photosAndDocs,
+        { id: customer.id }
+      )
+      .pipe(
+        map((photos) => {
+          const photoUrl = this.toImageDataUrl(photos.FromUploaded);
+
+          if (!photoUrl) {
+            return customer;
+          }
+
+          return {
+            ...customer,
+            documents: {
+              ...(customer.documents ?? {}),
+              customerPhotoUrl: photoUrl
+            }
+          };
+        }),
+        catchError((error: unknown) =>
+          this.isSessionExpired(error)
+            ? throwError(() => error)
+            : of(customer)
+        )
+      );
+  }
+
+  private isSessionExpired(error: unknown): boolean {
+    if (error instanceof HttpErrorResponse && error.status === 401) {
+      return true;
+    }
+
+    return error instanceof AdminekycApiError
+      && error.status === 'UNAUTH'
+      && error.apiMessage?.trim().toLowerCase() === 'valid session required.';
   }
 
   private mapCustomerListItem(

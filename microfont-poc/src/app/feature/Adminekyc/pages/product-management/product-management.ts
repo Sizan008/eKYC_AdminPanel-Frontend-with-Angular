@@ -1,5 +1,6 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, SecurityContext, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 
 import { AdminekycApiError } from '../../core/models/adminekyc-api-response.model';
 import {
@@ -16,6 +17,8 @@ import { ProductManagementService } from '../../core/services/product-management
 
 import { AdminLayout } from '../../sharedAdminekyc/layout/admin-layout/admin-layout';
 import { GenericButton } from '../../../../shared/common-components/generic-component-type/generic-button/generic-button';
+import { GenericDataGrid } from '../../../../shared/common-components/generic-component-type/generic-data-grid';
+import { CellRenderFunction } from '../../../../shared/common-components/generic-component-type/generic-data-grid/generic-data-grid';
 import { InputTextBox } from '../../../../shared/common-components/input-types/input-text-box/input-text-box';
 import { InputNumber } from '../../../../shared/common-components/input-types/input-number/input-number';
 import { InputSelectOptionField } from '../../../../shared/common-components/input-types/input-select-option-field/input-select-option-field';
@@ -48,6 +51,7 @@ type ProductAssignFormGroup = {
     ReactiveFormsModule,
     AdminLayout,
     GenericButton,
+    GenericDataGrid,
     InputTextBox,
     InputNumber,
     InputSelectOptionField,
@@ -81,6 +85,19 @@ export class ProductManagement implements OnInit {
   readonly currentPage = signal<number>(1);
   readonly itemsPerPage = 8;
 
+  readonly channelProductGridColumns = ['productCode', 'productName'];
+  readonly channelProductGridColumnNames = {
+    productCode: 'Product Code',
+    productName: 'Product Name'
+  };
+  readonly allProductGridColumns = ['productId', 'productName', 'productDescription'];
+  readonly allProductGridColumnNames = {
+    productId: 'Product ID',
+    productName: 'Product Name',
+    productDescription: 'Product Description'
+  };
+  readonly productGridCellRenderers: Record<string, CellRenderFunction>;
+
   // Spring/legacy product type codes are 00001/00002/00003. The label is only
   // display text; the form value sent to the backend must remain the code.
   readonly productTypeOptions = [
@@ -110,8 +127,17 @@ export class ProductManagement implements OnInit {
   constructor(
     public state: AdminekycState,
     public auth: AdminekycAuth,
-    private productService: ProductManagementService
-  ) {}
+    private productService: ProductManagementService,
+    private sanitizer: DomSanitizer
+  ) {
+    this.productGridCellRenderers = {
+      productDescription: (value: unknown) =>
+        this.sanitizer.sanitize(
+          SecurityContext.HTML,
+          value === null || value === undefined ? '' : String(value)
+        ) ?? ''
+    };
+  }
 
   ngOnInit(): void {
     this.loadProductChannels();

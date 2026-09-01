@@ -60,8 +60,8 @@
 }
 
 .parameters-table-card {
-  width: 100%;
-  margin-top: 8px;
+  width: min(1280px, 100%);
+  margin: 8px auto 0;
 }
 
 .parameters-table {

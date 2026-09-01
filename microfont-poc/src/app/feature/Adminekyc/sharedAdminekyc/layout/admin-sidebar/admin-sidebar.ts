@@ -1,8 +1,7 @@
-import { Component, OnDestroy, OnInit, input, output } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, input, output } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
-
-import { GenericSwitch } from '../../../../../shared/common-components/generic-component-type/generic-switch/generic-switch';
 
 export type AdminSidebarActiveMenu =
   | 'dashboard'
@@ -28,14 +27,11 @@ type SidebarParentControl =
 @Component({
   selector: 'admin-sidebar',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    GenericSwitch
-  ],
+  imports: [MatIcon],
   templateUrl: './admin-sidebar.html',
   styleUrl: './admin-sidebar.scss'
 })
-export class AdminSidebar implements OnInit, OnDestroy {
+export class AdminSidebar implements OnInit, OnChanges, OnDestroy {
   readonly activeMenu = input<AdminSidebarActiveMenu>('dashboard');
   readonly drawerOpened = input<boolean>(true);
 
@@ -95,6 +91,14 @@ export class AdminSidebar implements OnInit, OnDestroy {
         }
       })
     );
+
+    this.openParentMenuForActiveMenu();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['activeMenu']) {
+      this.openParentMenuForActiveMenu();
+    }
   }
 
   ngOnDestroy(): void {
@@ -123,47 +127,38 @@ export class AdminSidebar implements OnInit, OnDestroy {
   }
 
   onChannelManagementClicked(): void {
-    this.closeAllParentMenus();
     this.channelManagementClicked.emit();
   }
 
   onProductManagementClicked(): void {
-    this.closeAllParentMenus();
     this.productManagementClicked.emit();
   }
 
   onWorkflowManagementClicked(): void {
-    this.closeAllParentMenus();
     this.workflowManagementClicked.emit();
   }
 
   onParametersClicked(): void {
-    this.closeAllParentMenus();
     this.parametersClicked.emit();
   }
 
   onApiManagementClicked(): void {
-    this.closeAllParentMenus();
     this.apiManagementClicked.emit();
   }
 
   onAuthorizedClicked(): void {
-    this.closeAllParentMenus();
     this.authorizedClicked.emit();
   }
 
   onUnauthorizedClicked(): void {
-    this.closeAllParentMenus();
     this.unauthorizedClicked.emit();
   }
 
   onIncompleteClicked(): void {
-    this.closeAllParentMenus();
     this.incompleteClicked.emit();
   }
 
   onDeclinedClicked(): void {
-    this.closeAllParentMenus();
     this.declinedClicked.emit();
   }
 
@@ -173,13 +168,43 @@ export class AdminSidebar implements OnInit, OnDestroy {
   }
 
   onUserActivityLogClicked(): void {
-    this.closeAllParentMenus();
     this.userActivityLogClicked.emit();
   }
 
   onKycReportByYearClicked(): void {
-    this.closeAllParentMenus();
     this.kycReportByYearClicked.emit();
+  }
+
+
+  toggleParentMenu(controlName: SidebarParentControl): void {
+    const control = this.sidebarForm.controls[controlName];
+    control.setValue(!control.value);
+  }
+
+  private openParentMenuForActiveMenu(): void {
+    const menu = this.activeMenu();
+
+    if (menu === 'channelManagement' || menu === 'productManagement' || menu === 'workflowManagement') {
+      this.openOnlyParentMenu('productChannelOpened');
+      return;
+    }
+
+    if (menu === 'parameters' || menu === 'apiManagement') {
+      this.openOnlyParentMenu('configurationsOpened');
+      return;
+    }
+
+    if (menu === 'authorized' || menu === 'unauthorized' || menu === 'incomplete' || menu === 'declined') {
+      this.openOnlyParentMenu('authorizationQueueOpened');
+      return;
+    }
+
+    if (menu === 'userActivityLog' || menu === 'kycReportByYear') {
+      this.openOnlyParentMenu('logsOpened');
+      return;
+    }
+
+    this.closeAllParentMenus();
   }
 
   private openOnlyParentMenu(openedControl: SidebarParentControl): void {

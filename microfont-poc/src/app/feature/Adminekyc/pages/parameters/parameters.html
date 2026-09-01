@@ -40,62 +40,26 @@
         <button type="button" (click)="showCreate()">Create New Params</button>
       </div>
 
-      <section class="parameters-table-card w-full min-w-0 overflow-x-auto rounded-lg">
-        <table class="parameters-table w-full min-w-[760px] lg:min-w-full">
-          <thead>
-            <tr>
-              <th>Parameter Name</th>
-              <th>Parameter Value</th>
-              <th>Parameter Description</th>
-              <th>Action</th>
-            </tr>
-          </thead>
+      <section class="parameters-table-card w-full min-w-0 rounded-lg">
+        @if (isLoading()) {
+          <div class="empty-cell">Loading parameters...</div>
+        } @else {
+          <generic-data-grid
+            [id]="'adminekyc-parameters-grid'"
+            [dataSource]="parameters()"
+            [selectedColumns]="parameterGridColumns"
+            [customColumnNames]="parameterGridColumnNames"
+            [initPageSize]="itemsPerPage"
+            [pageSizeOptions]="[itemsPerPage, 24, 48]"
+            [showPaginator]="parameters().length > itemsPerPage"
+            [showEditButton]="true"
+            [useInlineEdit]="false"
+            (onFHEditClick)="showEditFromGrid($event)">
+          </generic-data-grid>
 
-          <tbody>
-            @for (parameter of getPaginatedParameters(); track parameter.id) {
-              <tr>
-                <td>{{ parameter.parameterName }}</td>
-                <td>{{ parameter.parameterValue }}</td>
-                <td>{{ parameter.parameterDescription }}</td>
-                <td>
-                  <button
-                    type="button"
-                    class="parameters-table__edit"
-                    (click)="showEdit(parameter)">
-                    Edit
-                  </button>
-                </td>
-              </tr>
-            }
-
-            @if (parameters().length === 0) {
-              <tr>
-                <td colspan="4" class="empty-cell">
-                  No parameter found.
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-
-        @if (parameters().length > itemsPerPage) {
-          <div class="parameters-pagination flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-            <button
-              type="button"
-              [disabled]="currentPage() === 1"
-              (click)="goToPreviousPage()">
-              Previous
-            </button>
-
-            <span>Page {{ currentPage() }} of {{ getTotalPages() }}</span>
-
-            <button
-              type="button"
-              [disabled]="currentPage() === getTotalPages()"
-              (click)="goToNextPage()">
-              Next
-            </button>
-          </div>
+          @if (parameters().length === 0) {
+            <div class="empty-cell">No parameter found.</div>
+          }
         }
       </section>
     }

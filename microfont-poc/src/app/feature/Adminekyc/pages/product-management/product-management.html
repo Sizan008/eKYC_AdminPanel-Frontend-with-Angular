@@ -63,38 +63,24 @@
       </div>
 
       @if (selectedChannelId()) {
-        <section class="product-table-card w-full min-w-0 overflow-x-auto rounded-lg">
-          <table class="product-table w-full min-w-[680px] lg:min-w-full">
-            <thead>
-              <tr>
-                <th>Product Code</th>
-                <th>Product Name</th>
-                <th>Action</th>
-              </tr>
-            </thead>
+        <section class="product-table-card w-full min-w-0 rounded-lg">
+          @if (isLoadingChannelProducts()) {
+            <div class="empty-cell">Loading products...</div>
+          } @else {
+            <generic-data-grid
+              [id]="'adminekyc-channel-products-grid'"
+              [dataSource]="channelProducts()"
+              [selectedColumns]="channelProductGridColumns"
+              [customColumnNames]="channelProductGridColumnNames"
+              [initPageSize]="itemsPerPage"
+              [pageSizeOptions]="[itemsPerPage, 16, 24]"
+              [showPaginator]="channelProducts().length > itemsPerPage">
+            </generic-data-grid>
 
-            <tbody>
-              @for (product of channelProducts(); track product.id) {
-                <tr>
-                  <td>{{ product.productCode }}</td>
-                  <td>{{ product.productName }}</td>
-                  <td></td>
-                </tr>
-              }
-
-              @if (isLoadingChannelProducts()) {
-                <tr>
-                  <td colspan="3" class="empty-cell">Loading products...</td>
-                </tr>
-              } @else if (channelProducts().length === 0) {
-                <tr>
-                  <td colspan="3" class="empty-cell">
-                    No product found for selected channel.
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
+            @if (channelProducts().length === 0) {
+              <div class="empty-cell">No product found for selected channel.</div>
+            }
+          }
         </section>
       }
     }
@@ -107,55 +93,24 @@
         <span>|</span>
       </div>
 
-      <section class="product-table-card w-full min-w-0 overflow-x-auto rounded-lg">
-        <table class="product-table w-full min-w-[680px] lg:min-w-full">
-          <thead>
-            <tr>
-              <th>Product ID</th>
-              <th>Product Name</th>
-              <th>Product Description</th>
-            </tr>
-          </thead>
+      <section class="product-table-card w-full min-w-0 rounded-lg">
+        @if (isLoadingProducts()) {
+          <div class="empty-cell">Loading products...</div>
+        } @else {
+          <generic-data-grid
+            [id]="'adminekyc-all-products-grid'"
+            [dataSource]="products()"
+            [selectedColumns]="allProductGridColumns"
+            [customColumnNames]="allProductGridColumnNames"
+            [cellRenderFunctions]="productGridCellRenderers"
+            [initPageSize]="itemsPerPage"
+            [pageSizeOptions]="[itemsPerPage, 16, 24]"
+            [showPaginator]="products().length > itemsPerPage">
+          </generic-data-grid>
 
-          <tbody>
-            @for (product of getPaginatedProducts(); track product.id) {
-              <tr>
-                <td>{{ product.productId }}</td>
-                <td>{{ product.productName }}</td>
-                <td class="product-description-cell" [innerHTML]="product.productDescription"></td>
-              </tr>
-            }
-
-            @if (isLoadingProducts()) {
-              <tr>
-                <td colspan="3" class="empty-cell">Loading products...</td>
-              </tr>
-            } @else if (products().length === 0) {
-              <tr>
-                <td colspan="3" class="empty-cell">No product found.</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-
-        @if (products().length > itemsPerPage) {
-          <div class="product-pagination flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-            <button
-              type="button"
-              [disabled]="currentPage() === 1"
-              (click)="goToPreviousPage()">
-              Previous
-            </button>
-
-            <span>Page {{ currentPage() }} of {{ getTotalPages() }}</span>
-
-            <button
-              type="button"
-              [disabled]="currentPage() === getTotalPages()"
-              (click)="goToNextPage()">
-              Next
-            </button>
-          </div>
+          @if (products().length === 0) {
+            <div class="empty-cell">No product found.</div>
+          }
         }
       </section>
     }
